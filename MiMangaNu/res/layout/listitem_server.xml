@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/server_bandera"
+        android:layout_width="30dp"
+        android:layout_height="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/server_nombre"
+        android:padding="2dp"
+        android:src="@drawable/flag_eng" />
+
+    <ImageView
+        android:id="@+id/server_imagen"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:padding="2dp"
+        android:src="@drawable/mangapanda" />
+
+    <TextView
+        android:id="@+id/server_nombre"
+        android:layout_width="253dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/server_bandera"
+        android:layout_toRightOf="@+id/server_imagen"
+        android:padding="2dp"
+        android:text=""
+        android:textSize="20sp" />
+
+</RelativeLayout>

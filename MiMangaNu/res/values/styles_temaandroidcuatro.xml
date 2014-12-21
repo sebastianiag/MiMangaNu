@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="EditTexttemaandroidcuatro" parent="android:Widget.EditText">
+	  <item name="android:background">@drawable/temaandroidcuatro_edit_text_holo_light</item>
+	  <item name="android:textColor">#000000</item>
+  </style>
+
+  <style name="AutoCompleteTextViewtemaandroidcuatro" parent="android:Widget.AutoCompleteTextView">
+      <item name="android:dropDownSelector">@drawable/temaandroidcuatro_list_selector_holo_light</item>
+	  <item name="android:background">@drawable/temaandroidcuatro_edit_text_holo_light</item>
+	  <item name="android:textColor">#000000</item>
+  </style>
+
+  <style name="Buttontemaandroidcuatro" parent="android:Widget.Button">
+	  <item name="android:background">@drawable/temaandroidcuatro_btn_default_holo_light</item>
+	  <item name="android:minHeight">48dip</item>
+	  <item name="android:minWidth">64dip</item>
+	  <item name="android:textColor">#000000</item>
+  </style>
+
+  <style name="ImageButtontemaandroidcuatro" parent="android:Widget.ImageButton">
+	  <item name="android:background">@drawable/temaandroidcuatro_btn_default_holo_light</item>
+  </style>
+
+  <style name="Spinnertemaandroidcuatro" parent="android:Widget.Spinner">
+      <item name="android:background">@drawable/temaandroidcuatro_spinner_background_holo_light</item>
+      <item name="android:dropDownSelector">@drawable/temaandroidcuatro_list_selector_holo_light</item>
+  </style>
+
+  <style name="SpinnerDropDownItemtemaandroidcuatro" parent="android:Widget.DropDownItem.Spinner">
+      <item name="android:checkMark">@drawable/temaandroidcuatro_btn_radio_holo_light</item>
+  </style>
+  <style name="Tabtemaandroidcuatro">
+      <item name="android:gravity">center_horizontal</item>
+      <item name="android:paddingLeft">16dip</item>
+      <item name="android:paddingRight">16dip</item>
+      <item name="android:background">@drawable/temaandroidcuatro_tab_indicator_holo</item>
+      <item name="android:layout_width">0dip</item>
+      <item name="android:layout_weight">1</item>
+      <item name="android:minWidth">80dip</item>
+  </style>
+
+  <style name="TabTexttemaandroidcuatro">
+	  <item name="android:textColor">#000000</item>
+      <item name="android:textSize">12sp</item>
+      <item name="android:textStyle">bold</item>
+      <!-- v14 <item name="android:textAllCaps">true</item> -->
+      <item name="android:ellipsize">marquee</item>
+      <item name="android:maxLines">2</item>
+      <item name="android:maxWidth">180dip</item>
+  </style>
+
+  <style name="ProgressBartemaandroidcuatro" parent="android:Widget.ProgressBar.Horizontal">
+      <item name="android:progressDrawable">@drawable/temaandroidcuatro_progress_horizontal_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/temaandroidcuatro_progress_indeterminate_horizontal_holo_light</item>
+      <item name="android:minHeight">16dip</item>
+      <item name="android:maxHeight">16dip</item>
+  </style>
+
+  <style name="SeekBartemaandroidcuatro" parent="android:Widget.SeekBar">
+      <item name="android:progressDrawable">@drawable/temaandroidcuatro_scrubber_progress_horizontal_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/temaandroidcuatro_scrubber_progress_horizontal_holo_light</item>
+      <item name="android:minHeight">13dip</item>
+      <item name="android:maxHeight">13dip</item>
+      <item name="android:thumb">@drawable/temaandroidcuatro_scrubber_control_selector_holo_light</item>
+      <item name="android:thumbOffset">16dip</item>
+      <item name="android:paddingLeft">16dip</item>
+      <item name="android:paddingRight">16dip</item>
+  </style>
+
+  <style name="Toggletemaandroidcuatro" parent="android:Widget.Button.Toggle">
+      <item name="android:background">@drawable/temaandroidcuatro_btn_toggle_holo_light</item>
+      <item name="android:minHeight">48dip</item>
+	  <item name="android:textColor">#000000</item>
+  </style>
+
+  <style name="ListViewtemaandroidcuatro" parent="android:Widget.ListView">
+      <item name="android:listSelector">@drawable/temaandroidcuatro_list_selector_holo_light</item>
+  </style>
+
+  <style name="ListViewtemaandroidcuatro.White" parent="android:Widget.ListView.White">
+      <item name="android:listSelector">@drawable/temaandroidcuatro_list_selector_holo_light</item>
+  </style>
+
+  <style name="SpinnerItemtemaandroidcuatro" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+      <item name="android:textColor">#000000</item>
+  </style>
+
+</resources>

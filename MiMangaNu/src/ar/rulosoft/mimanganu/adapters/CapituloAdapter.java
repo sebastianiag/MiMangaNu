@@ -1,0 +1,166 @@
+package ar.rulosoft.mimanganu.adapters;
+
+import java.io.File;
+import java.util.List;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.graphics.Color;
+import android.os.AsyncTask;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+import ar.rulosoft.mimanganu.ActivityCapitulos;
+import ar.rulosoft.mimanganu.ColaDeDescarga;
+import ar.rulosoft.mimanganu.FragmentMisMangas;
+import ar.rulosoft.mimanganu.R;
+import ar.rulosoft.mimanganu.componentes.Capitulo;
+import ar.rulosoft.mimanganu.componentes.Database;
+import ar.rulosoft.mimanganu.componentes.Manga;
+import ar.rulosoft.mimanganu.servers.ServerBase;
+
+public class CapituloAdapter extends ArrayAdapter<Capitulo> {
+
+	public static int TRANSPARENTE = Color.parseColor("#00FFFFFF");
+	public static int GRIS = Color.argb(15, 0, 0, 0);
+
+	private LayoutInflater li;
+	private static int listItem = R.layout.listitem_capitulo;
+	ActivityCapitulos activity;
+
+	public CapituloAdapter(Activity context, List<Capitulo> items) {
+		super(context, listItem, items);
+		activity = (ActivityCapitulos) context;
+		li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	}
+
+	public static class ViewHolder {
+		private TextView textViewNombre;
+		private TextView textViewEstado;
+		private TextView textViewPaginas;
+		private ImageView imageButton;
+
+		public ViewHolder(View v) {
+			this.textViewNombre = (TextView) v.findViewById(R.id.capitulo_titulo);
+			this.textViewEstado = (TextView) v.findViewById(R.id.capitulo_info);
+			this.textViewPaginas = (TextView) v.findViewById(R.id.capitulo_paginas);
+			this.imageButton = (ImageView) v.findViewById(R.id.boton);
+		}
+	}
+
+	public View getView(final int posicion, View convertView, ViewGroup parent) {
+		ViewHolder holder;
+		if (convertView == null) {
+			convertView = li.inflate(listItem, null);
+			holder = new ViewHolder(convertView);
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+		}
+
+		Capitulo item = getItem(posicion);
+
+		if (item != null) {
+			holder.textViewNombre.setText(android.text.Html.fromHtml(item.getTitulo()));
+			holder.textViewEstado.setText("");
+			switch (item.getEstadoLectura()) {
+			case Capitulo.NUEVO:
+				holder.textViewEstado.setText("Nuevo");
+				break;
+			case Capitulo.LEIDO:
+				convertView.setBackgroundColor(GRIS);
+				break;
+			default:
+				convertView.setBackgroundColor(TRANSPARENTE);
+			}
+			holder.textViewPaginas.setText("       ");
+			if (item.getPaginas() > 0) {
+				holder.textViewPaginas.setText(item.getPagLeidas() + "/" + item.getPaginas());
+			}
+			if (item.isDescargado()) {
+				holder.imageButton.setImageResource(R.drawable.ic_borrar);
+			} else {
+				holder.imageButton.setImageResource(R.drawable.ic_bajar);
+			}
+
+			holder.imageButton.setTag(item);
+			holder.imageButton.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(final View v) {
+					Capitulo c = (Capitulo) v.getTag();
+					if (c.isDescargado()) {
+						Manga m = activity.manga;
+						ServerBase s = ServerBase.getServer(m.getServerId());
+						String ruta = ColaDeDescarga.generarRutaBase(s, m, c);
+						FragmentMisMangas.DeleteRecursive(new File(ruta));
+						getItem(posicion).setDescargado(false);
+						Database.UpdateCapituloDescargado(activity, c.getId(), 0);
+						Toast.makeText(activity, "Se han borrado las imagenes", Toast.LENGTH_SHORT).show();
+						notifyDataSetChanged();
+						//((ImageView) v).setImageResource(R.drawable.ic_bajar);
+					} else {
+						new AgregarCola().execute(c);
+					}
+				}
+			});
+		}
+
+		return convertView;
+	}
+
+	private class AgregarCola extends AsyncTask<Capitulo, Void, Capitulo> {
+		ProgressDialog asyncdialog = new ProgressDialog(activity);
+		String error = "";
+
+		@Override
+		protected void onPreExecute() {
+			asyncdialog.setMessage("Iniciando Manga");
+			asyncdialog.show();
+			super.onPreExecute();
+		}
+
+		@Override
+		protected Capitulo doInBackground(Capitulo... arg0) {
+			Capitulo c = arg0[0];
+			ServerBase s = ServerBase.getServer(activity.manga.getServerId());
+			try {
+				if (c.getPaginas() < 1)
+					s.iniciarCapitulo(c);
+			} catch (Exception e) {
+				error = e.getMessage();
+				e.printStackTrace();
+			} finally {
+				onProgressUpdate();
+			}
+			return c;
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
+			asyncdialog.dismiss();
+			super.onProgressUpdate(values);
+		}
+
+		@Override
+		protected void onPostExecute(Capitulo result) {
+			if (error.length() > 1) {
+				Toast.makeText(activity, error, Toast.LENGTH_LONG).show();
+			} else {
+				asyncdialog.dismiss();
+				Database.updateCapitulo(activity, result);
+				ColaDeDescarga.addCola(result);
+				ColaDeDescarga.iniciarCola(activity);
+				Toast.makeText(activity, "Manga agregado a descarga", Toast.LENGTH_LONG).show();
+			}
+			super.onPostExecute(result);
+		}
+	}
+
+}

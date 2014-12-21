@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="temaandroidcuatro" parent="@style/_temaandroidcuatro"/>
+
+  <style name="_temaandroidcuatro" parent="Theme.AppCompat.Light.DarkActionBar">
+
+    <item name="android:editTextStyle">@style/EditTexttemaandroidcuatro</item>
+
+    <item name="android:textColorHighlight">#9933b5e5</item>
+
+    <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewtemaandroidcuatro</item>
+
+    <item name="android:buttonStyle">@style/Buttontemaandroidcuatro</item>
+
+    <item name="android:imageButtonStyle">@style/ImageButtontemaandroidcuatro</item>
+
+    <item name="android:spinnerStyle">@style/Spinnertemaandroidcuatro</item>
+
+    <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemtemaandroidcuatro</item>
+
+    <item name="android:progressBarStyleHorizontal">@style/ProgressBartemaandroidcuatro</item>
+
+    <item name="android:seekBarStyle">@style/SeekBartemaandroidcuatro</item>
+
+    <item name="android:buttonStyleToggle">@style/Toggletemaandroidcuatro</item>
+
+    <item name="android:spinnerItemStyle">@style/SpinnerItemtemaandroidcuatro</item>
+
+  </style>
+
+</resources>

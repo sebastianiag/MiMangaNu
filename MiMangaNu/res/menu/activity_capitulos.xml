@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="ar.rulosoft.mimanganu.ActivityCapitulos" >
+
+       <item
+        android:icon="@drawable/ic_action_core_overflow"
+        android:orderInCategory="100"
+        android:title="Configurar"
+        app:showAsAction="always">
+        <menu>
+            <item android:id="@+id/descargar_restantes" 
+                android:title="@string/descargarestantes"/>
+        </menu>
+    </item>
+
+</menu>

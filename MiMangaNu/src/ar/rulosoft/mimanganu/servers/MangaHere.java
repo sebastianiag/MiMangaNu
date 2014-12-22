@@ -156,7 +156,7 @@ public class MangaHere extends ServerBase {
 		ArrayList<Manga> mangas = new ArrayList<Manga>();
 		Navegador nav = new Navegador();
 		String data = nav.get("http://www.mangahere.co/search.php?name=" + termino);
-		Pattern p = Pattern.compile("<dt>				<a href=\"(http://www.mangahere.co/manga/.+?)\".+?\">(.+?<)");
+		Pattern p = Pattern.compile("<dt>				<a href=\"(http://www.mangahere.co/manga/.+?)\".+?\">(.+?)<");
 		Matcher m = p.matcher(data);
 		while(m.find()){
 			mangas.add(new Manga(getServerID(), m.group(2).trim(), m.group(1), false));

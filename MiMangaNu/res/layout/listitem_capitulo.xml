@@ -43,11 +43,13 @@
     <ImageView
         android:id="@+id/boton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/capitulo_titulo"
         android:layout_centerVertical="true"
-        android:padding="4dp"
+        android:padding="5dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
         android:src="@drawable/ic_bajar" />
 
 </RelativeLayout>

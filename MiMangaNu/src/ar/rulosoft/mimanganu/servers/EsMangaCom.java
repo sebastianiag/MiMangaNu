@@ -23,7 +23,7 @@ public class EsMangaCom extends ServerBase {
 
 	public EsMangaCom() {
 		this.setBandera(R.drawable.flag_esp);
-		this.setIcon(R.drawable.noimage);
+		this.setIcon(R.drawable.esmanga);
 		this.setServerName("EsManga");
 		setServerID(ServerBase.ESMANGA);
 	}

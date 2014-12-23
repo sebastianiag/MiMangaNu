@@ -12,7 +12,7 @@ import ar.rulosoft.navegadores.Navegador;
 
 public class EsMangaCom extends ServerBase {
 
-	public static String[] generos = new String[] { "Todos", "Acción", "Artes", "Marciales", "Aventura", "Ciencia Ficción", "Comedia", "Deportes", "Drama",
+	public static String[] generos = new String[] { "Todos", "Acción", "Artes Marciales", "Aventura", "Ciencia Ficción", "Comedia", "Deportes", "Drama",
 			"Ecchi", "Escolar", "Fantasía", "Harem", "Hentai", "Histórico", "Horror", "Josei", "Mecha", "Misterio", "Oneshot", "Psicológico", "Romance",
 			"Seinen", "Shojo", "Shounen", "Sobrenatural", "Tragedia", "Vida Cotidiana", "Yuri" };
 	public static String[] generosV = new String[] { "/lista-mangas", "/genero/accion", "/genero/artes-marciales", "/genero/aventura",

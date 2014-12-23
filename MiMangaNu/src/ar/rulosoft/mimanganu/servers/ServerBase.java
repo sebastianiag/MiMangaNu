@@ -20,6 +20,7 @@ public abstract class ServerBase {
 	public static final int SUBMANGA = 6;
 	public static final int ESMANGA = 7;
 	public static final int HEAVENMANGACOM = 8;
+	public static final int STARKANACOM = 9;
 	
 	private String serverName;
 	private int icon;
@@ -53,6 +54,9 @@ public abstract class ServerBase {
 			break;
 		case HEAVENMANGACOM:
 			s = new HeavenMangaCom();
+			break;
+		case STARKANACOM:
+			s = new StarkanaCom();
 			break;
 		default:
 			break;

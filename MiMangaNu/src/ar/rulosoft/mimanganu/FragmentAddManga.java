@@ -12,6 +12,7 @@ import android.widget.ListView;
 import ar.rulosoft.mimanganu.adapters.ServerAdapter;
 import ar.rulosoft.mimanganu.servers.EsMangaCom;
 import ar.rulosoft.mimanganu.servers.EsMangaHere;
+import ar.rulosoft.mimanganu.servers.EsNineMangaCom;
 import ar.rulosoft.mimanganu.servers.HeavenMangaCom;
 import ar.rulosoft.mimanganu.servers.MangaFox;
 import ar.rulosoft.mimanganu.servers.MangaHere;
@@ -35,7 +36,7 @@ public class FragmentAddManga extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		lista_server.setAdapter(new ServerAdapter(getActivity(), new ServerBase[] { new MangaPanda(), new EsMangaHere(), new MangaHere(),
-				new MangaFox(), new SubManga(), new EsMangaCom(), new HeavenMangaCom(), new StarkanaCom() }));
+				new MangaFox(), new SubManga(), new EsMangaCom(), new HeavenMangaCom(), new StarkanaCom(), new EsNineMangaCom()}));
 		lista_server.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

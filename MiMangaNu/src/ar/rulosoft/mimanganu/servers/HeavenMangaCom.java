@@ -76,12 +76,7 @@ public class HeavenMangaCom extends ServerBase {
 	@Override
 	public void cargarPortada(Manga m) throws Exception {
 		String source = new Navegador().get(m.getPath());
-		// portada
-		String portada = getFirstMacth("style=\"position:absolute;\"><img src=\"(.+?)\"", source, "Error al cargar portada");
-		m.setImages(portada);
-		// sinopsis
-		String sinopsis = getFirstMacth("<div class=\"sinopsis\">(.+?)<div", source, "Error al obtener portada");
-		m.setSinopsis(sinopsis.replaceAll("<.+?>", ""));
+		
 		// capitulos
 		Pattern p = Pattern.compile("<li><span class=\"capfec\">.+?><a href=\"(http://heavenmanga.com/.+?)\" title=\"(.+?)\"");
 		Matcher matcher = p.matcher(source);
@@ -93,6 +88,15 @@ public class HeavenMangaCom extends ServerBase {
 			m.setCapitulos(capitulos);
 		else
 			throw new Exception("Error al cargar capitulos");
+		
+		// portada
+		String portada = getFirstMacth("style=\"position:absolute;\"><img src=\"(.+?)\"", source, "Error al cargar portada");
+		m.setImages(portada);
+		
+		// sinopsis
+		String sinopsis = getFirstMacth("<div class=\"sinopsis\">(.+?)<div", source, "Error al obtener portada");
+		m.setSinopsis(sinopsis.replaceAll("<.+?>", ""));
+
 	}
 
 	@Override

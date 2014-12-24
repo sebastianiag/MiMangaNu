@@ -148,6 +148,9 @@ public class ActivityServerVisualNavegacion extends ActionBarActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.manga_server_visual, menu);
 		buscar = menu.findItem(R.id.action_search);
+		MenuItem vcl = menu.findItem(R.id.ver_como_lista);
+		if(!s.tieneListado())
+			vcl.setVisible(false);
 		SearchView searchView = (SearchView) MenuItemCompat.getActionView(buscar);
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
 

@@ -15,8 +15,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -186,7 +186,7 @@ public class ActivityLector extends ActionBarActivity implements ImagenDescargad
 			@Override
 			public void run() {
 				int id = mViewPager.getCurrentItem();
-				if (cid == capitulo.getId() && pagina <= (id + 2) && pagina >= (id - 2)) {
+				if (cid == capitulo.getId() && pagina <= (id + 1) && pagina >= (id - 1)) {
 					PlaceholderFragment f = ((PlaceholderFragment) mSectionsPagerAdapter.getItem(pagina - 1));
 					f.new SetImagen().execute();
 				}
@@ -201,14 +201,22 @@ public class ActivityLector extends ActionBarActivity implements ImagenDescargad
 	 */
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-		ArrayList<PlaceholderFragment> fragments = new ArrayList<PlaceholderFragment>(capitulo.getPaginas());
+		ArrayList<PlaceholderFragment> fragments = new ArrayList<PlaceholderFragment>(5);
+		int[] pos = { -1, -1, -1, -1, -1 };
+		int idx = 0;
 		FragmentManager fm = null;
+
+		private int getNextPos() {
+			int np = idx % 5;
+			idx++;
+			return np;
+		}
 
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
 			this.fm = fm;
-			for (int i = 0; i < capitulo.getPaginas(); i++) {
-				fragments.add(null);
+			for (int i = 0; i < 5; i++) {
+				fragments.add(new PlaceholderFragment());
 			}
 		}
 
@@ -225,13 +233,27 @@ public class ActivityLector extends ActionBarActivity implements ImagenDescargad
 
 		public Fragment getFragmentIn(int position) {
 			PlaceholderFragment f = null;
-			if (fragments.get(position) == null) {
+			for (int i = 0; i < pos.length; i++) {
+				if (pos[i] == position) {
+					f = fragments.get(i);
+					break;
+				}
+			}
+			if (f == null) {
 				String ruta = ColaDeDescarga.generarRutaBase(s, manga, capitulo) + "/" + (position + 1) + ".jpg";
-				fragments.set(position, PlaceholderFragment.newInstance(ruta));
-				f = fragments.get(position);
+				int idx = -1;
+				do {
+					idx = getNextPos();
+					if(pos[idx] == -1)
+						break;
+				} while (pos[idx] + 1 > mViewPager.getCurrentItem() && pos[idx] - 1 < mViewPager.getCurrentItem());
+				pos[idx] = position;
+				Fragment old = fragments.get(idx);
+				fragments.set(idx, PlaceholderFragment.newInstance(ruta));
+				fm.beginTransaction().remove(old).commit();
+				old = null;
+				f = fragments.get(idx);
 				f.setTapListener(ActivityLector.this);
-			} else {
-				f = fragments.get(position);
 			}
 			return f;
 		}
@@ -248,11 +270,11 @@ public class ActivityLector extends ActionBarActivity implements ImagenDescargad
 				}
 			}
 		}
-		
-		public Fragment getCurrentFragment(){
+
+		public Fragment getCurrentFragment() {
 			return getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
 		}
-		
+
 	}
 
 	public static class PlaceholderFragment extends Fragment {
@@ -262,7 +284,7 @@ public class ActivityLector extends ActionBarActivity implements ImagenDescargad
 		TapListener mTapListener;
 		Runnable r = null;
 
-		private String ruta = "";
+		private String ruta = null;
 
 		private static final String RUTA = "ruta";
 
@@ -293,7 +315,9 @@ public class ActivityLector extends ActionBarActivity implements ImagenDescargad
 			visor.setScaleEnabled(false);
 			cargando = (ProgressBar) rootView.findViewById(R.id.cargando);
 			cargando.bringToFront();
-			ruta = getArguments().getString(RUTA);
+			if (getArguments() != null)
+				ruta = getArguments().getString(RUTA);
+
 			return rootView;
 		}
 
@@ -316,7 +340,7 @@ public class ActivityLector extends ActionBarActivity implements ImagenDescargad
 			visor = (ImageViewTouch) getView().findViewById(R.id.visor);
 			if (visor == null) {
 				cargando.setVisibility(ProgressBar.VISIBLE);
-			} else
+			} else if (ruta != null)
 				new SetImagen().execute();
 
 			super.onResume();
@@ -324,6 +348,11 @@ public class ActivityLector extends ActionBarActivity implements ImagenDescargad
 
 		@Override
 		public void onPause() {
+			try {
+				((BitmapDrawable) visor.getDrawable()).getBitmap().recycle();
+			} catch (Exception exception) {
+
+			}
 			visor.setImageBitmap(null);
 			super.onPause();
 		}
@@ -336,7 +365,12 @@ public class ActivityLector extends ActionBarActivity implements ImagenDescargad
 			}
 		}
 
-		public class SetImagen extends AsyncTask<Void, Void, Bitmap> {
+		public void setImagen(String ruta) {
+			this.ruta = ruta;
+			new SetImagen().execute();
+		}
+
+		public class SetImagen extends AsyncTask<Void, Void, Drawable> {
 
 			@Override
 			protected void onPreExecute() {
@@ -346,26 +380,19 @@ public class ActivityLector extends ActionBarActivity implements ImagenDescargad
 			}
 
 			@Override
-			protected Bitmap doInBackground(Void... params) {
-				Bitmap bitmap = null;
-				/*
-				 * BitmapFactory.Options bfOptions = new
-				 * BitmapFactory.Options(); bfOptions.inDither = false;
-				 * bfOptions.inPurgeable = true; bfOptions.inInputShareable =
-				 * true; bfOptions.inTempStorage = new byte[32 * 1024];/
-				 */
-				bitmap = BitmapFactory.decodeFile(ruta);// , bfOptions);
-				return bitmap;
+			protected Drawable doInBackground(Void... params) {
+				// Bitmap bitmap = null;
+				// bitmap = BitmapFactory.decodeFile(ruta);
+				return Drawable.createFromPath(ruta);
 			}
 
 			@Override
-			protected void onPostExecute(Bitmap result) {
+			protected void onPostExecute(Drawable result) {
 				if (result != null) {
 					visor.setScaleEnabled(true);
-					visor.setImageBitmap(result);
-					// result.recycle();
+					visor.setImageDrawable(result);
 					cargando.setVisibility(ProgressBar.INVISIBLE);
-				} else {
+				} else if(ruta != null){
 					File f = new File(ruta);
 					if (f.exists()) {
 						f.delete();
@@ -402,7 +429,7 @@ public class ActivityLector extends ActionBarActivity implements ImagenDescargad
 			ArrayList<Capitulo> caps = l.manga.getCapitulos();
 			for (int i = 0; i < caps.size(); i++) {
 				if (caps.get(i).getId() == cid) {
-					if (i  > 0) {
+					if (i > 0) {
 						c1 = caps.get(i - 1);
 					}
 					if (i < caps.size() - 2) {

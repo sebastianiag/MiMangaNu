@@ -4,33 +4,36 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.WindowManager;
 import ar.rulosoft.mimanganu.componentes.Database;
 import ar.rulosoft.mimanganu.componentes.Manga;
 import ar.rulosoft.mimanganu.servers.ServerBase;
 import ar.rulosoft.mimanganu.R;
 
-public class ActivityMisMangas extends ActionBarActivity implements ActionBar.TabListener {
+public class ActivityMisMangas extends ActionBarActivity {
 
 	public static final String SERVER_ID = "server_id";
 	public static final String MANGA_ID = "manga_id";
@@ -39,10 +42,8 @@ public class ActivityMisMangas extends ActionBarActivity implements ActionBar.Ta
 	SectionsPagerAdapter mSectionsPagerAdapter;
 
 	ViewPager mViewPager;
-	ActionBar abar;
 	FragmentMisMangas fragmentMisMangas;
 	FragmentAddManga fragmentAddManga;
-	ActionBar.Tab tabAddManga, tabMisMangas;
 	SharedPreferences pm;
 
 	@Override
@@ -50,8 +51,6 @@ public class ActivityMisMangas extends ActionBarActivity implements ActionBar.Ta
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_mis_mangas);
-		abar = getSupportActionBar();
-		abar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
 		fragmentAddManga = new FragmentAddManga();
@@ -63,20 +62,11 @@ public class ActivityMisMangas extends ActionBarActivity implements ActionBar.Ta
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
-		mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-			@Override
-			public void onPageSelected(int position) {
-				abar.setSelectedNavigationItem(position);
-			}
-		});
-
-		tabMisMangas = abar.newTab().setText(getResources().getString(R.string.mismangas)).setTabListener(this);
-		tabAddManga = abar.newTab().setText(getResources().getString(R.string.masmangas)).setTabListener(this);
-
-		abar.addTab(tabMisMangas);
-		abar.addTab(tabAddManga);
-
 		pm = PreferenceManager.getDefaultSharedPreferences(ActivityMisMangas.this);
+
+		PagerTabStrip pagerTabStrip = (PagerTabStrip) findViewById(R.id.pager_strip);
+		pagerTabStrip.setDrawFullUnderline(true);
+		pagerTabStrip.setTabIndicatorColor(Color.BLACK);
 
 	}
 
@@ -119,24 +109,11 @@ public class ActivityMisMangas extends ActionBarActivity implements ActionBar.Ta
 					}
 			}
 			return true;
-		}else if(id == R.id.licencia){
+		} else if (id == R.id.licencia) {
 			Intent intent = new Intent(this, ActivityLicencia.class);
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-		mViewPager.setCurrentItem(tab.getPosition());
-	}
-
-	@Override
-	public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-	}
-
-	@Override
-	public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 	}
 
 	@Override
@@ -148,7 +125,35 @@ public class ActivityMisMangas extends ActionBarActivity implements ActionBar.Ta
 			super.onBackPressed();
 	}
 
+	@SuppressLint("InlinedApi")
+	public void lockOrintation() {
+		int orientation = ActivityMisMangas.this.getRequestedOrientation();
+		int rotation = ((WindowManager) ActivityMisMangas.this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+		if (android.os.Build.VERSION.SDK_INT > 8) {
+			switch (rotation) {
+			case Surface.ROTATION_0:
+				orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+				break;
+			case Surface.ROTATION_90:
+				orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+				break;
+			case Surface.ROTATION_180:
+				orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+				break;
+			default:
+				orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+				break;
+			}
+			setRequestedOrientation(orientation);
+		} else {
+			setRequestedOrientation(getResources().getConfiguration().orientation);
+		}
+	}
+
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+		private String tabs[] = new String[] { getResources().getString(R.string.mismangas), getResources().getString(R.string.masmangas) };
+
 		List<Fragment> fragments;
 
 		public void add(Fragment f) {
@@ -176,6 +181,11 @@ public class ActivityMisMangas extends ActionBarActivity implements ActionBar.Ta
 			if (position == 0)
 				size = 0.9f;
 			return size;
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return tabs[position];
 		}
 	}
 
@@ -229,8 +239,13 @@ public class ActivityMisMangas extends ActionBarActivity implements ActionBar.Ta
 		protected void onPostExecute(Void result) {
 			if (fragmentMisMangas.adapter != null)
 				fragmentMisMangas.adapter.notifyDataSetChanged();
-			if (progreso != null && progreso.isShowing())
-				progreso.dismiss();
+			if (progreso != null && progreso.isShowing()) {
+				try {
+					progreso.dismiss();
+				} catch (Exception e) {
+
+				}
+			}
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 			super.onPostExecute(result);
 		}

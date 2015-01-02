@@ -120,6 +120,7 @@ public class ImageLoader {
 		//
 	}
 	
+	@SuppressWarnings("deprecation")//Android lollipop automaticamente ignora estas lineas para verciones anteriores es realmente necesario
 	public static Bitmap convertBitmap(String path)   {
 
         Bitmap bitmap=null;

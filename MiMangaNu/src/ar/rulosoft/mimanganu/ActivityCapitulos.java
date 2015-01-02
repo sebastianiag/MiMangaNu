@@ -5,14 +5,14 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,17 +22,16 @@ import ar.rulosoft.mimanganu.componentes.Manga;
 import ar.rulosoft.mimanganu.servers.ServerBase;
 import ar.rulosoft.mimanganu.R;
 
-public class ActivityCapitulos extends ActionBarActivity implements ActionBar.TabListener {
+public class ActivityCapitulos extends ActionBarActivity {
 
 	public static final String CAPITULO_ID = "cap_id";
 
 	SectionsPagerAdapter mSectionsPagerAdapter;
+	PagerTabStrip pagerStrip;
 	FragmentCapitulos fragmentCapitulos;
 	FragmentDetalles fragmentDetalles;
 	FragmentDescarga fragmentDescarga;
-	ActionBar.Tab tabCapitulos, tabDetalle, tabDescarga;
 	ViewPager mViewPager;
-	ActionBar abar;
 	SetCapitulos listenerCapitulos;
 	public Manga manga;
 	int id;
@@ -41,9 +40,7 @@ public class ActivityCapitulos extends ActionBarActivity implements ActionBar.Ta
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_activity_capitulos);
-		abar = getSupportActionBar();
-		abar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
+		
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
 		fragmentCapitulos = new FragmentCapitulos();
@@ -66,21 +63,9 @@ public class ActivityCapitulos extends ActionBarActivity implements ActionBar.Ta
 		}
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-
-		mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-			@Override
-			public void onPageSelected(int position) {
-				abar.setSelectedNavigationItem(position);
-			}
-		});
-
-		tabCapitulos = abar.newTab().setText(getResources().getString(R.string.capitulos)).setTabListener(this);
-		tabDetalle = abar.newTab().setText(getResources().getString(R.string.info)).setTabListener(this);
-		tabDescarga = abar.newTab().setText(getResources().getString(R.string.descargas)).setTabListener(this);
-
-		abar.addTab(tabCapitulos);
-		abar.addTab(tabDetalle);
-		abar.addTab(tabDescarga);
+		PagerTabStrip pagerTabStrip = (PagerTabStrip) findViewById(R.id.pager_strip);
+		pagerTabStrip.setDrawFullUnderline(true);
+		pagerTabStrip.setTabIndicatorColor(Color.BLACK);
 	}
 
 	@Override
@@ -123,21 +108,10 @@ public class ActivityCapitulos extends ActionBarActivity implements ActionBar.Ta
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-		mViewPager.setCurrentItem(tab.getPosition());
-	}
-
-	@Override
-	public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-	}
-
-	@Override
-	public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-	}
-
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 		List<Fragment> fragments;
+		private String tabs[] = new String[] { getResources().getString(R.string.capitulos), getResources().getString(R.string.info),
+				getResources().getString(R.string.descargas) };
 
 		public void add(Fragment f) {
 			fragments.add(f);
@@ -165,6 +139,11 @@ public class ActivityCapitulos extends ActionBarActivity implements ActionBar.Ta
 				size = 0.9f;
 			return size;
 		}
+
+		public CharSequence getPageTitle(int position) {
+			return tabs[position];
+		}
+
 	}
 
 	public interface SetCapitulos {
@@ -174,18 +153,20 @@ public class ActivityCapitulos extends ActionBarActivity implements ActionBar.Ta
 	public class DascargarDemas extends AsyncTask<Capitulo, Void, Void> {
 		private ServerBase server;
 		private Context context;
+
 		@Override
 		protected void onPreExecute() {
 			server = ServerBase.getServer(ActivityCapitulos.this.manga.getServerId());
 			context = getApplicationContext();
 			super.onPreExecute();
 		}
+
 		@Override
 		protected Void doInBackground(Capitulo... capitulos) {
-			for(Capitulo c : capitulos){
+			for (Capitulo c : capitulos) {
 				try {
 					server.iniciarCapitulo(c);
-					Database.updateCapitulo(context , c);	
+					Database.updateCapitulo(context, c);
 					ColaDeDescarga.addCola(c);
 					ColaDeDescarga.iniciarCola(context);
 				} catch (Exception e) {

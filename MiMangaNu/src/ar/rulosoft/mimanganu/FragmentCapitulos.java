@@ -110,7 +110,6 @@ public class FragmentCapitulos extends Fragment implements SetCapitulos {
 			ServerBase s = ServerBase.getServer(manga.getServerId());
 			String ruta = ColaDeDescarga.generarRutaBase(s, manga, c);
 			FragmentMisMangas.DeleteRecursive(new File(ruta));
-			Database.borrarCapitulo(getActivity(), c);
 			c.setPaginas(0);
 			c.setDescargado(false);
 			c.setPagLeidas(0);

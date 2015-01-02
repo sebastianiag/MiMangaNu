@@ -102,7 +102,7 @@ public class CapituloAdapter extends ArrayAdapter<Capitulo> {
 						FragmentMisMangas.DeleteRecursive(new File(ruta));
 						getItem(posicion).setDescargado(false);
 						Database.UpdateCapituloDescargado(activity, c.getId(), 0);
-						Toast.makeText(activity, "Se han borrado las imagenes", Toast.LENGTH_SHORT).show();
+						Toast.makeText(activity, activity.getResources().getString(R.string.borrado_imagenes), Toast.LENGTH_SHORT).show();
 						notifyDataSetChanged();
 						//((ImageView) v).setImageResource(R.drawable.ic_bajar);
 					} else {

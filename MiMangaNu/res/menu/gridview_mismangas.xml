@@ -3,11 +3,11 @@
 
     <item
         android:id="@+id/borrar"
-        android:title="Borrar">
+        android:title="@string/borrar">
     </item>
     <item
         android:id="@+id/noupdate"
-        android:title="No Buscar Actualizaciones">
+        android:title="@string/nobuscarupdate">
     </item>
 
 </menu>

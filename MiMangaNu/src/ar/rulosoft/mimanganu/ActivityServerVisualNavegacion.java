@@ -46,7 +46,7 @@ public class ActivityServerVisualNavegacion extends ActionBarActivity {
 		setContentView(R.layout.activity_server_visual_navegacion);
 		int id = getIntent().getExtras().getInt(ActivityMisMangas.SERVER_ID);
 		s = ServerBase.getServer(id);
-		getSupportActionBar().setTitle(getResources().getString(R.string.listaen) + s.getServerName());
+		getSupportActionBar().setTitle(getResources().getString(R.string.listaen) + " " + s.getServerName());
 		grilla = (GridView) findViewById(R.id.grilla);
 		generos = (Spinner) findViewById(R.id.generos);
 		orden = (Spinner) findViewById(R.id.ordenar_por);

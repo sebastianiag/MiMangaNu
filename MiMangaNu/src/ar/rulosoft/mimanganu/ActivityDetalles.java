@@ -35,7 +35,7 @@ public class ActivityDetalles extends ActionBarActivity {
 		datos = (DatosSerie) findViewById(R.id.datos);
 		cargando = (ProgressBar) findViewById(R.id.cargando);
 		String titulo = getIntent().getExtras().getString(TITULO);
-		getSupportActionBar().setTitle(getResources().getString(R.string.datosde) + titulo);
+		getSupportActionBar().setTitle(getResources().getString(R.string.datosde) + " " + titulo);
 		String path = getIntent().getExtras().getString(PATH);
 		int id = getIntent().getExtras().getInt(ActivityMisMangas.SERVER_ID);
 		m = new Manga(id, titulo, path, false);
@@ -94,9 +94,10 @@ public class ActivityDetalles extends ActionBarActivity {
 
 	}
 
-	public class AgregaManga extends AsyncTask<Manga, Void, Void> {
+	public class AgregaManga extends AsyncTask<Manga, Integer, Void> {
 		ProgressDialog agregando = new ProgressDialog(ActivityDetalles.this);
 		String error = ".";
+		int total = 0;
 
 		@Override
 		protected void onPreExecute() {
@@ -112,8 +113,31 @@ public class ActivityDetalles extends ActionBarActivity {
 			} catch (Exception e) {
 				error = e.getMessage();
 			}
-			Database.addManga(getBaseContext(), params[0]);
+			total = params[0].getCapitulos().size();
+			int mid = Database.addManga(getBaseContext(), params[0]);
+			long initTime = System.currentTimeMillis();
+			for (int i = 0; i < params[0].getCapitulos().size(); i++) {
+				if(System.currentTimeMillis() - initTime > 500){
+					onProgressUpdate(i);
+					initTime = System.currentTimeMillis();
+				}
+				Database.addCapitulo(ActivityDetalles.this, params[0].getCapitulo(i), mid);
+			}
 			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(final Integer... values) {
+			super.onProgressUpdate(values);
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					if(agregando != null){
+						agregando.setMessage(getResources().getString(R.string.agregando) + " " + values[0] + "/" + total);
+					}
+				}
+			});
+			
 		}
 
 		@Override

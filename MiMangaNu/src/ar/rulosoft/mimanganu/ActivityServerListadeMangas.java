@@ -36,7 +36,7 @@ public class ActivityServerListadeMangas extends ActionBarActivity {
 		setContentView(R.layout.activity_server_lista_de_mangas);
 		int id = getIntent().getExtras().getInt(ActivityMisMangas.SERVER_ID);
 		s = ServerBase.getServer(id);
-		getSupportActionBar().setTitle(getResources().getString(R.string.listaen) + s.getServerName());
+		getSupportActionBar().setTitle(getResources().getString(R.string.listaen) + " " + s.getServerName());
 		lista = (ListView) findViewById(R.id.lista_de_mangas);
 		cargando = (ProgressBar) findViewById(R.id.cargando);
 
@@ -80,7 +80,7 @@ public class ActivityServerListadeMangas extends ActionBarActivity {
 	}
 
 	private class CargarMangas extends AsyncTask<Void, Void, List<Manga>> {
-		
+
 		String error = ".";
 
 		@Override
@@ -106,7 +106,7 @@ public class ActivityServerListadeMangas extends ActionBarActivity {
 				adapter = new MangaAdapter(getApplicationContext(), result);
 				lista.setAdapter(adapter);
 			}
-			if(error.length() > 2){
+			if (error.length() > 2) {
 				Toast.makeText(getApplicationContext(), "Error: " + error, Toast.LENGTH_LONG).show();
 			}
 			cargando.setVisibility(ProgressBar.INVISIBLE);

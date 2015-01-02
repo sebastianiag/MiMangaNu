@@ -7,19 +7,19 @@
         android:id="@+id/buscarActualizaciones"
         android:icon="@drawable/ic_action_av_reload"
         android:orderInCategory="100"
-        android:title="Buscar Nuevos"
+        android:title="@string/buscarnuevos"
         app:showAsAction="always"/>
     <item
         android:icon="@drawable/ic_action_core_overflow"
         android:orderInCategory="100"
-        android:title="Configurar"
+        android:title="@string/mas"
         app:showAsAction="always">
         <menu>
             <group android:checkableBehavior="all" >
                 <item
                     android:id="@+id/action_mostrar_en_galeria"
                     android:orderInCategory="100"
-                    android:title="Esconder en galeria"/>
+                    android:title="@string/escondergaleria"/>
             </group>
             <item android:id="@+id/licencia" 
                 android:title="@string/licencia"/>

@@ -1,39 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">MiMangaNu</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_server_listade_mangas">Lista de Mangas</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_activity_detalles">ActivityDetalles</string>
-    <string name="title_activity_activity_capitulos">Capitulos</string>
-    <string name="title_activity_activity_lector">ActivityLector</string>
-    <string name="title_activity_server_visual_navegacion">Mangas en</string>
-    <string name="title_activity_activity_resultado_de_busqueda">Resultado de Búsqueda</string>
-    <string name="action_ajustar_a">Ajustar a</string>
-    <string name="cargando">Cargando...</string>
-    <string name="capitulos">Capítulos</string>
-    <string name="info">Info</string>
-    <string name="descargas">Descargas</string>
-    <string name="datosde">Datos de</string>
-    <string name="agregando">Agregando a Base de Datos</string>
-    <string name="agregado">Manga Agregado</string>
-    <string name="iniciando">Iniciando Manga</string>
-    <string name="mismangas">Mis Mangas</string>
-    <string name="masmangas">Mas Mangas</string>
-    <string name="buscandonuevo">Buscando Nuevos Mangas de</string>
-    <string name="busquedanores">La Búsqueda no produjo resultados</string>
-    <string name="listaen">Listado de Mangas en </string>
-    <string name="buscarupdates">Buscar Actualizaciones</string>
-    <string name="nobuscarupdate">No Buscar Actulaizaciones</string>
-    <string name="licencia">Licencia</string>
-    <string name="esconder">Escoder de galeria</string>
-    <string name="descargarestantes">Descargar restantes</string>
+    <string name="app_name">Mi Manga Nu</string>
+    <string name="title_activity_server_listade_mangas">List of Manga</string>
+    <string name="title_activity_activity_detalles">Details</string>
+    <string name="title_activity_activity_capitulos">Chapters</string>
+    <string name="title_activity_activity_lector">Reader</string>
+    <string name="title_activity_server_visual_navegacion">Mangas in</string>
+    <string name="title_activity_activity_resultado_de_busqueda">Search result</string>
+    <string name="action_ajustar_a">Fit to</string>
+    <string name="cargando">Loading&#8230;</string>
+    <string name="capitulos">Chapters</string>
+    <string name="info">Details</string>
+    <string name="descargas">Downloads</string>
+    <string name="datosde">Details</string>
+    <string name="agregando">Adding to database</string>
+    <string name="agregado">Manga added</string>
+    <string name="iniciando">Loading number of pages</string>
+    <string name="mismangas">My Mangas</string>
+    <string name="masmangas">Add Mangas</string>
+    <string name="buscandonuevo">Searching for updates </string>
+    <string name="busquedanores">The search returned no results</string>
+    <string name="listaen">List of Mangas from</string>
+    <string name="buscarupdates">Search for updates</string>
+    <string name="nobuscarupdate">Don,t search for updates</string>
+    <string name="licencia">Licence</string>
+    <string name="esconder">Hide from gallery</string>
+    <string name="descargarestantes">Download remaining</string>
+    <string name="borrado_imagenes">Images deleted</string>
+    <string name="agregar">Add</string>
+    <string name="borrar">Delete</string>
+    <string name="borrarcap">Delete chapter</string>
+    <string name="resetcap">Reset chapter</string>
+    <string name="buscarnuevos">Search for updates</string>
+    <string name="mas">More</string>
+    <string name="escondergaleria">Hide from gallery</string>
+    <string name="filtrar">Filter</string>
+    <string name="vercomolista">View as List</string>
     <string name="mit">The MIT License (MIT)
-        Copyright (c) 2014 rulosoft (Raul Haag)
+        Copyright &#169; 2014 rulosoft (Raul Haag)
         Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.

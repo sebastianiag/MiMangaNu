@@ -71,7 +71,7 @@ public class Database extends SQLiteOpenHelper {
 		return localDB;
 	}
 
-	public static void addManga(Context c, Manga m) {
+	public static int  addManga(Context c, Manga m) {
 		ContentValues cv = new ContentValues();
 		cv.put(COL_NOMBRE, m.titulo);
 		cv.put(COL_PATH, m.path);
@@ -86,9 +86,7 @@ public class Database extends SQLiteOpenHelper {
 			cv.put(COL_BUSCAR, 0);
 
 		int mid = (int) getDatabase(c).insert(TABLE_MANGA, null, cv);
-		for (int i = 0; i < m.capitulos.size(); i++) {
-			addCapitulo(c, m.capitulos.get(i), mid);
-		}
+		return mid;
 	}
 
 	public static void updateMangaLeido(Context c, int mid) {

@@ -22,7 +22,8 @@ public abstract class ServerBase {
 	public static final int HEAVENMANGACOM = 8;
 	public static final int STARKANACOM = 9;
 	public static final int ESNINEMANGA = 10;
-	
+	public static final int LECTUREENLIGNE = 11;
+
 	private String serverName;
 	private int icon;
 	private int bandera;
@@ -62,6 +63,9 @@ public abstract class ServerBase {
 		case ESNINEMANGA:
 			s = new EsNineMangaCom();
 			break;
+		case LECTUREENLIGNE:
+			s = new LectureEnLigne();
+			break;
 		default:
 			break;
 		}
@@ -70,7 +74,8 @@ public abstract class ServerBase {
 
 	// server
 	public abstract ArrayList<Manga> getMangas() throws Exception;
-	public abstract ArrayList<Manga> getBusqueda(String termino)throws Exception;
+
+	public abstract ArrayList<Manga> getBusqueda(String termino) throws Exception;
 
 	// capitulos
 	public abstract void cargarCapitulos(Manga m) throws Exception;
@@ -83,7 +88,6 @@ public abstract class ServerBase {
 	public abstract String getImagen(Capitulo c, int pagina) throws Exception;
 
 	public abstract void iniciarCapitulo(Capitulo c) throws Exception;
-	
 
 	// server visual
 	public abstract ArrayList<Manga> getMangasFiltered(int categoria, int ordentipo, int pagina) throws Exception;
@@ -91,40 +95,40 @@ public abstract class ServerBase {
 	public abstract String[] getCategorias();
 
 	public abstract String[] getOrdenes();
-	
+
 	public abstract boolean tieneListado();
-	
-	public int buscarNuevosCapitulos(Manga manga, Context context)throws Exception{
+
+	public int buscarNuevosCapitulos(Manga manga, Context context) throws Exception {
 		int returnValue = 0;
 		Manga mangaDb = Database.getFullManga(context, manga.getId());
-			this.cargarCapitulos(manga);
-			int diff = manga.getCapitulos().size() - mangaDb.getCapitulos().size();
-			if (diff > 0) {
-				int diffEncontradas = 0;
-				for (int j = manga.getCapitulos().size() - 1; j > 0 ; j--) {
-					boolean flag = true;
-					for (int k = 0; k < mangaDb.getCapitulos().size(); k++) {
-						if (manga.getCapitulos().get(j).getPath().contains(mangaDb.getCapitulos().get(k).getPath())) {
-							mangaDb.getCapitulos().remove(k);
-							flag = false;
-							break;
-						}
-					}
-					if (flag) {
-						manga.getCapitulo(j).setEstadoLectura(Capitulo.NUEVO);
-						Database.addCapitulo(context, manga.getCapitulo(j), manga.getId());
-						Log.e("Nuevo Manga", manga.getCapitulo(j).getTitulo());
-						diffEncontradas++;
-						if (diffEncontradas == diff) {
-							Database.updateMangaNuevos(context, mangaDb, diff);
-							returnValue = diff;
-							break;
-						}
+		this.cargarCapitulos(manga);
+		int diff = manga.getCapitulos().size() - mangaDb.getCapitulos().size();
+		if (diff > 0) {
+			int diffEncontradas = 0;
+			for (int j = manga.getCapitulos().size() - 1; j > 0; j--) {
+				boolean flag = true;
+				for (int k = 0; k < mangaDb.getCapitulos().size(); k++) {
+					if (manga.getCapitulos().get(j).getPath().contains(mangaDb.getCapitulos().get(k).getPath())) {
+						mangaDb.getCapitulos().remove(k);
+						flag = false;
+						break;
 					}
 				}
-			} else if (diff < 0) {
-				
+				if (flag) {
+					manga.getCapitulo(j).setEstadoLectura(Capitulo.NUEVO);
+					Database.addCapitulo(context, manga.getCapitulo(j), manga.getId());
+					Log.e("Nuevo Manga", manga.getCapitulo(j).getTitulo());
+					diffEncontradas++;
+					if (diffEncontradas == diff) {
+						Database.updateMangaNuevos(context, mangaDb, diff);
+						returnValue = diff;
+						break;
+					}
+				}
 			}
+		} else if (diff < 0) {
+
+		}
 		return returnValue;
 	}
 
@@ -168,8 +172,8 @@ public abstract class ServerBase {
 		}
 		throw new Exception(errorMsj);
 	}
-	
-	public boolean tieneNavegacionVisual(){
+
+	public boolean tieneNavegacionVisual() {
 		return true;
 	}
 

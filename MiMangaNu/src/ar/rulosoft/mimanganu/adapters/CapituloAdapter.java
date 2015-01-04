@@ -121,7 +121,7 @@ public class CapituloAdapter extends ArrayAdapter<Capitulo> {
 
 		@Override
 		protected void onPreExecute() {
-			asyncdialog.setMessage("Iniciando Manga");
+			asyncdialog.setMessage(activity.getResources().getString(R.string.iniciando));
 			asyncdialog.show();
 			super.onPreExecute();
 		}
@@ -157,7 +157,7 @@ public class CapituloAdapter extends ArrayAdapter<Capitulo> {
 				Database.updateCapitulo(activity, result);
 				ColaDeDescarga.addCola(result);
 				ColaDeDescarga.iniciarCola(activity);
-				Toast.makeText(activity, "Manga agregado a descarga", Toast.LENGTH_LONG).show();
+				Toast.makeText(activity, activity.getResources().getString(R.string.iniciando), Toast.LENGTH_LONG).show();
 			}
 			super.onPostExecute(result);
 		}

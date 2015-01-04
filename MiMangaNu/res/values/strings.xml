@@ -17,6 +17,7 @@
     <string name="agregando">Adding to database</string>
     <string name="agregado">Manga added</string>
     <string name="iniciando">Loading number of pages</string>
+    <string name="agregadodescarga">Manga added to downloads</string>
     <string name="mismangas">My Mangas</string>
     <string name="masmangas">Add Mangas</string>
     <string name="buscandonuevo">Searching for updates </string>

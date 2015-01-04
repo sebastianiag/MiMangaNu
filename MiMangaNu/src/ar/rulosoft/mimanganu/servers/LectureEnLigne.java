@@ -74,7 +74,7 @@ public class LectureEnLigne extends ServerBase {
 	@Override
 	public void iniciarCapitulo(Capitulo c) throws Exception {
 		String data = new Navegador().get(c.getPath());
-		String paginas = getFirstMacth("\"\\d+\">(\\d+)</option>	</select>", data, "Error: no se pudo obtener el numero de paginas");
+		String paginas = getFirstMacth("\"\\d+\">(\\d+)</option>	+</select>[^<]", data, "Error: no se pudo obtener el numero de paginas");
 		c.setPaginas(Integer.parseInt(paginas));
 	}
 

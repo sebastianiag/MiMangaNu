@@ -137,6 +137,7 @@ public abstract class ServerBase {
 			
 			if(simpleList.size() > 0){
 				Database.updateMangaLeido(context, mangaDb.getId());
+				Database.updateMangaNuevos(context, mangaDb, diff);		
 			}
 			
 			returnValue = simpleList.size();

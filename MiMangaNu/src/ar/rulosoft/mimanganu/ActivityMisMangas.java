@@ -4,11 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +21,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.view.ContextMenu;
@@ -126,28 +129,37 @@ public class ActivityMisMangas extends ActionBarActivity {
 	}
 
 	@SuppressLint("InlinedApi")
-	public void lockOrintation() {
-		int orientation = ActivityMisMangas.this.getRequestedOrientation();
-		int rotation = ((WindowManager) ActivityMisMangas.this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-		if (android.os.Build.VERSION.SDK_INT > 8) {
-			switch (rotation) {
-			case Surface.ROTATION_0:
-				orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-				break;
-			case Surface.ROTATION_90:
-				orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-				break;
-			case Surface.ROTATION_180:
-				orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
-				break;
-			default:
-				orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
-				break;
-			}
-			setRequestedOrientation(orientation);
-		} else {
-			setRequestedOrientation(getResources().getConfiguration().orientation);
+	public static boolean lockOrintation(Activity activity) {
+		boolean locked = false;
+
+		if (Settings.System.getInt(activity.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1) != 1) {
+			locked = true;
 		}
+
+		if (!locked) {
+			int orientation = activity.getRequestedOrientation();
+			int rotation = ((WindowManager) activity.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+			if (android.os.Build.VERSION.SDK_INT > 8) {
+				switch (rotation) {
+				case Surface.ROTATION_0:
+					orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+					break;
+				case Surface.ROTATION_90:
+					orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+					break;
+				case Surface.ROTATION_180:
+					orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+					break;
+				default:
+					orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+					break;
+				}
+				activity.setRequestedOrientation(orientation);
+			} else {
+				activity.setRequestedOrientation(activity.getResources().getConfiguration().orientation);
+			}
+		}
+		return locked;
 	}
 
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -192,10 +204,11 @@ public class ActivityMisMangas extends ActionBarActivity {
 	public class BuscarNuevo extends AsyncTask<Void, String, Void> {
 
 		ProgressDialog progreso = new ProgressDialog(ActivityMisMangas.this);
+		boolean locked = false;
 
 		@Override
 		protected void onPreExecute() {
-			setRequestedOrientation(getResources().getConfiguration().orientation);
+			locked = lockOrintation(ActivityMisMangas.this);
 			progreso.setTitle(getResources().getString(R.string.buscandonuevo));
 			progreso.show();
 			super.onPreExecute();
@@ -246,8 +259,9 @@ public class ActivityMisMangas extends ActionBarActivity {
 
 				}
 			}
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-			super.onPostExecute(result);
+			if (!locked)
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+			//super.onPostExecute(result);
 		}
 
 	}

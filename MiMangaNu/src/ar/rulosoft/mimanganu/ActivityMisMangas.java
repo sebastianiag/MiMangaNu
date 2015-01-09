@@ -86,7 +86,8 @@ public class ActivityMisMangas extends ActionBarActivity {
 
 		int id = item.getItemId();
 		if (id == R.id.buscarActualizaciones) {
-			new BuscarNuevo().setActivity(ActivityMisMangas.this).execute();
+			if (!BuscarNuevo.running)
+				new BuscarNuevo().setActivity(ActivityMisMangas.this).execute();
 			return true;
 		} else if (id == R.id.action_mostrar_en_galeria) {
 			File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/MiMangaNu/", ".nomedia");
@@ -167,11 +168,6 @@ public class ActivityMisMangas extends ActionBarActivity {
 		static boolean running = false;
 		static BuscarNuevo actual = null;
 		String msg;
-		
-		public BuscarNuevo setActivity(Activity activity) {
-			this.activity = activity;
-			return this;
-		}
 
 		public static void onActivityPaused() {
 			if (running && actual.progreso != null)
@@ -181,9 +177,15 @@ public class ActivityMisMangas extends ActionBarActivity {
 		public static void onActivityResumed(Activity actvt) {
 			if (running && actual != null) {
 				actual.progreso = new ProgressDialog(actvt);
+				actual.progreso.setCancelable(false);
 				actual.progreso.setMessage(actual.msg);
 				actual.progreso.show();
 			}
+		}
+
+		public BuscarNuevo setActivity(Activity activity) {
+			this.activity = activity;
+			return this;
 		}
 
 		@Override
@@ -191,6 +193,7 @@ public class ActivityMisMangas extends ActionBarActivity {
 			running = true;
 			actual = this;
 			progreso = new ProgressDialog(activity);
+			progreso.setCancelable(false);
 			msg = activity.getResources().getString(R.string.buscandonuevo);
 			progreso.setTitle(msg);
 			progreso.show();

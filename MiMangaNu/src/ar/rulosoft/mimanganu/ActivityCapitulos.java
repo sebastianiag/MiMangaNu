@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -40,7 +41,7 @@ public class ActivityCapitulos extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_activity_capitulos);
-		
+
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
 		fragmentCapitulos = new FragmentCapitulos();
@@ -76,7 +77,15 @@ public class ActivityCapitulos extends ActionBarActivity {
 		fragmentDetalles.m = manga;
 		Database.updateMangaLeido(this, manga.getId());
 		Database.updateMangaNuevos(ActivityCapitulos.this, manga, -100);
+		BuscarNuevo.onActivityResumed(ActivityCapitulos.this);
 	}
+	
+	@Override
+	protected void onPause() {
+		BuscarNuevo.onActivityPaused();
+		super.onPause();
+	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -95,15 +104,21 @@ public class ActivityCapitulos extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		int id = item.getItemId();
-		if (id == R.id.descargar_restantes) {
+		if (id == R.id.action_descargar_restantes) {
 			ArrayList<Capitulo> capitulos = Database.getCapitulos(ActivityCapitulos.this, ActivityCapitulos.this.id, Database.COL_CAP_DESCARGADO + " != 1");
 			Capitulo[] arr = new Capitulo[capitulos.size()];
 			arr = capitulos.toArray(arr);
 			new DascargarDemas().execute(arr);
-
 			// TODO mecanimos
-
 			return true;
+		} else if (id == R.id.action_marcar_todo_leido) {
+			Database.marcarTodoComoLeido(ActivityCapitulos.this, this.id);
+			fragmentCapitulos.onCalpitulosCargados(ActivityCapitulos.this, Database.getCapitulos(ActivityCapitulos.this, this.id));
+		} else if (id == R.id.action_marcar_todo_no_leido) {
+			Database.marcarTodoComoNoLeido(ActivityCapitulos.this, this.id);
+			fragmentCapitulos.onCalpitulosCargados(ActivityCapitulos.this, Database.getCapitulos(ActivityCapitulos.this, this.id));
+		} else if (id == R.id.action_buscarnuevos) {
+			new BuscarNuevo().setActivity(ActivityCapitulos.this).execute(manga);
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -177,5 +192,92 @@ public class ActivityCapitulos extends ActionBarActivity {
 			return null;
 		}
 
+	}
+	
+public static class BuscarNuevo extends AsyncTask<Manga, String, Integer> {
+		
+		Activity activity;
+		ProgressDialog progreso;
+		static boolean running = false;
+		static BuscarNuevo actual = null;
+		int mangaId = 0;
+		String msg;
+
+		public static void onActivityPaused() {
+			if (running && actual.progreso != null)
+				actual.progreso.dismiss();
+		}
+
+		public static void onActivityResumed(Activity actvt) {
+			if (running && actual != null) {
+				actual.progreso = new ProgressDialog(actvt);
+				actual.progreso.setCancelable(false);
+				actual.progreso.setMessage(actual.msg);
+				actual.progreso.show();
+			}
+		}
+
+		public BuscarNuevo setActivity(Activity activity) {
+			this.activity = activity;
+			return this;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			running = true;
+			actual = this;
+			progreso = new ProgressDialog(activity);
+			progreso.setCancelable(false);
+			msg = activity.getResources().getString(R.string.buscandonuevo);
+			progreso.setTitle(msg);
+			progreso.show();
+			super.onPreExecute();
+		}
+
+		@Override
+		protected void onProgressUpdate(String... values) {
+			final String s = values[0];
+			msg = s;
+			activity.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					progreso.setMessage(s);
+				}
+			});
+			super.onProgressUpdate(values);
+		}
+
+		@Override
+		protected Integer doInBackground(Manga... params) {
+			int result = 0;
+			Database.removerCapitulosHuerfanos(activity);
+				ServerBase s = ServerBase.getServer(params[0].getServerId());
+				mangaId = params[0].getId();
+				try {
+					onProgressUpdate(params[0].getTitulo());
+					params[0].setCapitulos(null);
+					s.cargarCapitulos(params[0]);
+					int diff = s.buscarNuevosCapitulos(params[0], activity);
+					result += diff;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			if(((ActivityCapitulos)activity).fragmentCapitulos != null && result > 0)
+				((ActivityCapitulos)activity).fragmentCapitulos.onCalpitulosCargados(activity, Database.getCapitulos(activity, mangaId));;
+			if (progreso != null && progreso.isShowing()) {
+				try {
+					progreso.dismiss();
+				} catch (Exception e) {
+
+				}
+			}
+			running = false;
+			actual = null;
+		}
 	}
 }

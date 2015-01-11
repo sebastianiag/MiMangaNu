@@ -16,7 +16,7 @@ public class EsMangaHere extends ServerBase {
 	private static final String PATRON_PORTADA = "<img src=\"(.+?cover.+?)\"";
 	private static final String PATRON_SINOPSIS = "<p id=\"show\" style=\"display:none;\">(.+?)&nbsp;<a";
 	private static final String PATTERN_CAPITULOS = "href=\"(/manga.+?)\".+?>(.+?)</a>";
-	private static final String PATRON_SEG_CAP = "<div class=\"chapters_points clearfix\">(.+?)</ul></div></div><ul";
+	private static final String PATRON_SEG_CAP = "<div class=\"detail_list\">(.+?)</ul></div></div><ul";
 	private static final String PATRON_CAPS_VIS = "<img src=\"(.+?)\" alt=\"(.+?)\".+?<a href=\"(.+?)\"";
 
 	private static final String PATRON_LAST = ">(\\d+)</option>[^<]+?</select>";

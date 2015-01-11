@@ -1,43 +1,47 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Mi Manga Nu</string>
-  <string name="title_activity_server_listade_mangas">Liste des Mangas</string>
-  <string name="title_activity_activity_detalles">Détails</string>
-  <string name="title_activity_activity_capitulos">Chapitres</string>
-  <string name="title_activity_activity_lector">Lecteur</string>
-  <string name="title_activity_server_visual_navegacion">Mangas dans</string>
-  <string name="title_activity_activity_resultado_de_busqueda">Résultat de la recherche</string>
-  <string name="action_ajustar_a">Adapter</string>
-  <string name="cargando">Chargement&#8230;</string>
-  <string name="capitulos">Chapitres</string>
-  <string name="info">Détails</string>
-  <string name="descargas">Téléchargements</string>
-  <string name="datosde">Détails</string>
-  <string name="agregando">Ajout de la base de données</string>
-  <string name="agregado">Manga ajouté</string>
-  <string name="iniciando">Chargement des pages</string>
-  <string name="agregadodescarga">Manga Ajouté à télécharger</string>
-  <string name="mismangas">Mes Mangas</string>
-  <string name="masmangas">Ajouter Mangas</string>
-  <string name="buscandonuevo">Recherche de mises à jour</string>
-  <string name="busquedanores">La recherche n\'a donné aucun résultat</string>
-  <string name="listaen">Liste des Mangas depuis</string>
-  <string name="buscarupdates">Rechercher des mises à jour</string>
-  <string name="nobuscarupdate">Ne pas rechercher les mises à jour</string>
-  <string name="licencia">Licence</string>
-  <string name="esconder">Masquer dans la galerie</string>
-  <string name="descargarestantes">Téléchargement restant</string>
-  <string name="borrado_imagenes">Images supprimées</string>
-  <string name="agregar">Ajouter</string>
-  <string name="borrar">Supprimer</string>
-  <string name="borrarcap">Chapitre Supprimé</string>
-  <string name="resetcap">Chapitre Réinitialisé</string>
-  <string name="buscarnuevos">Recherche des mises à jour</string>
-  <string name="mas">Plus</string>
-  <string name="escondergaleria">Masquer dans la galerie</string>
-  <string name="filtrar">Filtre</string>
-  <string name="vercomolista">Vue en liste</string>
-  <string name="mit">The MIT License (MIT)
+
+    <string name="app_name">Mi Manga Nu</string>
+    <string name="title_activity_server_listade_mangas">Liste des Mangas</string>
+    <string name="title_activity_activity_detalles">Détails</string>
+    <string name="title_activity_activity_capitulos">Chapitres</string>
+    <string name="title_activity_activity_lector">Lecteur</string>
+    <string name="title_activity_server_visual_navegacion">Mangas dans</string>
+    <string name="title_activity_activity_resultado_de_busqueda">Résultat de la recherche</string>
+    <string name="action_ajustar_a">Adapter</string>
+    <string name="cargando">Chargement&#8230;</string>
+    <string name="capitulos">Chapitres</string>
+    <string name="info">Détails</string>
+    <string name="descargas">Téléchargements</string>
+    <string name="datosde">Détails</string>
+    <string name="agregando">Ajout de la base de données</string>
+    <string name="agregado">Manga ajouté</string>
+    <string name="iniciando">Chargement des pages</string>
+    <string name="agregadodescarga">Manga Ajouté à télécharger</string>
+    <string name="mismangas">Mes Mangas</string>
+    <string name="masmangas">Ajouter Mangas</string>
+    <string name="buscandonuevo">Recherche de mises à jour</string>
+    <string name="busquedanores">La recherche n\'a donné aucun résultat</string>
+    <string name="listaen">Liste des Mangas depuis</string>
+    <string name="buscarupdates">Rechercher des mises à jour</string>
+    <string name="nobuscarupdate">Ne pas rechercher les mises à jour</string>
+    <string name="licencia">Licence</string>
+    <string name="esconder">Masquer dans la galerie</string>
+    <string name="descargarestantes">Téléchargement restant</string>
+    <string name="borrado_imagenes">Images supprimées</string>
+    <string name="agregar">Ajouter</string>
+    <string name="borrar">Supprimer</string>
+    <string name="borrarcap">Chapitre Supprimé</string>
+    <string name="resetcap">Chapitre Réinitialisé</string>
+    <string name="buscarnuevos">Recherche des mises à jour</string>
+    <string name="mas">Plus</string>
+    <string name="escondergaleria">Masquer dans la galerie</string>
+    <string name="filtrar">Filtre</string>
+    <string name="vercomolista">Vue en liste</string>
+    <string name="esconder_leido">Cacher déjà lu</string>
+    <string name="macartodoleido">Marquer tout comme lu</string>
+    <string name="macartodonoleido">Marquer tout comme non lu</string>
+    <string name="mit">The MIT License (MIT)
         Copyright © 2014 rulosoft (Raul Haag)
         Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -45,6 +49,6 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-Thanks to sephiroth74 for the library ImageViewTouch and  thest1 for LazyList.
-</string>
+Thanks to sephiroth74 for the library ImageViewTouch and  thest1 for LazyList.</string>
+
 </resources>

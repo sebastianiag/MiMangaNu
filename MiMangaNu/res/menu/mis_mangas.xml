@@ -4,7 +4,7 @@
     tools:context="ar.rulosoft.mimanganu.MisMangas" >
 
     <item
-        android:id="@+id/buscarActualizaciones"
+        android:id="@+id/action_buscarnuevos"
         android:icon="@drawable/ic_action_av_reload"
         android:orderInCategory="100"
         android:title="@string/buscarnuevos"
@@ -21,7 +21,16 @@
                     android:orderInCategory="100"
                     android:title="@string/escondergaleria"/>
             </group>
-            <item android:id="@+id/licencia" 
+            <group android:checkableBehavior="all" >
+                <item
+                    android:id="@+id/action_esconder_leidos"
+                    android:orderInCategory="100"
+                    android:title="@string/esconder_leido"/>
+            </group>
+
+            <item
+                android:id="@+id/licencia"
+                android:orderInCategory="100"
                 android:title="@string/licencia"/>
         </menu>
     </item>

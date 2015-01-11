@@ -3,6 +3,9 @@
 
 Lector Manga online 
 
+Cambios 1.09
+Agregado lo pedido #15 asi como la opcion de marcar todo como (no) leido y búsqueda de actulizaciones individuales desde la lista de capitulos.
+
 Cambios 1.08
 Reescrito el sistema de busqueda de actualizaciones viendo si se pudo corregir el issue #4 y resuelto lo del #15.
 

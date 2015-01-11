@@ -71,7 +71,7 @@ public class Database extends SQLiteOpenHelper {
 		return localDB;
 	}
 
-	public static int  addManga(Context c, Manga m) {
+	public static int addManga(Context c, Manga m) {
 		ContentValues cv = new ContentValues();
 		cv.put(COL_NOMBRE, m.titulo);
 		cv.put(COL_PATH, m.path);
@@ -158,10 +158,14 @@ public class Database extends SQLiteOpenHelper {
 	}
 
 	public static ArrayList<Manga> getMangasCondotion(Context c, String condition) {
-		ArrayList<Manga> mangas = new ArrayList<Manga>();
 		Cursor cursor = getDatabase(c).query(TABLE_MANGA,
-				new String[] { COL_ID, COL_NOMBRE, COL_PATH, COL_IMAGE, COL_SINOPSIS, COL_LAST_REAS, COL_SERVER_ID, COL_NUEVOS, COL_BUSCAR, COL_LAST_INDEX }, condition, null,
-				null, null, COL_LAST_REAS + " DESC");
+				new String[] { COL_ID, COL_NOMBRE, COL_PATH, COL_IMAGE, COL_SINOPSIS, COL_LAST_REAS, COL_SERVER_ID, COL_NUEVOS, COL_BUSCAR, COL_LAST_INDEX },
+				condition, null, null, null, COL_LAST_REAS + " DESC");
+		return getMangasFromCursor(cursor);
+	}
+
+	public static ArrayList<Manga> getMangasFromCursor(Cursor cursor) {
+		ArrayList<Manga> mangas = new ArrayList<Manga>();
 		if (cursor.moveToFirst()) {
 			int colId = cursor.getColumnIndex(COL_ID);
 			int colServerId = cursor.getColumnIndex(COL_SERVER_ID);
@@ -203,7 +207,7 @@ public class Database extends SQLiteOpenHelper {
 	public static ArrayList<Capitulo> getCapitulos(Context c, int MangaId) {
 		return getCapitulos(c, MangaId, "1");
 	}
-	
+
 	public static ArrayList<Capitulo> getCapitulos(Context c, int MangaId, String condicion) {
 		ArrayList<Capitulo> capitulos = new ArrayList<Capitulo>();
 		Cursor cursor = getDatabase(c).query(
@@ -307,6 +311,18 @@ public class Database extends SQLiteOpenHelper {
 		}
 		cursor.close();
 		return manga;
+	}
+	
+	public static void marcarTodoComoLeido(Context c, int mangaId){
+		ContentValues cv = new ContentValues();
+		cv.put(COL_CAP_ESTADO, Capitulo.LEIDO);
+		getDatabase(c).update(TABLE_CAPITULOS, cv, COL_CAP_ID_MANGA + " = " + mangaId, null);
+	}
+	
+	public static void marcarTodoComoNoLeido(Context c, int mangaId){
+		ContentValues cv = new ContentValues();
+		cv.put(COL_CAP_ESTADO, Capitulo.SIN_LEER);
+		getDatabase(c).update(TABLE_CAPITULOS, cv, COL_CAP_ID_MANGA + " = " + mangaId, null);
 	}
 
 	public static void removerCapitulosHuerfanos(Context c) {

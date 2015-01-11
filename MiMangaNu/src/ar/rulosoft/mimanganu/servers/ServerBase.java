@@ -132,6 +132,7 @@ public abstract class ServerBase {
 			}
 			for(Capitulo c: simpleList){
 				c.setMangaID(mangaDb.getId());
+				c.setEstadoLectura(Capitulo.NUEVO);
 				Database.addCapitulo(context, c, mangaDb.getId());
 			}
 			

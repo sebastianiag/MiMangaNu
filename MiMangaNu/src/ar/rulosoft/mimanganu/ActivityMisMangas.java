@@ -71,8 +71,11 @@ public class ActivityMisMangas extends ActionBarActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.mis_mangas, menu);
 		MenuItem menuMostrarGaleria = (MenuItem) menu.findItem(R.id.action_mostrar_en_galeria);
+		MenuItem menuEsconderSinLectura = (MenuItem) menu.findItem(R.id.action_esconder_leidos);
 		boolean checked = pm.getInt(MOSTRAR_EN_GALERIA, 0) > 0;
+		boolean checkedLeidos = pm.getInt(FragmentMisMangas.SELECTOR_MODO, FragmentMisMangas.MODO_ULTIMA_LECTURA_Y_NUEVOS) > 0;
 		menuMostrarGaleria.setChecked(checked);
+		menuEsconderSinLectura.setChecked(checkedLeidos);	
 		return true;
 	}
 
@@ -85,7 +88,7 @@ public class ActivityMisMangas extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		int id = item.getItemId();
-		if (id == R.id.buscarActualizaciones) {
+		if (id == R.id.action_buscarnuevos) {
 			if (!BuscarNuevo.running)
 				new BuscarNuevo().setActivity(ActivityMisMangas.this).execute();
 			return true;
@@ -110,6 +113,15 @@ public class ActivityMisMangas extends ActionBarActivity {
 		} else if (id == R.id.licencia) {
 			Intent intent = new Intent(this, ActivityLicencia.class);
 			startActivity(intent);
+		} else if(id == R.id.action_esconder_leidos){
+			if (item.isChecked()){
+				item.setChecked(false);
+				pm.edit().putInt(FragmentMisMangas.SELECTOR_MODO, FragmentMisMangas.MODO_ULTIMA_LECTURA_Y_NUEVOS).commit();
+			}else{
+				item.setChecked(true);
+				pm.edit().putInt(FragmentMisMangas.SELECTOR_MODO, FragmentMisMangas.MODO_SIN_LEER).commit();
+			}
+			fragmentMisMangas.cargarMangas();
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -162,7 +174,8 @@ public class ActivityMisMangas extends ActionBarActivity {
 		}
 	}
 
-	public static class BuscarNuevo extends AsyncTask<Void, String, Void> {
+	public static class BuscarNuevo extends AsyncTask<Void, String, Integer> {
+		
 		Activity activity;
 		ProgressDialog progreso;
 		static boolean running = false;
@@ -214,8 +227,9 @@ public class ActivityMisMangas extends ActionBarActivity {
 		}
 
 		@Override
-		protected Void doInBackground(Void... params) {
+		protected Integer doInBackground(Void... params) {
 			ArrayList<Manga> mangas = Database.getMangasForUpdates(activity);
+			int result = 0;
 			Database.removerCapitulosHuerfanos(activity);
 			for (int i = 0; i < mangas.size(); i++) {
 				Manga manga = mangas.get(i);
@@ -224,20 +238,18 @@ public class ActivityMisMangas extends ActionBarActivity {
 					onProgressUpdate(manga.getTitulo());
 					s.cargarCapitulos(manga);
 					int diff = s.buscarNuevosCapitulos(manga, activity);
-					if (0 < diff && ((ActivityMisMangas) activity).fragmentMisMangas.adapter != null) {
-						((ActivityMisMangas) activity).fragmentMisMangas.adapter.getItem(i).setNuevos(diff);
-					}
+					result += diff;
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-			return null;
+			return result;
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
-			if (((ActivityMisMangas) activity).fragmentMisMangas.adapter != null)
-				((ActivityMisMangas) activity).fragmentMisMangas.adapter.notifyDataSetChanged();
+		protected void onPostExecute(Integer result) {
+			if(((ActivityMisMangas) activity).fragmentMisMangas != null && result > 0)
+				((ActivityMisMangas) activity).fragmentMisMangas.cargarMangas();
 			if (progreso != null && progreso.isShowing()) {
 				try {
 					progreso.dismiss();

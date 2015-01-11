@@ -1,9 +1,11 @@
 package ar.rulosoft.mimanganu;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.view.ContextMenu;
@@ -25,6 +27,11 @@ import ar.rulosoft.mimanganu.servers.ServerBase;
 import ar.rulosoft.mimanganu.R;
 
 public class FragmentMisMangas extends Fragment {
+	
+	public static final String SELECTOR_MODO = "selector_modo";
+	public static final int MODO_ULTIMA_LECTURA_Y_NUEVOS = 0;
+	public static final int MODO_SIN_LEER = 1;
+
 
 	GridView grilla;
 	MisMangasAdaptes adapter;
@@ -112,9 +119,25 @@ public class FragmentMisMangas extends Fragment {
 
 	@Override
 	public void onResume() {
-		adapter = new MisMangasAdaptes(getActivity(), Database.getMangas(getActivity()));
-		grilla.setAdapter(adapter);
+		cargarMangas();
 		super.onResume();
+	}
+	
+	public void cargarMangas(){
+		ArrayList<Manga> mangas = new ArrayList<Manga>();
+		int value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt(SELECTOR_MODO, MODO_ULTIMA_LECTURA_Y_NUEVOS);
+		switch (value) {
+		case MODO_ULTIMA_LECTURA_Y_NUEVOS:
+			mangas = Database.getMangas(getActivity());
+			break;
+		case MODO_SIN_LEER:
+			mangas = Database.getMangasCondotion(getActivity(), "id in (select manga_id from capitulos where estado != 1 group by manga_id order by count(*) desc)");
+			break;
+		default:
+			break;
+		}
+		adapter = new MisMangasAdaptes(getActivity(),mangas);	
+		grilla.setAdapter(adapter);
 	}
 
 	public static void DeleteRecursive(File fileOrDirectory) {

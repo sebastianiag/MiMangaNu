@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Mi Manga Nu</string>
     <string name="title_activity_server_listade_mangas">Liste des Mangas</string>
     <string name="title_activity_activity_detalles">Détails</string>
@@ -17,22 +16,22 @@
     <string name="agregando">Ajout de la base de données</string>
     <string name="agregado">Manga ajouté</string>
     <string name="iniciando">Chargement des pages</string>
-    <string name="agregadodescarga">Manga Ajouté à télécharger</string>
+    <string name="agregadodescarga">Manga ajouté au téléchargement</string>
     <string name="mismangas">Mes Mangas</string>
-    <string name="masmangas">Ajouter Mangas</string>
+    <string name="masmangas">Ajouter des Mangas</string>
     <string name="buscandonuevo">Recherche de mises à jour</string>
     <string name="busquedanores">La recherche n\'a donné aucun résultat</string>
-    <string name="listaen">Liste des Mangas depuis</string>
+    <string name="listaen">Liste des Mangas de</string>
     <string name="buscarupdates">Rechercher des mises à jour</string>
-    <string name="nobuscarupdate">Ne pas rechercher les mises à jour</string>
+    <string name="nobuscarupdate">Ne pas rechercher de mises à jour</string>
     <string name="licencia">Licence</string>
     <string name="esconder">Masquer dans la galerie</string>
-    <string name="descargarestantes">Téléchargement restant</string>
+    <string name="descargarestantes">Télécharger le reste</string>
     <string name="borrado_imagenes">Images supprimées</string>
     <string name="agregar">Ajouter</string>
     <string name="borrar">Supprimer</string>
-    <string name="borrarcap">Chapitre Supprimé</string>
-    <string name="resetcap">Chapitre Réinitialisé</string>
+    <string name="borrarcap">Supprimer le Chapitre</string>
+    <string name="resetcap">Réinitialiser le Chapitre</string>
     <string name="buscarnuevos">Recherche des mises à jour</string>
     <string name="mas">Plus</string>
     <string name="escondergaleria">Masquer dans la galerie</string>

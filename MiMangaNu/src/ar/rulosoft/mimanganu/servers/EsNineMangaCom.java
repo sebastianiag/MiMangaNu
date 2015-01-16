@@ -61,11 +61,10 @@ public class EsNineMangaCom extends ServerBase {
 	public ArrayList<Manga> getBusqueda(String termino) throws Exception {
 		String source = new Navegador().get("http://es.ninemanga.com/search/?wd=" + URLEncoder.encode(termino, "UTF-8"));
 		ArrayList<Manga> mangas = new ArrayList<Manga>();
-		Pattern p = Pattern.compile("l\"><img src=\"(.+?)\"/>.+?href=\"(.+?)\">(.+?)<");
+		Pattern p = Pattern.compile("bookname\" href=\"(/manga/[^\"]+)\">(.+?)<");
 		Matcher m = p.matcher(source);
 		while (m.find()) {
-			Manga manga = new Manga(ESNINEMANGA, m.group(3), "http://es.ninemanga.com" + m.group(2), false);
-			manga.setImages(m.group(1));
+			Manga manga = new Manga(ESNINEMANGA, m.group(2), "http://es.ninemanga.com" + m.group(1), false);
 			mangas.add(manga);
 		}
 		return mangas;
@@ -79,9 +78,20 @@ public class EsNineMangaCom extends ServerBase {
 
 	@Override
 	public void cargarPortada(Manga m) throws Exception {
-		String source = new Navegador().get(m.getPath());
-		
+		String source = new Navegador().get(m.getPath() + "?waring=1");
+		// portada
+		String portada = getFirstMacthDefault("Manga\" src=\"(.+?)\"", source, "");
+		m.setImages(portada);
+		// sinopsis
+		String sinopsis = getFirstMacthDefault("<p itemprop=\"description\">(.+?)&nbsp;Show less", source, "Sin sinopsis").replaceAll("<.+?>", "");
+		m.setSinopsis(sinopsis);
+
 		// capítulos
+		/*
+		 * if (source.indexOf("html?waring=1") != -1) source = new
+		 * Navegador().get(m.getPath() + "?waring=1");/
+		 */
+
 		Pattern p = Pattern.compile("<a class=\"chapter_list_a\" href=\"(/chapter.+?)\" title=\"(.+?)\">(.+?)</a>");
 		Matcher matcher = p.matcher(source);
 		ArrayList<Capitulo> capitulos = new ArrayList<Capitulo>();
@@ -89,13 +99,6 @@ public class EsNineMangaCom extends ServerBase {
 			capitulos.add(new Capitulo(matcher.group(3), "http://es.ninemanga.com" + matcher.group(1)));
 		}
 		m.setCapitulos(capitulos);
-		
-		// portada
-		String portada = getFirstMacthDefault("Manga\" src=\"(.+?)\"", source, "");
-		m.setImages(portada);
-		// sinopsis
-		String sinopsis = getFirstMacthDefault("<p itemprop=\"description\">(.+?)&nbsp;Show less", source, "Sin sinopsis").replaceAll("<.?>", "");
-		m.setSinopsis(sinopsis);
 
 	}
 

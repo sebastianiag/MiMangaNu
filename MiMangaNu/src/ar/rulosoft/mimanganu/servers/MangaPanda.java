@@ -81,16 +81,12 @@ public class MangaPanda extends ServerBase {
 				}
 			}
 		}
-		p = Pattern.compile("<p>(.+)</p>");
-		m = p.matcher(data);
-		if (m.find()) {
-			manga.setSinopsis(m.group(1));
-		}
-		p = Pattern.compile("mangaimg\"><img src=\"([^\"]+)");
-		m = p.matcher(data);
-		if (m.find()) {
-			manga.setImages(m.group(1));
-		}
+
+		// sinopsis
+		manga.setSinopsis(getFirstMacthDefault("<p>(.+)</p>", data, "Without synopsis"));
+		// portada
+		manga.setImages(getFirstMacthDefault("mangaimg\"><img src=\"([^\"]+)", data, ""));
+
 	}
 
 	@Override

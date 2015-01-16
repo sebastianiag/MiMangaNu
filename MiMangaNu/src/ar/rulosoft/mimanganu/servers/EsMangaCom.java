@@ -61,8 +61,8 @@ public class EsMangaCom extends ServerBase {
 	public void cargarPortada(Manga m) throws Exception {
 		Navegador nav = new Navegador();
 		String source = nav.get(m.getPath());
-		m.setSinopsis(getFirstMacth("<div>Sinopsis:</div></td>[\\s\\S]+?<td class=\"contxt\">([\\s\\S]+?)<", source, "plugin desacualizada(Sinopsis)"));
-		m.setImages(getFirstMacth("<div class=\"img-anim\">\\s+?<img src=\"(.+?)\"", source, "plugin desacualizada(imagen)"));
+		m.setSinopsis(getFirstMacthDefault("<div>Sinopsis:</div></td>[\\s\\S]+?<td class=\"contxt\">([\\s\\S]+?)<", source, "Sin Sinopsis"));
+		m.setImages(getFirstMacthDefault("<div class=\"img-anim\">\\s+?<img src=\"(.+?)\"", source, ""));
 
 		// capitulos
 		ArrayList<Capitulo> capitulos = new ArrayList<Capitulo>();

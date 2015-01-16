@@ -46,9 +46,9 @@ public class LectureEnLigne extends ServerBase {
 
 		String data = new Navegador().get((manga.getPath()));// :</p><p>(.+?)</p>
 
-		manga.setSinopsis(getFirstMacth(":</p><p>(.+?)</p>", data, "plugin desacualizada(Sinopsis)"));
+		manga.setSinopsis(getFirstMacthDefault(":</p><p>(.+?)</p>", data, "Sans synopsis"));
 		manga.setImages("http://www.lecture-en-ligne.com/"
-				+ getFirstMacth("<img src=\"([^\"]+)\" alt=\"[^\"]+\" class=\"imagemanga\"", data, "plugin desacualizada(imagen)"));
+				+ getFirstMacthDefault("<img src=\"([^\"]+)\" alt=\"[^\"]+\" class=\"imagemanga\"", data, ""));
 
 		// capitulos
 		ArrayList<Capitulo> capitulos = new ArrayList<Capitulo>();

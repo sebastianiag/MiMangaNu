@@ -76,29 +76,9 @@ public class EsMangaOnline extends ServerBase {
 	@Override
 	public void cargarPortada(Manga manga) throws Exception {
 		String data = new Navegador().get(manga.getPath());
-		Pattern p = Pattern.compile("<img class=\"cvr\" src=\"([^\"]*)\" alt=\"[^\"]*\"/>");
-		Matcher m = p.matcher(data);
-
-		if (m.find()) {
-			manga.setImages(m.group(1));
-		} else {
-			manga.setImages("");
-		}
-
-		p = Pattern.compile("<div class=\"det\">.+?<p>(.+?)</br></br>Algún");
-		m = p.matcher(data);
-
-		if (m.find()) {
-			manga.setSinopsis(Html.fromHtml(m.group(1)).toString());
-		} else {
-			manga.setSinopsis("Sin sinopsis.");
-		}
-
-		String sinopsis = manga.getSinopsis().trim();
-		if (sinopsis == "") {
-			manga.setSinopsis("Sin sinopsis.");
-		}
-
+		//portada
+		manga.setSinopsis(Html.fromHtml(getFirstMacthDefault("<div class=\"det\">.+?<p>(.+?)</br></br>Algún", data, "Sin Sinopsis")).toString());
+		manga.setImages(getFirstMacthDefault("<img class=\"cvr\" src=\"([^\"]*)\" alt=\"[^\"]*\"/>", data, ""));
 	}
 
 	@Override

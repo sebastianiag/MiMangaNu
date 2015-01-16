@@ -186,6 +186,16 @@ public abstract class ServerBase {
 		}
 		throw new Exception(errorMsj);
 	}
+	
+	public String getFirstMacthDefault(String patron, String source, String mDefault) throws Exception {
+		Pattern p = Pattern.compile(patron);
+		Matcher m = p.matcher(source);
+		if (m.find()) {
+			return m.group(1);
+		}else{
+			return mDefault;
+		}
+	}
 
 	public boolean tieneNavegacionVisual() {
 		return true;

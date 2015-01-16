@@ -66,21 +66,9 @@ public class MangaFox extends ServerBase {
 			String data = new Navegador().get((manga.getPath()));
 
 			// portada
-			p = Pattern.compile(PATRON_PORTADA);
-			m = p.matcher(data);
-
-			if (m.find()) {
-				manga.setImages(m.group(1));
-			}
-
+			manga.setImages(getFirstMacthDefault(PATRON_PORTADA, data, ""));
 			// sinopsis
-			p = Pattern.compile(PATRON_SINOPSIS);
-			m = p.matcher(data);
-			if (m.find()) {
-				manga.setSinopsis(m.group(1));
-			} else {
-				manga.setSinopsis("Sin sinopsis.");
-			}
+			manga.setSinopsis(getFirstMacthDefault(PATRON_SINOPSIS, data, "Without synopsis."));
 
 			// capitulos
 			p = Pattern.compile(PATTERN_CAPITULOS);
@@ -104,8 +92,8 @@ public class MangaFox extends ServerBase {
 		if (pagina > c.getPaginas()) {
 			pagina = 1;
 		}
-		if(c.getPath().endsWith("html") && c.getPath().indexOf("/") > 0){
-			c.setPath(c.getPath().substring(0,c.getPath().lastIndexOf("/") + 1));
+		if (c.getPath().endsWith("html") && c.getPath().indexOf("/") > 0) {
+			c.setPath(c.getPath().substring(0, c.getPath().lastIndexOf("/") + 1));
 		}
 		return c.getPath() + pagina + ".html";
 

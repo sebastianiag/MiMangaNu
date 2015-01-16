@@ -91,15 +91,12 @@ public class EsNineMangaCom extends ServerBase {
 		m.setCapitulos(capitulos);
 		
 		// portada
-		String portada = getFirstMacth("src=\"([^\"]+)\"/>", source, "Error al obtener la portada");
+		String portada = getFirstMacthDefault("Manga\" src=\"(.+?)\"", source, "");
 		m.setImages(portada);
 		// sinopsis
-		try {
-			String sinopsis = getFirstMacth("<p itemprop=\"description\">(.+?)&nbsp;Show less", source, "Erros al obtener sinopsis").replaceAll("<.?>", "");
-			m.setSinopsis(sinopsis);
-		} catch (Exception e) {
-			m.setSinopsis("Sin Sinopsis");
-		}
+		String sinopsis = getFirstMacthDefault("<p itemprop=\"description\">(.+?)&nbsp;Show less", source, "Sin sinopsis").replaceAll("<.?>", "");
+		m.setSinopsis(sinopsis);
+
 	}
 
 	@Override

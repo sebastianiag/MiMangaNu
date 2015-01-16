@@ -3,6 +3,9 @@
 
 Lector Manga online 
 
+Cambio 1.10
+Reparado starkana y unos cuantos bugfix y mejoras
+
 Cambios 1.09
 Agregado lo pedido #15 asi como la opcion de marcar todo como (no) leido y búsqueda de actulizaciones individuales desde la lista de capitulos.
 

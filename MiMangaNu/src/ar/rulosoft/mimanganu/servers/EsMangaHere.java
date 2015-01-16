@@ -59,23 +59,12 @@ public class EsMangaHere extends ServerBase {
 			Pattern p;
 			Matcher m;
 			String data = new Navegador().get((manga.getPath()));
-
+			
 			// portada
-			p = Pattern.compile(PATRON_PORTADA);
-			m = p.matcher(data);
-
-			if (m.find()) {
-				manga.setImages(m.group(1));
-			}
+			manga.setImages(getFirstMacthDefault(PATRON_PORTADA,data,""));
 
 			// sinopsis
-			p = Pattern.compile(PATRON_SINOPSIS);
-			m = p.matcher(data);
-			if (m.find()) {
-				manga.setSinopsis(m.group(1));
-			} else {
-				manga.setSinopsis("Sin sinopsis.");
-			}
+			manga.setSinopsis(getFirstMacthDefault(PATRON_SINOPSIS,data,"Sin sinopsis."));
 
 			// capitulos
 			data = getFirstMacth(PATRON_SEG_CAP, data, "Error al obtener lista de capítulos");

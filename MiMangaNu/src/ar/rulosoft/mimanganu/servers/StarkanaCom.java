@@ -63,10 +63,11 @@ public class StarkanaCom extends ServerBase {
 	public void cargarPortada(Manga m) throws Exception {
 		String source = new Navegador().get(m.getPath());
 		// portada
-		String portada = getFirstMacth("<img class=\"a_img\" src=\"(.+?)\"", source, "Error al obtener portada");
-		m.setImages(portada);;
+		String portada = getFirstMacthDefault("<img class=\"a_img\" src=\"(.+?)\"", source, "");
+		m.setImages(portada);
+		;
 		// Sinopsis
-		String sinopsis = getFirstMacth("<b>Summary:.+?<div>(.+?)<", source, "Error al obtener sinopsis");
+		String sinopsis = getFirstMacthDefault("<b>Summary:.+?<div>(.+?)<", source, "Without synopsis");
 		m.setSinopsis(sinopsis);
 		// capitulos
 		Pattern p = Pattern.compile("<a class=\"download-link\" href=\"(.+?)\">(.+?)</a>");
@@ -106,6 +107,7 @@ public class StarkanaCom extends ServerBase {
 			web = "/manga/search?" + generosV[categoria];
 		}
 		if (web.length() > 2) {
+			
 			String source = new Navegador().get("http://starkana.com" + web);
 			mangas = getMangasFromSource(source);
 		}
@@ -115,17 +117,17 @@ public class StarkanaCom extends ServerBase {
 	ArrayList<Manga> getMangasFromSource(String source) {
 		ArrayList<Manga> mangas = new ArrayList<Manga>();
 		Pattern p = Pattern
-				.compile("<img class=\"a_img\" src=\"(.+?)\".+?<img src=\"http://starkana.com/img/icons/tick_(.+?).png\".+?href=\"(.+?)\".+?>(.+?)</a>");
+				.compile("title=\"([^\"]+)\" href=\"(/manga/.+?)\".+?src=\"(.+?)\".+?tick_(.+?)\\.");//"<img class=\"a_img\" src=\"(.+?)\".+?<img src=\"http://starkana.com/img/icons/tick_(.+?).png\".+?href=\"(.+?)\".+?>(.+?)</a>");
 		Matcher m = p.matcher(source);
 		while (m.find()) {
 			Manga manga;
-			String title = m.group(4).replaceAll("<.+?>", "");
-			if (m.group(2).length() == 4) {
-				manga = new Manga(STARKANACOM, title, "http://starkana.com" + m.group(3), false);
+			String title = m.group(1).replaceAll("<.+?>", "");
+			if (m.group(4).length() == 4) {
+				manga = new Manga(STARKANACOM, title, "http://starkana.com" + m.group(2), false);
 			} else {
-				manga = new Manga(STARKANACOM, title, "http://starkana.com" + m.group(3), true);
+				manga = new Manga(STARKANACOM, title, "http://starkana.com" + m.group(2), true);
 			}
-			manga.setImages(m.group(1).replace("small_", "default_"));
+			manga.setImages(m.group(3).replace("small_", "default_"));
 			mangas.add(manga);
 		}
 		return mangas;

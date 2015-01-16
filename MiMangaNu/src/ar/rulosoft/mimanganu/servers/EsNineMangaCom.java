@@ -125,7 +125,7 @@ public class EsNineMangaCom extends ServerBase {
 
 	public ArrayList<Manga> getMangasFromSource(String source) {
 		ArrayList<Manga> mangas = new ArrayList<Manga>();
-		Pattern p = Pattern.compile("<dl class=\"bookinfo\"><dt><a href=\"(/manga/.+?)\"><img src=\"(.+?)\" alt=\"(.+?)\"/>");
+		Pattern p = Pattern.compile("<a href=\"(/manga/[^\"]+)\"><img src=\"(.+?)\".+?alt=\"([^\"]+)\"");
 		Matcher m = p.matcher(source);
 		while (m.find()) {
 			Manga manga = new Manga(ESNINEMANGA, m.group(3), "http://es.ninemanga.com" + m.group(1), false);

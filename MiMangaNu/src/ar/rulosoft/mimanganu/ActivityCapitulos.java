@@ -21,6 +21,7 @@ import ar.rulosoft.mimanganu.componentes.Capitulo;
 import ar.rulosoft.mimanganu.componentes.Database;
 import ar.rulosoft.mimanganu.componentes.Manga;
 import ar.rulosoft.mimanganu.servers.ServerBase;
+import ar.rulosoft.mimanganu.services.ServicioColaDeDescarga;
 import ar.rulosoft.mimanganu.R;
 
 public class ActivityCapitulos extends ActionBarActivity {
@@ -182,8 +183,7 @@ public class ActivityCapitulos extends ActionBarActivity {
 				try {
 					server.iniciarCapitulo(c);
 					Database.updateCapitulo(context, c);
-					ColaDeDescarga.addCola(c);
-					ColaDeDescarga.iniciarCola(context);
+					ServicioColaDeDescarga.agregarDescarga(ActivityCapitulos.this, c, false);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

@@ -17,13 +17,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import ar.rulosoft.mimanganu.ActivityCapitulos;
-import ar.rulosoft.mimanganu.ColaDeDescarga;
 import ar.rulosoft.mimanganu.FragmentMisMangas;
 import ar.rulosoft.mimanganu.R;
 import ar.rulosoft.mimanganu.componentes.Capitulo;
 import ar.rulosoft.mimanganu.componentes.Database;
 import ar.rulosoft.mimanganu.componentes.Manga;
 import ar.rulosoft.mimanganu.servers.ServerBase;
+import ar.rulosoft.mimanganu.services.ServicioColaDeDescarga;
 
 public class CapituloAdapter extends ArrayAdapter<Capitulo> {
 
@@ -98,7 +98,7 @@ public class CapituloAdapter extends ArrayAdapter<Capitulo> {
 					if (c.isDescargado()) {
 						Manga m = activity.manga;
 						ServerBase s = ServerBase.getServer(m.getServerId());
-						String ruta = ColaDeDescarga.generarRutaBase(s, m, c);
+						String ruta = ServicioColaDeDescarga.generarRutaBase(s, m, c);
 						FragmentMisMangas.DeleteRecursive(new File(ruta));
 						getItem(posicion).setDescargado(false);
 						Database.UpdateCapituloDescargado(activity, c.getId(), 0);
@@ -155,8 +155,9 @@ public class CapituloAdapter extends ArrayAdapter<Capitulo> {
 			} else {
 				asyncdialog.dismiss();
 				Database.updateCapitulo(activity, result);
-				ColaDeDescarga.addCola(result);
-				ColaDeDescarga.iniciarCola(activity);
+				//ColaDeDescarga.addCola(result);
+				//ColaDeDescarga.iniciarCola(activity);
+				ServicioColaDeDescarga.agregarDescarga(activity, result, false);
 				Toast.makeText(activity, activity.getResources().getString(R.string.agregadodescarga), Toast.LENGTH_LONG).show();
 			}
 			super.onPostExecute(result);

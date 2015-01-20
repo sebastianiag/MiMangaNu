@@ -36,15 +36,16 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
-import ar.rulosoft.mimanganu.ColaDeDescarga.ImagenDescargada;
 import ar.rulosoft.mimanganu.componentes.Capitulo;
+import ar.rulosoft.mimanganu.services.DescargaListener;
+import ar.rulosoft.mimanganu.services.ServicioColaDeDescarga;
 import ar.rulosoft.mimanganu.componentes.Database;
 import ar.rulosoft.mimanganu.componentes.Manga;
 import ar.rulosoft.mimanganu.componentes.UnescroledViewPager;
 import ar.rulosoft.mimanganu.servers.ServerBase;
 import ar.rulosoft.mimanganu.R;
 
-public class ActivityLector extends ActionBarActivity implements ImagenDescargada, OnSeekBarChangeListener, TapListener {
+public class ActivityLector extends ActionBarActivity implements DescargaListener, OnSeekBarChangeListener, TapListener {
 
 	public static final String AJUSTE_KEY = "ajustea";
 
@@ -77,7 +78,8 @@ public class ActivityLector extends ActionBarActivity implements ImagenDescargad
 		actionBar.setTitle(capitulo.getTitulo());
 		manga = Database.getFullManga(this, capitulo.getMangaID());
 		s = ServerBase.getServer(manga.getServerId());
-		ColaDeDescarga.imagenDescargadaListener = this;
+		if (ServicioColaDeDescarga.actual != null)
+			ServicioColaDeDescarga.actual.setDescargaListener(this);
 		ultimaPaginaFragment = new UltimaPaginaFragment();
 		mViewPager = (UnescroledViewPager) findViewById(R.id.pager);
 
@@ -181,18 +183,21 @@ public class ActivityLector extends ActionBarActivity implements ImagenDescargad
 	}
 
 	@Override
-	public void onDescarga(final int cid, final int pagina) {
+	public void onImagenDescargada(final int cid, final int pagina) {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				int id = mViewPager.getCurrentItem();
-				if (cid == capitulo.getId() && pagina <= (id + 1) && pagina >= (id - 1)) {
-					PlaceholderFragment f = ((PlaceholderFragment) mSectionsPagerAdapter.getItem(pagina - 1));
-					f.new SetImagen().execute();
+				try {
+					if (cid == capitulo.getId() && pagina <= (id + 2) && pagina >= (id - 21)) {
+						PlaceholderFragment f = ((PlaceholderFragment) mSectionsPagerAdapter.getItem(pagina - 1));
+						f.new SetImagen().execute();
+					}
+				} catch (Exception e) {
+
 				}
 			}
 		});
-
 	}
 
 	/**
@@ -240,11 +245,11 @@ public class ActivityLector extends ActionBarActivity implements ImagenDescargad
 				}
 			}
 			if (f == null) {
-				String ruta = ColaDeDescarga.generarRutaBase(s, manga, capitulo) + "/" + (position + 1) + ".jpg";
+				String ruta = ServicioColaDeDescarga.generarRutaBase(s, manga, capitulo) + "/" + (position + 1) + ".jpg";
 				int idx = -1;
 				do {
 					idx = getNextPos();
-					if(pos[idx] == -1)
+					if (pos[idx] == -1)
 						break;
 				} while (pos[idx] + 1 > mViewPager.getCurrentItem() && pos[idx] - 1 < mViewPager.getCurrentItem());
 				pos[idx] = position;
@@ -392,15 +397,17 @@ public class ActivityLector extends ActionBarActivity implements ImagenDescargad
 					visor.setScaleEnabled(true);
 					visor.setImageDrawable(result);
 					cargando.setVisibility(ProgressBar.INVISIBLE);
-				} else if(ruta != null){
+				} else if (ruta != null) {
 					File f = new File(ruta);
 					if (f.exists()) {
 						f.delete();
 					}
-					if (!ColaDeDescarga.corriendo) {
-						ColaDeDescarga.add(((ActivityLector) getActivity()).capitulo);
-						ColaDeDescarga.iniciarCola(getActivity());
-					}
+					/*
+					 * if (!ColaDeDescarga.corriendo) {
+					 * ColaDeDescarga.add(((ActivityLector)
+					 * getActivity()).capitulo);
+					 * ColaDeDescarga.iniciarCola(getActivity()); }/
+					 */
 				}
 				super.onPostExecute(result);
 			}
@@ -509,8 +516,9 @@ public class ActivityLector extends ActionBarActivity implements ImagenDescargad
 				} else {
 					asyncdialog.dismiss();
 					Database.updateCapitulo(getActivity(), result);
-					ColaDeDescarga.add(result);
-					ColaDeDescarga.iniciarCola(getActivity());
+					ServicioColaDeDescarga.agregarDescarga(getActivity(), result, true);
+					// ColaDeDescarga.add(result);
+					// .iniciarCola(getActivity());
 					Intent intent = new Intent(getActivity(), ActivityLector.class);
 					intent.putExtra(ActivityCapitulos.CAPITULO_ID, result.getId());
 					getActivity().startActivity(intent);

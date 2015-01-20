@@ -52,6 +52,9 @@
             android:name="ar.rulosoft.mimanganu.ActivityLicencia"
             android:label="@string/licencia" >
         </activity>
+
+        <service android:name="ar.rulosoft.mimanganu.services.ServicioColaDeDescarga" >
+        </service>
     </application>
 
 </manifest>

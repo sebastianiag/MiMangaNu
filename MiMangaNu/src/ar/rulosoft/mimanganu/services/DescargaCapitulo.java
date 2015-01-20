@@ -1,0 +1,123 @@
+package ar.rulosoft.mimanganu.services;
+
+import ar.rulosoft.mimanganu.componentes.Capitulo;
+import ar.rulosoft.mimanganu.componentes.Database;
+import ar.rulosoft.mimanganu.services.DescargaIndividual.Estados;
+
+public class DescargaCapitulo implements CambioEstado {
+	public static enum DescargaEstado {
+		EN_COLA, DESCARGANDO, DESCARGADO, ERROR
+	};
+
+	CambioEstado cambioListener = null;
+
+	static final int MAX_ERRORS = 5;
+	public DescargaEstado estado;
+	Capitulo capitulo;
+	Estados[] paginasStatus;
+	int progreso = 0;
+
+	public DescargaCapitulo(Capitulo capitulo) {
+		this.capitulo = capitulo;
+		paginasStatus = new Estados[capitulo.getPaginas()];
+		for (int i = 0; i < paginasStatus.length; i++) {
+			paginasStatus[i] = Estados.EN_COLA;
+		}
+		estado = DescargaEstado.EN_COLA;
+	}
+
+	public void cambiarEstado(DescargaEstado nuevoEstado) {
+		this.estado = nuevoEstado;
+	}
+
+	public int getSiguiente() {
+		int j = -2;
+		if (estado.ordinal() < DescargaEstado.DESCARGADO.ordinal()) {
+			if (estado == DescargaEstado.EN_COLA)
+				cambiarEstado(DescargaEstado.DESCARGANDO);
+			if (hayErrores()) {
+				j = -11;
+			} else if (progreso < capitulo.getPaginas()) {
+				for (int i = 0; i < capitulo.getPaginas(); i++) {
+					if (paginasStatus[i] == Estados.EN_COLA || paginasStatus[i] == Estados.POSTERGADA) {
+						paginasStatus[i] = Estados.INICIADA;
+						j = i;
+						break;
+					}
+				}
+			}
+		}
+		return (j + 1);
+	}
+
+	public boolean hayErrores() {
+		int errors = 0;
+		for (Estados e : paginasStatus) {
+			if (e.ordinal() > Estados.DESCARGA_OK.ordinal()) {
+				errors++;
+				if (errors > MAX_ERRORS) {
+					cambiarEstado(DescargaEstado.ERROR);
+					break;
+				}
+			}
+		}
+		return errors > MAX_ERRORS;
+	}
+
+	public boolean estaDescargando() {
+		boolean ret = false;
+		for (Estados e : paginasStatus) {
+			if (e.ordinal() < Estados.POSTERGADA.ordinal()) {
+				ret = true;
+				break;
+			}
+		}
+		if (!ret)
+			cambiarEstado(DescargaEstado.DESCARGADO);
+		return ret;
+	}
+
+	public void setPaginaFinalizada(int pagina, Estados estado) {
+		paginasStatus[(pagina - 1)] = estado;
+		progreso++;
+	}
+
+	public void setPaginaStatus(int pagina, Estados estado) {
+		paginasStatus[(pagina - 1)] = estado;
+	}
+
+	public int getProgreso() {
+		return progreso;
+	}
+
+	public void setProgreso(int progreso) {
+		this.progreso = progreso;
+	}
+
+	public int getFaltantes() {
+		return capitulo.getPaginas() - progreso;
+	}
+
+	public Capitulo getCapitulo() {
+		return capitulo;
+	}
+
+	public void setCapitulo(Capitulo capitulo) {
+		this.capitulo = capitulo;
+	}
+
+	public void setCambioListener(CambioEstado cambioListener) {
+		this.cambioListener = cambioListener;
+	}
+
+	@Override
+	public void onCambio(DescargaIndividual descargaIndividual) {
+		paginasStatus[descargaIndividual.index] = descargaIndividual.estado;
+		progreso++;
+		if (progreso == capitulo.getPaginas()) {
+			Database.UpdateCapituloDescargado(ServicioColaDeDescarga.actual, capitulo.getId(), 1);
+		}
+		if (cambioListener != null)
+			cambioListener.onCambio(descargaIndividual);
+	}
+}

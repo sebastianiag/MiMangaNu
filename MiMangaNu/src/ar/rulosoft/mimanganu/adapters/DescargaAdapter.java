@@ -11,23 +11,22 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import ar.rulosoft.mimanganu.ColaDeDescarga;
 import ar.rulosoft.mimanganu.R;
-import ar.rulosoft.mimanganu.ColaDeDescarga.Descarga;
+import ar.rulosoft.mimanganu.services.DescargaCapitulo;
 
-public class DescargaAdapter extends ArrayAdapter<ColaDeDescarga.Descarga> {
+public class DescargaAdapter extends ArrayAdapter<DescargaCapitulo> {
 
 	private LayoutInflater li;
 	private static int listItem = R.layout.listitem_descarga;
-	ArrayList<Descarga> descargas = new ArrayList<ColaDeDescarga.Descarga>();
+	ArrayList<DescargaCapitulo> descargas = new ArrayList<DescargaCapitulo>();
 
-	public DescargaAdapter(Context context, ArrayList<Descarga> objects) {
+	public DescargaAdapter(Context context, ArrayList<DescargaCapitulo> objects) {
 		super(context, listItem);
 		li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 	
 	@Override
-	public Descarga getItem(int position) {
+	public DescargaCapitulo getItem(int position) {
 		return descargas.get(position);
 	}
 	
@@ -37,7 +36,7 @@ public class DescargaAdapter extends ArrayAdapter<ColaDeDescarga.Descarga> {
 	}
 	
 	@Override
-	public void add(Descarga object) {
+	public void add(DescargaCapitulo object) {
 		descargas.add(object);
 	}
 
@@ -52,7 +51,7 @@ public class DescargaAdapter extends ArrayAdapter<ColaDeDescarga.Descarga> {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		final Descarga item = getItem(position);
+		final DescargaCapitulo item = getItem(position);
 
 		if (item != null) {
 			holder.textViewNombre.setText(item.getCapitulo().getTitulo());
@@ -68,15 +67,15 @@ public class DescargaAdapter extends ArrayAdapter<ColaDeDescarga.Descarga> {
 		return convertView;
 	}
 
-	public void updateAll(ArrayList<Descarga> mDescargas) {
+	public void updateAll(ArrayList<DescargaCapitulo> mDescargas) {
 		if (mDescargas != null) {
 			for (int i = 0; i < mDescargas.size(); i++) {
 				boolean esNuevo = true;
-				Descarga aComparar = mDescargas.get(i);
+				DescargaCapitulo aComparar = mDescargas.get(i);
 				for (int j = 0; j < getCount(); j++) {
 					if (getItem(j).getCapitulo().getId() == aComparar.getCapitulo().getId()) {
 						esNuevo = false;
-						Descarga item = getItem(j);
+						DescargaCapitulo item = getItem(j);
 						item.setProgreso(aComparar.getProgreso());
 						break;
 					}

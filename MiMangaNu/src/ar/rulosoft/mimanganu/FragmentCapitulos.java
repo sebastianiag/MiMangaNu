@@ -27,6 +27,7 @@ import ar.rulosoft.mimanganu.componentes.Capitulo;
 import ar.rulosoft.mimanganu.componentes.Database;
 import ar.rulosoft.mimanganu.componentes.Manga;
 import ar.rulosoft.mimanganu.servers.ServerBase;
+import ar.rulosoft.mimanganu.services.ServicioColaDeDescarga;
 import ar.rulosoft.mimanganu.R;
 
 public class FragmentCapitulos extends Fragment implements SetCapitulos {
@@ -99,7 +100,7 @@ public class FragmentCapitulos extends Fragment implements SetCapitulos {
 			Capitulo c = (Capitulo) lista.getAdapter().getItem(info.position);
 			Manga manga = ((ActivityCapitulos) getActivity()).manga;
 			ServerBase s = ServerBase.getServer(manga.getServerId());
-			String ruta = ColaDeDescarga.generarRutaBase(s, manga, c);
+			String ruta = ServicioColaDeDescarga.generarRutaBase(s, manga, c);
 			FragmentMisMangas.DeleteRecursive(new File(ruta));
 			Database.borrarCapitulo(getActivity(), c);
 			capitulosAdapter.remove(c);
@@ -108,7 +109,7 @@ public class FragmentCapitulos extends Fragment implements SetCapitulos {
 			Capitulo c = (Capitulo) lista.getAdapter().getItem(info.position);
 			Manga manga = ((ActivityCapitulos) getActivity()).manga;
 			ServerBase s = ServerBase.getServer(manga.getServerId());
-			String ruta = ColaDeDescarga.generarRutaBase(s, manga, c);
+			String ruta = ServicioColaDeDescarga.generarRutaBase(s, manga, c);
 			FragmentMisMangas.DeleteRecursive(new File(ruta));
 			c.setPaginas(0);
 			c.setDescargado(false);
@@ -159,8 +160,7 @@ public class FragmentCapitulos extends Fragment implements SetCapitulos {
 			} else {
 				asyncdialog.dismiss();
 				Database.updateCapitulo(getActivity(), result);
-				ColaDeDescarga.add(result);
-				ColaDeDescarga.iniciarCola(getActivity());
+				ServicioColaDeDescarga.agregarDescarga(getActivity(), result, true);
 				int firs = lista.getFirstVisiblePosition();
 				Database.updateMangaLastIndex(getActivity(), ((ActivityCapitulos) getActivity()).manga.getId(), firs);
 				Intent intent = new Intent(getActivity(), ActivityLector.class);

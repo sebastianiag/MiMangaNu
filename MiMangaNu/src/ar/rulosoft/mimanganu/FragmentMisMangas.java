@@ -24,6 +24,7 @@ import ar.rulosoft.mimanganu.adapters.MisMangasAdaptes;
 import ar.rulosoft.mimanganu.componentes.Database;
 import ar.rulosoft.mimanganu.componentes.Manga;
 import ar.rulosoft.mimanganu.servers.ServerBase;
+import ar.rulosoft.mimanganu.services.ServicioColaDeDescarga;
 import ar.rulosoft.mimanganu.R;
 
 public class FragmentMisMangas extends Fragment {
@@ -98,7 +99,7 @@ public class FragmentMisMangas extends Fragment {
 			Manga m = (Manga) grilla.getAdapter().getItem(info.position);
 
 			ServerBase s = ServerBase.getServer(m.getServerId());
-			String ruta = ColaDeDescarga.generarRutaBase(s, m);
+			String ruta = ServicioColaDeDescarga.generarRutaBase(s, m);
 			DeleteRecursive(new File(ruta));
 			Database.BorrarManga(getActivity(), m.getId());
 			adapter.remove(m);

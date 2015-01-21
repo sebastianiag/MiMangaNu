@@ -38,7 +38,8 @@
         </activity>
         <activity
             android:name="ar.rulosoft.mimanganu.ActivityLector"
-            android:label="@string/title_activity_activity_lector" >
+            android:label="@string/title_activity_activity_lector"
+            android:largeHeap="true" >
         </activity>
         <activity
             android:name="ar.rulosoft.mimanganu.ActivityServerVisualNavegacion"

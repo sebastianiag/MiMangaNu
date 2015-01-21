@@ -123,6 +123,10 @@ public class ServicioColaDeDescarga extends Service implements CambioEstado {
 		else
 			descargas.add(new DescargaCapitulo(capitulo));
 	}
+	
+	public static void quitarDescarga(int index){
+		descargas.remove(index);
+	}
 
 	public static String generarRutaBase(ServerBase s, Manga m, Capitulo c) {
 		return Environment.getExternalStorageDirectory().getAbsolutePath() + "/MiMangaNu/" + cleanFileName(s.getServerName()) + "/"

@@ -15,8 +15,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -187,14 +189,9 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				int id = mViewPager.getCurrentItem();
-				try {
-					if (cid == capitulo.getId() && pagina <= (id + 2) && pagina >= (id - 21)) {
-						PlaceholderFragment f = ((PlaceholderFragment) mSectionsPagerAdapter.getItem(pagina - 1));
-						f.new SetImagen().execute();
-					}
-				} catch (Exception e) {
-
+				Fragment fragment = mSectionsPagerAdapter.getIfOnMemory(pagina);
+				if (fragment != null) {
+					((PlaceholderFragment) fragment).new SetImagen().execute();
 				}
 			}
 		});
@@ -207,12 +204,12 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 		ArrayList<PlaceholderFragment> fragments = new ArrayList<PlaceholderFragment>(5);
-		int[] pos = { -1, -1, -1, -1, -1 };
+		int[] pos = { -1, -1, -1, -1 };
 		int idx = 0;
 		FragmentManager fm = null;
 
 		private int getNextPos() {
-			int np = idx % 5;
+			int np = idx % pos.length;
 			idx++;
 			return np;
 		}
@@ -220,7 +217,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
 			this.fm = fm;
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < pos.length; i++) {
 				fragments.add(new PlaceholderFragment());
 			}
 		}
@@ -254,9 +251,9 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 				} while (pos[idx] + 1 > mViewPager.getCurrentItem() && pos[idx] - 1 < mViewPager.getCurrentItem());
 				pos[idx] = position;
 				Fragment old = fragments.get(idx);
-				fragments.set(idx, PlaceholderFragment.newInstance(ruta));
 				fm.beginTransaction().remove(old).commit();
 				old = null;
+				fragments.set(idx, PlaceholderFragment.newInstance(ruta));
 				f = fragments.get(idx);
 				f.setTapListener(ActivityLector.this);
 			}
@@ -278,6 +275,17 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 
 		public Fragment getCurrentFragment() {
 			return getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
+		}
+
+		public Fragment getIfOnMemory(int idx) {
+			Fragment fragment = null;
+			for (int i = 0; i < pos.length; i++) {
+				if (pos[i] == idx) {
+					fragment = fragments.get(i);
+					break;
+				}
+			}
+			return fragment;
 		}
 
 	}
@@ -375,7 +383,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 			new SetImagen().execute();
 		}
 
-		public class SetImagen extends AsyncTask<Void, Void, Drawable> {
+		public class SetImagen extends AsyncTask<Void, Void, Bitmap> {
 
 			@Override
 			protected void onPreExecute() {
@@ -385,17 +393,19 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 			}
 
 			@Override
-			protected Drawable doInBackground(Void... params) {
-				// Bitmap bitmap = null;
-				// bitmap = BitmapFactory.decodeFile(ruta);
-				return Drawable.createFromPath(ruta);
+			protected Bitmap doInBackground(Void... params) {
+				Bitmap bitmap = null;
+				BitmapFactory.Options opts = new BitmapFactory.Options();
+				opts.inPreferredConfig = Config.RGB_565;
+				bitmap = BitmapFactory.decodeFile(ruta, opts);
+				return bitmap;
 			}
 
 			@Override
-			protected void onPostExecute(Drawable result) {
+			protected void onPostExecute(Bitmap result) {
 				if (result != null) {
 					visor.setScaleEnabled(true);
-					visor.setImageDrawable(result);
+					visor.setImageBitmap(result);
 					cargando.setVisibility(ProgressBar.INVISIBLE);
 				} else if (ruta != null) {
 					File f = new File(ruta);

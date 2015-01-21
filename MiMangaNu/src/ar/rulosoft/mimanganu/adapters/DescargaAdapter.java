@@ -24,17 +24,17 @@ public class DescargaAdapter extends ArrayAdapter<DescargaCapitulo> {
 		super(context, listItem);
 		li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
-	
+
 	@Override
 	public DescargaCapitulo getItem(int position) {
 		return descargas.get(position);
 	}
-	
+
 	@Override
 	public int getCount() {
 		return descargas.size();
 	}
-	
+
 	@Override
 	public void add(DescargaCapitulo object) {
 		descargas.add(object);
@@ -54,13 +54,13 @@ public class DescargaAdapter extends ArrayAdapter<DescargaCapitulo> {
 		final DescargaCapitulo item = getItem(position);
 
 		if (item != null) {
-			holder.textViewNombre.setText(item.getCapitulo().getTitulo());
+			String textInfo = " " + item.estado.name();
+			holder.textViewNombre.setText(item.getCapitulo().getTitulo() + textInfo);
 			holder.cargandoProgressBar.setMax(item.getCapitulo().getPaginas());
 			holder.cargandoProgressBar.setProgress(item.getProgreso());
 			holder.botonImageView.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-
 				}
 			});
 		}
@@ -95,6 +95,7 @@ public class DescargaAdapter extends ArrayAdapter<DescargaCapitulo> {
 		public ViewHolder(View v) {
 			this.textViewNombre = (TextView) v.findViewById(R.id.nombre);
 			this.botonImageView = (ImageView) v.findViewById(R.id.boton);
+			this.botonImageView.setVisibility(ImageView.INVISIBLE);
 			this.cargandoProgressBar = (ProgressBar) v.findViewById(R.id.progreso);
 		}
 	}

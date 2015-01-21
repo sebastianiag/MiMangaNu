@@ -77,25 +77,12 @@ public class DescargaCapitulo implements CambioEstado {
 		return ret;
 	}
 
-	public void setPaginaFinalizada(int pagina, Estados estado) {
-		paginasStatus[(pagina - 1)] = estado;
-		progreso++;
-	}
-
-	public void setPaginaStatus(int pagina, Estados estado) {
-		paginasStatus[(pagina - 1)] = estado;
-	}
-
 	public int getProgreso() {
 		return progreso;
 	}
 
 	public void setProgreso(int progreso) {
 		this.progreso = progreso;
-	}
-
-	public int getFaltantes() {
-		return capitulo.getPaginas() - progreso;
 	}
 
 	public Capitulo getCapitulo() {
@@ -116,6 +103,7 @@ public class DescargaCapitulo implements CambioEstado {
 		progreso++;
 		if (progreso == capitulo.getPaginas()) {
 			Database.UpdateCapituloDescargado(ServicioColaDeDescarga.actual, capitulo.getId(), 1);
+			cambiarEstado(DescargaEstado.DESCARGADO);
 		}
 		if (cambioListener != null)
 			cambioListener.onCambio(descargaIndividual);

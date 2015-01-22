@@ -38,7 +38,8 @@ public class LectureEnLigne extends ServerBase {
 
 	@Override
 	public void cargarCapitulos(Manga manga) throws Exception {
-		// todo
+		if(manga.getCapitulos() == null || manga.getCapitulos().size() == 0)
+			cargarPortada(manga);
 	}
 
 	@Override

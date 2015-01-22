@@ -26,8 +26,7 @@ public class ImageLoader {
 
 	MemoryCache memoryCache = new MemoryCache();
 	FileCache fileCache;
-	private Map<Imaginable, String> imageViews = Collections
-			.synchronizedMap(new WeakHashMap<Imaginable, String>());
+	private Map<Imaginable, String> imageViews = Collections.synchronizedMap(new WeakHashMap<Imaginable, String>());
 	ExecutorService executorService;
 	Handler handler = new Handler();// handler to display images in UI thread
 
@@ -49,8 +48,6 @@ public class ImageLoader {
 		}
 	}
 
-
-
 	private void queuePhoto(String url, Imaginable imageView) {
 		PhotoToLoad p = new PhotoToLoad(url, imageView);
 		executorService.submit(new PhotosLoader(p));
@@ -67,12 +64,23 @@ public class ImageLoader {
 		// from web
 		try {
 			Bitmap bitmap = null;
-			URL imageUrl = new URL(url);
-			HttpURLConnection conn = (HttpURLConnection) imageUrl
-					.openConnection();
+			URL imageUrl;
+			String host = null;
+			{
+				int idx;
+				if ((idx = url.indexOf("|")) > 0) {
+					host = url.substring(idx + 1);
+					url = url.substring(0, idx);
+				}
+			}
+			imageUrl = new URL(url);
+			HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
 			conn.setConnectTimeout(5000);
 			conn.setReadTimeout(5000);
 			conn.setInstanceFollowRedirects(true);
+			if (host != null) {
+				conn.addRequestProperty("Host", host);
+			}
 			InputStream is = conn.getInputStream();
 			OutputStream os = new FileOutputStream(f);
 			Utils.CopyStream(is, os);
@@ -93,11 +101,10 @@ public class ImageLoader {
 		// try {
 		// decode image size
 
-		//return BitmapFactory.decodeFile(f.getPath());
-		
+		// return BitmapFactory.decodeFile(f.getPath());
+
 		return convertBitmap(f.getPath());
-		
-		
+
 		/*
 		 * BitmapFactory.Options o = new BitmapFactory.Options();
 		 * o.inJustDecodeBounds = true; FileInputStream stream1=new
@@ -119,47 +126,51 @@ public class ImageLoader {
 		 */
 		//
 	}
-	
-	@SuppressWarnings("deprecation")//Android lollipop automaticamente ignora estas lineas para verciones anteriores es realmente necesario
-	public static Bitmap convertBitmap(String path)   {
 
-        Bitmap bitmap=null;
-        BitmapFactory.Options bfOptions=new BitmapFactory.Options();
-        bfOptions.inDither=false;                     //Disable Dithering mode
-        bfOptions.inPurgeable=true;                   //Tell to gc that whether it needs free memory, the Bitmap can be cleared
-        bfOptions.inInputShareable=true;              //Which kind of reference will be used to recover the Bitmap data after being clear, when it will be used in the future
-        bfOptions.inTempStorage=new byte[32 * 1024]; 
+	@SuppressWarnings("deprecation")
+	// Android lollipop automaticamente ignora estas lineas para verciones
+	// anteriores es realmente necesario
+	public static Bitmap convertBitmap(String path) {
 
+		Bitmap bitmap = null;
+		BitmapFactory.Options bfOptions = new BitmapFactory.Options();
+		bfOptions.inDither = false; // Disable Dithering mode
+		bfOptions.inPurgeable = true; // Tell to gc that whether it needs free
+										// memory, the Bitmap can be cleared
+		bfOptions.inInputShareable = true; // Which kind of reference will be
+											// used to recover the Bitmap data
+											// after being clear, when it will
+											// be used in the future
+		bfOptions.inTempStorage = new byte[32 * 1024];
 
-        File file=new File(path);
-        FileInputStream fs=null;
-        try {
-            fs = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+		File file = new File(path);
+		FileInputStream fs = null;
+		try {
+			fs = new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 
-        try {
-            if(fs!=null)
-            {
-                bitmap=BitmapFactory.decodeFileDescriptor(fs.getFD(), null, bfOptions);
-            }
-            } catch (IOException e) {
+		try {
+			if (fs != null) {
+				bitmap = BitmapFactory.decodeFileDescriptor(fs.getFD(), null, bfOptions);
+			}
+		} catch (IOException e) {
 
-            e.printStackTrace();
-        } finally{ 
-            if(fs!=null) {
-                try {
-                    fs.close();
-                } catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (fs != null) {
+				try {
+					fs.close();
+				} catch (IOException e) {
 
-                    e.printStackTrace();
-                }
-            }
-        }
+					e.printStackTrace();
+				}
+			}
+		}
 
-        return bitmap;
-    }
+		return bitmap;
+	}
 
 	// Task for the queue
 	private class PhotoToLoad {

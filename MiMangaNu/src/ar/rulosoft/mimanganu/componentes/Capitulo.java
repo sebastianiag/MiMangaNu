@@ -8,7 +8,7 @@ public class Capitulo {
 	
 	int id, paginas, mangaID;
 	int pagLeidas, estadoLectura;
-	String titulo, path;
+	String titulo, path, extra;
 	boolean finalizado, descargado;
 
 	public int getMangaID() {
@@ -93,5 +93,12 @@ public class Capitulo {
 	public void setDescargado(boolean descargado) {
 		this.descargado = descargado;
 	}
+	
+	public String getExtra() {
+		return extra;
+	}
 
+	public void setExtra(String extra) {
+		this.extra = extra;
+	}
 }

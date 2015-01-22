@@ -10,7 +10,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory.Options;
 import android.util.Log;
+import ar.rulosoft.mimanganu.R;
 
 public class DescargaIndividual implements Runnable {
 	String origen, destino;
@@ -98,20 +103,31 @@ public class DescargaIndividual implements Runnable {
 				} finally {
 					boolean flagedOk = false;
 					if (estado != Estados.REINTENTANDO) {
-						if (contentLenght > o.length()) {
+						if (contentLenght > ot.length()) {
 							Log.e("MIMANGA DOWNLOAD", "content lenght =" + contentLenght + " tamaño =" + o.length() + " en =" + o.getPath());
 							ot.delete();
 							reintentos--;
 							changeStatus(Estados.REINTENTANDO);
 						} else {
-							flagedOk =true;
+							flagedOk = true;
 						}
 					}
 					try {
 						output.close();
 						input.close();
 						if (flagedOk) {
-							ot.renameTo(o);
+							if (ot.length() > 0) {
+								ot.renameTo(o);
+							} else {
+								ot.delete();
+								Options opt = new Options();
+								opt.inPreferredConfig = Config.RGB_565;
+								Bitmap bitmap = BitmapFactory.decodeResource(ServicioColaDeDescarga.actual.getResources(), R.drawable.error_image, opt);
+								FileOutputStream outStream = new FileOutputStream(o);
+								bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outStream);
+							    outStream.flush();
+							    outStream.close();
+							}
 							Log.i("MIMANGA DOWNLOAD", "descarga ok =" + o.getPath());
 							changeStatus(Estados.DESCARGA_OK);
 						}

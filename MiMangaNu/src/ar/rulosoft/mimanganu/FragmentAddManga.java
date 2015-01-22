@@ -14,6 +14,7 @@ import ar.rulosoft.mimanganu.servers.EsMangaCom;
 import ar.rulosoft.mimanganu.servers.EsMangaHere;
 import ar.rulosoft.mimanganu.servers.EsNineMangaCom;
 import ar.rulosoft.mimanganu.servers.HeavenMangaCom;
+import ar.rulosoft.mimanganu.servers.KissManga;
 import ar.rulosoft.mimanganu.servers.LectureEnLigne;
 import ar.rulosoft.mimanganu.servers.MangaFox;
 import ar.rulosoft.mimanganu.servers.MangaHere;
@@ -37,7 +38,7 @@ public class FragmentAddManga extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		lista_server.setAdapter(new ServerAdapter(getActivity(), new ServerBase[] { new HeavenMangaCom(), new SubManga(), new EsMangaCom(),
-				new EsNineMangaCom(), new EsMangaHere(), new MangaPanda(), new MangaHere(), new MangaFox(), new StarkanaCom(), new LectureEnLigne()}));
+				new EsNineMangaCom(), new EsMangaHere(), new MangaPanda(), new MangaHere(), new MangaFox(), new StarkanaCom(), new KissManga(), new LectureEnLigne()}));
 		lista_server.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

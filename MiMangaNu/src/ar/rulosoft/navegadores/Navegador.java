@@ -38,6 +38,7 @@ public class Navegador {
 		URL url = new URL(web);
 		conn = (HttpURLConnection) url.openConnection();
 		conn.setConnectTimeout(5000);
+		conn.setReadTimeout(5000);
 		addHeader("Accept-Encoding", "gzip,deflate");
 		setHeaders();
 		if (getLast_cookie() != null && getLast_cookie().length() > 2) {
@@ -86,6 +87,7 @@ public class Navegador {
 		URL url = new URL("http://" + ip + path);
 		conn = (HttpURLConnection) url.openConnection();
 		conn.setConnectTimeout(5000);
+		conn.setReadTimeout(5000);
 		addHeader("Accept-Encoding", "gzip,deflate");
 		addHeader("Host", host);
 		setHeaders();
@@ -160,6 +162,7 @@ public class Navegador {
 		URL url = new URL(web);
 		conn = (HttpURLConnection) url.openConnection();
 		conn.setConnectTimeout(5000);
+		conn.setReadTimeout(5000);
 		setHeaders();
 		if (getLast_cookie() != null && getLast_cookie().length() > 2) {
 			conn.setRequestProperty("Cookie", getLast_cookie());
@@ -193,6 +196,7 @@ public class Navegador {
 		conn = (HttpURLConnection) url.openConnection();
 		conn.addRequestProperty("Host", host);
 		conn.setConnectTimeout(5000);
+		conn.setReadTimeout(5000);
 		setHeaders();
 		if (getLast_cookie() != null && getLast_cookie().length() > 2) {
 			conn.setRequestProperty("Cookie", getLast_cookie());

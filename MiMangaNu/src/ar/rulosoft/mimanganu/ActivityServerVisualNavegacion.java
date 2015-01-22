@@ -204,7 +204,7 @@ public class ActivityServerVisualNavegacion extends ActionBarActivity {
 
 		@Override
 		protected void onPostExecute(ArrayList<Manga> result) {
-			if (error.length() > 1) {
+			if (error != null && error.length() > 1) {
 				Toast.makeText(ActivityServerVisualNavegacion.this, "Error: " + error, Toast.LENGTH_SHORT).show();
 			} else {
 				pagina++;

@@ -203,8 +203,8 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 	 */
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-		ArrayList<PlaceholderFragment> fragments = new ArrayList<PlaceholderFragment>(5);
-		int[] pos = { -1, -1, -1, -1 };
+		ArrayList<PlaceholderFragment> fragments = new ArrayList<PlaceholderFragment>(6);
+		int[] pos = { -1, -1, -1, -1 , -1, -1 };
 		int idx = 0;
 		FragmentManager fm = null;
 

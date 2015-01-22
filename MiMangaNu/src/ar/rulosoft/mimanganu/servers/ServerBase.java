@@ -114,22 +114,20 @@ public abstract class ServerBase {
 			simpleListC.addAll(mangaDb.getCapitulos().subList(0, diff));
 			simpleListC.addAll(mangaDb.getCapitulos().subList(mangaDb.getCapitulos().size() - diff, mangaDb.getCapitulos().size()));
 			for (Capitulo c : simpleListC) {
-				int i = 0;
-				while (simpleList.size() > i && !c.getPath().equalsIgnoreCase(simpleList.get(i).getPath())) {
-					i++;
-				}
-				if ((simpleList.size() > i)) {
-					simpleList.remove(i);
+				for(Capitulo csl: simpleList){
+					if(c.getPath().equalsIgnoreCase(csl.getPath())){
+						simpleList.remove(csl);
+						break;
+					}
 				}
 			}
 			if (!(simpleList.size() >= diff)) {
 				for (Capitulo c : mangaDb.getCapitulos()) {
-					int i = 0;
-					while (manga.getCapitulos().size() > i && !c.getPath().equalsIgnoreCase(manga.getCapitulo(i).getPath())) {
-						i++;
-					}
-					if ((manga.getCapitulos().size() > i)) {
-						manga.getCapitulos().remove(i);
+					for(Capitulo csl: manga.getCapitulos()){
+						if(c.getPath().equalsIgnoreCase(csl.getPath())){
+							manga.getCapitulos().remove(csl);
+							break;
+						}
 					}
 				}
 				simpleList = manga.getCapitulos();

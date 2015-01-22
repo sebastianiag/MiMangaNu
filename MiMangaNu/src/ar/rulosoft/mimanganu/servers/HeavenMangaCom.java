@@ -89,7 +89,7 @@ public class HeavenMangaCom extends ServerBase {
 		Matcher matcher = p.matcher(source);
 		ArrayList<Capitulo> capitulos = new ArrayList<Capitulo>();
 		while (matcher.find()) {
-			capitulos.add(new Capitulo(matcher.group(2), matcher.group(1)));
+			capitulos.add(0,new Capitulo(matcher.group(2), matcher.group(1)));
 		}
 		if (capitulos.size() > 0)
 			m.setCapitulos(capitulos);
@@ -102,7 +102,13 @@ public class HeavenMangaCom extends ServerBase {
 
 	@Override
 	public String getPagina(Capitulo c, int pagina) {
-		return c.getPath().substring(0,c.getPath().lastIndexOf("/") + 1) + pagina;
+		if(c.getExtra() == null)
+			try {
+				setExtra(c);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		return c.getExtra().substring(0,c.getExtra().lastIndexOf("/") + 1) + pagina;
 	}
 
 	@Override
@@ -113,12 +119,17 @@ public class HeavenMangaCom extends ServerBase {
 
 	@Override
 	public void iniciarCapitulo(Capitulo c) throws Exception {
-		String source = new Navegador().get(c.getPath());
-		String web = getFirstMacth("<a id=\"l\" href=\"(http://heavenmanga.com/.+?)\"><b>Leer</b>", source, "Error al obtener página");
-		c.setPath(web);
-		source = new Navegador().get(c.getPath());
+		if(c.getExtra() == null)
+			setExtra(c);
+		String source = new Navegador().get(c.getExtra());
 		String nop = getFirstMacth("(\\d+)</option></select>", source, "Error al cargar paginas");
 		c.setPaginas(Integer.parseInt(nop));
+	}
+	
+	private void setExtra(Capitulo c) throws Exception{
+		String source = new Navegador().get(c.getPath());
+		String web = getFirstMacth("<a id=\"l\" href=\"(http://heavenmanga.com/.+?)\"><b>Leer</b>", source, "Error al obtener página");
+		c.setExtra(web);
 	}
 
 	@Override

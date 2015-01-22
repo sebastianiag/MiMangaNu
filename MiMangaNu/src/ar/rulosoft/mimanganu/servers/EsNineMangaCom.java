@@ -109,8 +109,21 @@ public class EsNineMangaCom extends ServerBase {
 
 	@Override
 	public String getImagen(Capitulo c, int pagina) throws Exception {
-		String source = new Navegador().get(getPagina(c, pagina));
-		return getFirstMacth("<img class=\"manga_pic.+?src=\"([^\"]+)", source, "Error al obtener imagen");
+		if(c.getExtra() == null)
+			setExtra(c);
+		String[] imagenes = c.getExtra().split("\\|");
+		return imagenes[pagina];
+	}
+	
+	public void setExtra(Capitulo c)throws Exception{
+		String source = new Navegador().get(c.getPath().replace(".html", "-" + c.getPaginas() + "-1.html"));
+		Pattern p = Pattern.compile("<img class=\"manga_pic.+?src=\"([^\"]+)");
+		Matcher m = p.matcher(source);
+		String imagenes = "";
+		while (m.find()) {
+			imagenes = imagenes + "|" + m.group(1);
+		}
+		c.setExtra(imagenes);
 	}
 
 	@Override

@@ -86,8 +86,21 @@ public class StarkanaCom extends ServerBase {
 
 	@Override
 	public String getImagen(Capitulo c, int pagina) throws Exception {
-		String source = new Navegador().get(getPagina(c, pagina));
-		return getFirstMacth("class=\"dyn\" src=\"(.+?)\"", source, "Error al obtener imagen");
+		if(c.getExtra() == null)
+			setExtra(c);
+		String[] imagenes = c.getExtra().split("\\|");
+		return imagenes[pagina];
+	}
+
+	public void setExtra(Capitulo c) throws Exception {
+		String source = new Navegador().get(c.getPath() + "?scroll");
+		Pattern p = Pattern.compile("<img src=\"([^\"]+)\" alt=\"[^\"]*\" class=\"dyn\">");
+		Matcher m = p.matcher(source);
+		String imagenes = "";
+		while (m.find()) {
+			imagenes = imagenes + "|" + m.group(1);
+		}
+		c.setExtra(imagenes);
 	}
 
 	@Override
@@ -107,7 +120,7 @@ public class StarkanaCom extends ServerBase {
 			web = "/manga/search?" + generosV[categoria];
 		}
 		if (web.length() > 2) {
-			
+
 			String source = new Navegador().get("http://starkana.com" + web);
 			mangas = getMangasFromSource(source);
 		}
@@ -116,8 +129,7 @@ public class StarkanaCom extends ServerBase {
 
 	ArrayList<Manga> getMangasFromSource(String source) {
 		ArrayList<Manga> mangas = new ArrayList<Manga>();
-		Pattern p = Pattern
-				.compile("title=\"([^\"]+)\" href=\"(/manga/.+?)\".+?src=\"(.+?)\".+?tick_(.+?)\\.");//"<img class=\"a_img\" src=\"(.+?)\".+?<img src=\"http://starkana.com/img/icons/tick_(.+?).png\".+?href=\"(.+?)\".+?>(.+?)</a>");
+		Pattern p = Pattern.compile("title=\"([^\"]+)\" href=\"(/manga/.+?)\".+?src=\"(.+?)\".+?tick_(.+?)\\.");// "<img class=\"a_img\" src=\"(.+?)\".+?<img src=\"http://starkana.com/img/icons/tick_(.+?).png\".+?href=\"(.+?)\".+?>(.+?)</a>");
 		Matcher m = p.matcher(source);
 		while (m.find()) {
 			Manga manga;

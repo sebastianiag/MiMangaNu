@@ -108,7 +108,7 @@ public class HeavenMangaCom extends ServerBase {
 	@Override
 	public String getImagen(Capitulo c, int pagina) throws Exception {
 		String source = new Navegador().get(getPagina(c, pagina));
-		return getFirstMacth("<img src=\"(http://heavenmanga.com/.+?)\"", source, "Error al obtener imagen");
+		return getFirstMacth("src=\"([^\"]+)\" border=\"1\" id=\"p\">", source, "Error al obtener imagen");
 	}
 
 	@Override

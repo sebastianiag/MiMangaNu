@@ -13,6 +13,7 @@ import ar.rulosoft.mimanganu.componentes.Capitulo;
 import ar.rulosoft.mimanganu.componentes.Database;
 import ar.rulosoft.mimanganu.componentes.Manga;
 import ar.rulosoft.mimanganu.servers.ServerBase;
+import ar.rulosoft.mimanganu.services.DescargaCapitulo.DescargaEstado;
 import ar.rulosoft.mimanganu.services.DescargaIndividual.Estados;
 
 public class ServicioColaDeDescarga extends Service implements CambioEstado {
@@ -52,11 +53,11 @@ public class ServicioColaDeDescarga extends Service implements CambioEstado {
 		if (descargaIndividual.estado.ordinal() > Estados.POSTERGADA.ordinal()) {
 			slots++;
 		}
-		if(descargaListener != null){
+		if (descargaListener != null) {
 			descargaListener.onImagenDescargada(descargaIndividual.cid, descargaIndividual.index);
 		}
 	}
-	
+
 	public void setDescargaListener(DescargaListener descargaListener) {
 		this.descargaListener = descargaListener;
 	}
@@ -72,10 +73,12 @@ public class ServicioColaDeDescarga extends Service implements CambioEstado {
 				DescargaCapitulo dc = null;
 				int sig = 1;
 				for (DescargaCapitulo d : descargas) {
-					sig = d.getSiguiente();
-					if (sig > -1) {
-						dc = d;
-						break;
+					if (d.estado != DescargaEstado.ERROR) {
+						sig = d.getSiguiente();
+						if (sig > -1) {
+							dc = d;
+							break;
+						}
 					}
 				}
 				if (dc != null) {
@@ -96,7 +99,8 @@ public class ServicioColaDeDescarga extends Service implements CambioEstado {
 						dc.setCambioListener(this);
 						new Thread(des).start();
 					} catch (Exception e) {
-						e.printStackTrace();
+						dc.setErrorIdx(sig - 1);
+						slots++;
 					}
 				} else {
 					break;
@@ -123,8 +127,8 @@ public class ServicioColaDeDescarga extends Service implements CambioEstado {
 		else
 			descargas.add(new DescargaCapitulo(capitulo));
 	}
-	
-	public static void quitarDescarga(int index){
+
+	public static void quitarDescarga(int index) {
 		descargas.remove(index);
 	}
 

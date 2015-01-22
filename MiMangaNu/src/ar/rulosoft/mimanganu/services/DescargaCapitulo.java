@@ -96,15 +96,26 @@ public class DescargaCapitulo implements CambioEstado {
 	public void setCambioListener(CambioEstado cambioListener) {
 		this.cambioListener = cambioListener;
 	}
+	
+	public void setErrorIdx(int idx){
+		paginasStatus[idx] = Estados.ERROR_SUBIDA;
+		progreso++;	
+		hayErrores();
+		chackProgreso();
+	}
+	
+	public void chackProgreso(){
+		if (progreso == capitulo.getPaginas()) {
+			Database.UpdateCapituloDescargado(ServicioColaDeDescarga.actual, capitulo.getId(), 1);
+			cambiarEstado(DescargaEstado.DESCARGADO);
+		}
+	}
 
 	@Override
 	public void onCambio(DescargaIndividual descargaIndividual) {
 		paginasStatus[descargaIndividual.index] = descargaIndividual.estado;
 		progreso++;
-		if (progreso == capitulo.getPaginas()) {
-			Database.UpdateCapituloDescargado(ServicioColaDeDescarga.actual, capitulo.getId(), 1);
-			cambiarEstado(DescargaEstado.DESCARGADO);
-		}
+		chackProgreso();
 		if (cambioListener != null)
 			cambioListener.onCambio(descargaIndividual);
 	}

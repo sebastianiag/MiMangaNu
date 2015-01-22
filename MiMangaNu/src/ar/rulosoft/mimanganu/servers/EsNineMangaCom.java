@@ -116,7 +116,7 @@ public class EsNineMangaCom extends ServerBase {
 	@Override
 	public void iniciarCapitulo(Capitulo c) throws Exception {
 		String source = new Navegador().get(c.getPath());
-		String nop = getFirstMacth("\\d+/(\\d+)</option></select>", source, "Error al obtener el número de páginas");
+		String nop = getFirstMacth("\\d+/(\\d+)</option>[\\s]+</select>", source, "Error al obtener el número de páginas");
 		c.setPaginas(Integer.parseInt(nop));
 	}
 

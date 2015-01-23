@@ -19,6 +19,7 @@ import android.os.Handler;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Bitmap.Config;
 import ar.rulosoft.mimanganu.R;
 import ar.rulosoft.mimanganu.componentes.Imaginable;
 
@@ -141,6 +142,7 @@ public class ImageLoader {
 											// used to recover the Bitmap data
 											// after being clear, when it will
 											// be used in the future
+		bfOptions.inPreferredConfig = Config.RGB_565;
 		bfOptions.inTempStorage = new byte[32 * 1024];
 
 		File file = new File(path);

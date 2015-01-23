@@ -53,12 +53,12 @@ public class ActivityServerVisualNavegacion extends ActionBarActivity {
 		cargando = (ProgressBar) findViewById(R.id.cargando);
 
 		if (s.getCategorias() != null)
-			generos.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, s.getCategorias()));
+			generos.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, s.getCategorias()));
 		else
 			generos.setVisibility(Spinner.INVISIBLE);
 
 		if (s.getOrdenes() != null)
-			orden.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, s.getOrdenes()));
+			orden.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, s.getOrdenes()));
 		else
 			orden.setVisibility(Spinner.INVISIBLE);
 		

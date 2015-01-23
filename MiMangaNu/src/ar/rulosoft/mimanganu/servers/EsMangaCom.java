@@ -83,7 +83,7 @@ public class EsMangaCom extends ServerBase {
 	public String getImagen(Capitulo c, int pagina) throws Exception {
 		Navegador nav = new Navegador();
 		String source = nav.get(this.getPagina(c, pagina));
-		return getFirstMacth("<center>.+?src=\"(.+?)\" alt", source, "Error en plugin (obtener imager)");
+		return getFirstMacth("src=\"([^\"]+\\d.(jpg|png|bmp))", source, "Error en plugin (obtener imager)");
 	}
 
 	@Override

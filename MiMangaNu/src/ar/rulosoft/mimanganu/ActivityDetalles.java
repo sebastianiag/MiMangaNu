@@ -60,9 +60,9 @@ public class ActivityDetalles extends ActionBarActivity {
 	}
 
 	private class CargarDetalles extends AsyncTask<Void, Void, Void> {
-		
+
 		String error = ".";
-		
+
 		@Override
 		protected void onPreExecute() {
 			cargando.setVisibility(ProgressBar.VISIBLE);
@@ -87,7 +87,7 @@ public class ActivityDetalles extends ActionBarActivity {
 			datos.pTxt.setColor(Color.BLACK);
 			datos.inicializar(m.getTitulo(), m.getSinopsis(), 166, 250);
 			imageLoader.DisplayImage(m.getImages(), datos);
-			if(error != null && error.length() > 2){
+			if (error != null && error.length() > 2) {
 				Toast.makeText(ActivityDetalles.this, error, Toast.LENGTH_LONG).show();
 			}
 		}
@@ -117,7 +117,7 @@ public class ActivityDetalles extends ActionBarActivity {
 			int mid = Database.addManga(getBaseContext(), params[0]);
 			long initTime = System.currentTimeMillis();
 			for (int i = 0; i < params[0].getCapitulos().size(); i++) {
-				if(System.currentTimeMillis() - initTime > 500){
+				if (System.currentTimeMillis() - initTime > 500) {
 					onProgressUpdate(i);
 					initTime = System.currentTimeMillis();
 				}
@@ -125,29 +125,33 @@ public class ActivityDetalles extends ActionBarActivity {
 			}
 			return null;
 		}
-		
+
 		@Override
 		protected void onProgressUpdate(final Integer... values) {
 			super.onProgressUpdate(values);
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					if(agregando != null){
+					if (agregando != null) {
 						agregando.setMessage(getResources().getString(R.string.agregando) + " " + values[0] + "/" + total);
 					}
 				}
 			});
-			
+
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
 			agregando.dismiss();
 			Toast.makeText(ActivityDetalles.this, getResources().getString(R.string.agregado), Toast.LENGTH_SHORT).show();
-			if(error != null && error.length() > 2){
+			if (error != null && error.length() > 2) {
 				Toast.makeText(ActivityDetalles.this, error, Toast.LENGTH_LONG).show();
 			}
-			onBackPressed();
+			try {
+				onBackPressed();
+			} catch (Exception e) {
+
+			}
 			super.onPostExecute(result);
 		}
 

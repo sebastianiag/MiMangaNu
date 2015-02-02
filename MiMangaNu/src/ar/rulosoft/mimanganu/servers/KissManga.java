@@ -78,7 +78,7 @@ public class KissManga extends ServerBase {
 		Matcher matcher = p.matcher(source);
 		ArrayList<Capitulo> capitulos = new ArrayList<Capitulo>();
 		while (matcher.find()) {
-			capitulos.add(new Capitulo(matcher.group(2), matcher.group(1)));
+			capitulos.add(0, new Capitulo(matcher.group(2), matcher.group(1)));
 		}
 		m.setCapitulos(capitulos);
 	}

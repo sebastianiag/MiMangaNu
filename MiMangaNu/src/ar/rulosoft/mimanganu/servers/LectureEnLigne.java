@@ -47,16 +47,16 @@ public class LectureEnLigne extends ServerBase {
 
 		String data = new Navegador().get((manga.getPath()));// :</p><p>(.+?)</p>
 
-		manga.setSinopsis(getFirstMacthDefault(":</p><p>(.+?)</p>", data, "Sans synopsis"));
+		manga.setSinopsis(getFirstMacthDefault("</p>[\\s]+<p>(.+?)</p>", data, "Sans synopsis"));
 		manga.setImages("http://www.lecture-en-ligne.com/"
 				+ getFirstMacthDefault("<img src=\"([^\"]+)\" alt=\"[^\"]+\" class=\"imagemanga\"", data, ""));
 
 		// capitulos
 		ArrayList<Capitulo> capitulos = new ArrayList<Capitulo>();
-		Pattern p = Pattern.compile("<td class=\"td\">(.+?)</td><td class=\"td\"><a href=\"../../(.+?)\" class=\"table\">");
+		Pattern p = Pattern.compile("<td class=\"td\">(.+?)</td>[^\\.]+\\.\\./\\.\\.(.+?)\"");
 		Matcher ma = p.matcher(data);
 		while (ma.find()) {
-			capitulos.add(new Capitulo(ma.group(1), "http://www.lecture-en-ligne.com/" + ma.group(2)));
+			capitulos.add(0,new Capitulo(ma.group(1), "http://www.lecture-en-ligne.com/" + ma.group(2)));
 		}
 		manga.setCapitulos(capitulos);
 	}

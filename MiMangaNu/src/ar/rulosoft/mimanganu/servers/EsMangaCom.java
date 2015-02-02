@@ -72,7 +72,7 @@ public class EsMangaCom extends ServerBase {
 		Pattern p = Pattern.compile("<li>	<a href=\"(.+?)\".+?>(.+?)<strong>(.+?)<");
 		Matcher ma = p.matcher(source);
 		while (ma.find()) {
-			capitulos.add(new Capitulo(ma.group(2).trim() + " " + ma.group(3).trim(), ma.group(1)));
+			capitulos.add(0,new Capitulo(ma.group(2).trim() + " " + ma.group(3).trim(), ma.group(1)));
 		}
 		m.setCapitulos(capitulos);
 	}

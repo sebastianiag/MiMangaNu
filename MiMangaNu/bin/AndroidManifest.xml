@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ar.rulosoft.mimanganu"
-    android:versionCode="1"
-    android:versionName="1.01" >
+    android:versionCode="12"
+    android:versionName="1.12" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -38,7 +38,8 @@
         </activity>
         <activity
             android:name="ar.rulosoft.mimanganu.ActivityLector"
-            android:label="@string/title_activity_activity_lector" >
+            android:label="@string/title_activity_activity_lector"
+            android:largeHeap="true" >
         </activity>
         <activity
             android:name="ar.rulosoft.mimanganu.ActivityServerVisualNavegacion"
@@ -52,6 +53,9 @@
             android:name="ar.rulosoft.mimanganu.ActivityLicencia"
             android:label="@string/licencia" >
         </activity>
+
+        <service android:name="ar.rulosoft.mimanganu.services.ServicioColaDeDescarga" >
+        </service>
     </application>
 
 </manifest>

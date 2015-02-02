@@ -60,6 +60,13 @@ public class MangaPanda extends ServerBase {
 
 	@Override
 	public void cargarCapitulos(Manga manga) throws Exception {
+		if (manga.getCapitulos() == null || manga.getCapitulos().size() == 0)
+			cargarPortada(manga);
+	}
+
+	@Override
+	public void cargarPortada(Manga manga) throws Exception {
+		
 		String data = new Navegador().get((manga.getPath()));
 		Pattern p = Pattern.compile(PATTERN_FRAG_CAPITULOS);
 		Matcher m = p.matcher(data);
@@ -89,12 +96,6 @@ public class MangaPanda extends ServerBase {
 		//status
 		manga.setFinalizado(data.contains("</td><td>Completed</td>"));
 
-	}
-
-	@Override
-	public void cargarPortada(Manga m) throws Exception {
-		if (m.getCapitulos().isEmpty())
-			cargarCapitulos(m);
 	}
 
 	@Override

@@ -94,7 +94,7 @@ public class EsNineMangaCom extends ServerBase {
 		Matcher matcher = p.matcher(source);
 		ArrayList<Capitulo> capitulos = new ArrayList<Capitulo>();
 		while (matcher.find()) {
-			capitulos.add(new Capitulo(matcher.group(3), "http://es.ninemanga.com" + matcher.group(1)));
+			capitulos.add(0, new Capitulo(matcher.group(3), "http://es.ninemanga.com" + matcher.group(1)));
 		}
 		m.setCapitulos(capitulos);
 

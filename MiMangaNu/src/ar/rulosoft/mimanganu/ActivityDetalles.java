@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import ar.rulosoft.mimanganu.componentes.Database;
 import ar.rulosoft.mimanganu.componentes.DatosSerie;
@@ -25,6 +26,7 @@ public class ActivityDetalles extends ActionBarActivity {
 	ImageLoader imageLoader;
 	DatosSerie datos;
 	ProgressBar cargando;
+	TextView estado;
 	ServerBase s;
 	Manga m;
 
@@ -34,6 +36,7 @@ public class ActivityDetalles extends ActionBarActivity {
 		setContentView(R.layout.activity_detalles);
 		datos = (DatosSerie) findViewById(R.id.datos);
 		cargando = (ProgressBar) findViewById(R.id.cargando);
+		estado = (TextView) findViewById(R.id.status);
 		String titulo = getIntent().getExtras().getString(TITULO);
 		getSupportActionBar().setTitle(getResources().getString(R.string.datosde) + " " + titulo);
 		String path = getIntent().getExtras().getString(PATH);
@@ -85,6 +88,13 @@ public class ActivityDetalles extends ActionBarActivity {
 			cargando.setVisibility(ProgressBar.INVISIBLE);
 			datos.pTitle.setColor(Color.BLACK);
 			datos.pTxt.setColor(Color.BLACK);
+			String infoExtra = "";
+			if (m.isFinalizado()) {
+				infoExtra = infoExtra + getResources().getString(R.string.finalizado);
+			} else {
+				infoExtra = infoExtra + getResources().getString(R.string.en_progreso);
+			}
+			estado.setText(infoExtra);
 			datos.inicializar(m.getTitulo(), m.getSinopsis(), 166, 250);
 			imageLoader.DisplayImage(m.getImages(), datos);
 			if (error != null && error.length() > 2) {

@@ -61,9 +61,12 @@ public class EsMangaCom extends ServerBase {
 	public void cargarPortada(Manga m) throws Exception {
 		Navegador nav = new Navegador();
 		String source = nav.get(m.getPath());
+		//sinopsis
 		m.setSinopsis(getFirstMacthDefault("<div>Sinopsis:</div></td>[\\s\\S]+?<td class=\"contxt\">([\\s\\S]+?)<", source, "Sin Sinopsis"));
+		//imagen
 		m.setImages(getFirstMacthDefault("<div class=\"img-anim\">\\s+?<img src=\"(.+?)\"", source, ""));
-
+		//status
+		m.setFinalizado(getFirstMacthDefault("Estado.+?<td><strong>([^<]+)", source, "En desarrollo").length() == 9);
 		// capitulos
 		ArrayList<Capitulo> capitulos = new ArrayList<Capitulo>();
 		Pattern p = Pattern.compile("<li>	<a href=\"(.+?)\".+?>(.+?)<strong>(.+?)<");
@@ -127,5 +130,7 @@ public class EsMangaCom extends ServerBase {
 	public boolean tieneListado() {
 		return true;
 	}
+	
+	
 
 }

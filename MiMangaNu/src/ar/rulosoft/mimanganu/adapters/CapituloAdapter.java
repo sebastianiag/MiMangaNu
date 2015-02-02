@@ -81,7 +81,7 @@ public class CapituloAdapter extends ArrayAdapter<Capitulo> {
 			}
 			holder.textViewPaginas.setText("       ");
 			if (item.getPaginas() > 0) {
-				holder.textViewPaginas.setText(item.getPagLeidas() + "/" + item.getPaginas());
+					holder.textViewPaginas.setText(item.getPagLeidas() + "/" + item.getPaginas());
 			}
 			if (item.isDescargado()) {
 				holder.imageButton.setImageResource(R.drawable.ic_borrar);
@@ -104,7 +104,8 @@ public class CapituloAdapter extends ArrayAdapter<Capitulo> {
 						Database.UpdateCapituloDescargado(activity, c.getId(), 0);
 						Toast.makeText(activity, activity.getResources().getString(R.string.borrado_imagenes), Toast.LENGTH_SHORT).show();
 						notifyDataSetChanged();
-						//((ImageView) v).setImageResource(R.drawable.ic_bajar);
+						// ((ImageView)
+						// v).setImageResource(R.drawable.ic_bajar);
 					} else {
 						new AgregarCola().execute(c);
 					}
@@ -155,8 +156,8 @@ public class CapituloAdapter extends ArrayAdapter<Capitulo> {
 			} else {
 				asyncdialog.dismiss();
 				Database.updateCapitulo(activity, result);
-				//ColaDeDescarga.addCola(result);
-				//ColaDeDescarga.iniciarCola(activity);
+				// ColaDeDescarga.addCola(result);
+				// ColaDeDescarga.iniciarCola(activity);
 				ServicioColaDeDescarga.agregarDescarga(activity, result, false);
 				Toast.makeText(activity, activity.getResources().getString(R.string.agregadodescarga), Toast.LENGTH_LONG).show();
 			}

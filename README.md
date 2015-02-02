@@ -3,6 +3,9 @@
 
 Lector Manga online 
 
+Cambios 1.12
+Agregada opcion sentido de lectura issue #29, fixed #28, #27, #24, #23, #21 y agregado lo pedido en #22
+
 Cambios 1.11
 Agregado kissmanga reescrito el administrador de descarga como servicio y unos cuantos fixes para intentar manejar los errores en lollipop ademas de los generales.
 

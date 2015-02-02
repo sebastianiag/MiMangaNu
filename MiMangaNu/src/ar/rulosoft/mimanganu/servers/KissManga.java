@@ -43,7 +43,18 @@ public class KissManga extends ServerBase {
 		Navegador nav = new Navegador();
 		nav.addPost("keyword", URLEncoder.encode(termino, "UTF-8"));
 		String source = nav.post(IP, "/Search/Manga", HOST);
-		return getMangasSource(source);
+		ArrayList<Manga> lista = null;
+		Pattern p = Pattern.compile("href=\"(/Manga/.*?)\">([^<]+)</a>[^<]+<p>[^<]+<span class=\"info\"");
+		Matcher m = p.matcher(source);
+		if (m.find()) {
+			lista = new ArrayList<Manga>();
+			boolean status = getFirstMacthDefault("Status:</span>&nbsp;([\\S]+)", source, "Ongoing").length() == 9;
+			lista.add(new Manga(KISSMANGA, m.group(2), m.group(1), status));
+		} else {
+			lista = getMangasSource(source);
+		}
+
+		return lista;
 	}
 
 	@Override

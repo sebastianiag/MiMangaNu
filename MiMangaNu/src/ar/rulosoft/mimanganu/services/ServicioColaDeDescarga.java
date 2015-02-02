@@ -118,14 +118,16 @@ public class ServicioColaDeDescarga extends Service implements CambioEstado {
 	}
 
 	public static void agregarDescarga(Activity activity, Capitulo capitulo, boolean lectura) {
-		if (!intentPrending && actual == null) {
-			intentPrending = true;
-			activity.startService(new Intent(activity, ServicioColaDeDescarga.class));
+		if (!capitulo.isDescargado()) {
+			if (!intentPrending && actual == null) {
+				intentPrending = true;
+				activity.startService(new Intent(activity, ServicioColaDeDescarga.class));
+			}
+			if (lectura)
+				descargas.add(0, new DescargaCapitulo(capitulo));
+			else
+				descargas.add(new DescargaCapitulo(capitulo));
 		}
-		if (lectura)
-			descargas.add(0, new DescargaCapitulo(capitulo));
-		else
-			descargas.add(new DescargaCapitulo(capitulo));
 	}
 
 	public static void quitarDescarga(int index) {

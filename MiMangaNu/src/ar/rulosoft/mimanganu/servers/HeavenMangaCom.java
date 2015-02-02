@@ -83,6 +83,8 @@ public class HeavenMangaCom extends ServerBase {
 		// sinopsis
 		String sinopsis = getFirstMacthDefault("<div class=\"sinopsis\">(.+?)<div", source, "Sin sinopsis");
 		m.setSinopsis(sinopsis.replaceAll("<.+?>", ""));
+		
+		//estado no soportado
 	
 		// capitulos
 		Pattern p = Pattern.compile("<li><span class=\"capfec\">.+?><a href=\"(http://heavenmanga.com/.+?)\" title=\"(.+?)\"");

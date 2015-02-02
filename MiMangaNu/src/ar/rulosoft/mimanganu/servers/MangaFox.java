@@ -18,7 +18,7 @@ public class MangaFox extends ServerBase {
 
 	private static final String PATRON_PORTADA = "<div class=\"cover\">.+?src=\"(.+?)\"";
 	private static final String PATRON_SINOPSIS = "<p class=\"summary\">(.+?)</p>";
-	private static final String PATTERN_CAPITULOS = "<h4>                                <a href=\"(.+?)\".+?>(.+?)<.+?title nowrap\">(.+?)<";
+	private static final String PATTERN_CAPITULOS = "<h4>[\\s]+<a href=\"([^\"]+)\".+?>([^<]+)([^\"]+<span class=\"title nowrap\">(.+?)<)?";
 
 	private static final String PATRON_LAST = "(\\d+)</option>					<option value=\"0\"";
 	private static final String PATRON_IMAGEN = "src=\"([^\"]+?.(jpg|gif|jpeg|png|bmp))";
@@ -70,12 +70,18 @@ public class MangaFox extends ServerBase {
 			// sinopsis
 			manga.setSinopsis(getFirstMacthDefault(PATRON_SINOPSIS, data, "Without synopsis."));
 
+			manga.setFinalizado(data.contains("<h5>Status:</h5>    <span>        Completed"));
+
 			// capitulos
 			p = Pattern.compile(PATTERN_CAPITULOS);
 			m = p.matcher(data);
 
 			while (m.find()) {
-				Capitulo mc = new Capitulo(m.group(2).trim() + ": " + m.group(3), m.group(1));
+				Capitulo mc = null;
+				if (m.group(4) != null)
+					mc = new Capitulo(m.group(2).trim() + ": " + m.group(4), m.group(1));
+				else
+					mc = new Capitulo(m.group(2).trim(), m.group(1));
 				manga.addCapituloFirst(mc);
 			}
 		}

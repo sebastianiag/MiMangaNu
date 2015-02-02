@@ -41,6 +41,9 @@
     <string name="esconder_leido">Ocultar leídos</string>
     <string name="macartodoleido">Marcar todo como leído</string>
     <string name="macartodonoleido">Marcar todo como no leído</string>
+    <string name="sentido">Sentido de lectura</string>
+    <string name="finalizado">Estado: Finalizado.</string>
+    <string name="en_progreso">Estado: En progreso.</string>
     <string name="mit">The MIT License (MIT)
         Copyright &#169; 2014 rulosoft (Raul Haag)
         Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:

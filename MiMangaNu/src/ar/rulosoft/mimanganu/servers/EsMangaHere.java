@@ -65,6 +65,10 @@ public class EsMangaHere extends ServerBase {
 
 			// sinopsis
 			manga.setSinopsis(getFirstMacthDefault(PATRON_SINOPSIS,data,"Sin sinopsis."));
+			
+			// estado
+			
+			manga.setFinalizado(getFirstMacthDefault("<li><label>Estado:</label>(.+?)</li>", data, "En desarrollo").length() == 9);
 
 			// capitulos
 			data = getFirstMacth(PATRON_SEG_CAP, data, "Error al obtener lista de capítulos");

@@ -63,8 +63,10 @@ public class MangaHere extends ServerBase {
 			manga.setImages(getFirstMacthDefault(PATRON_PORTADA, data, ""));
 			
 			// sinopsis
-			p = Pattern.compile(PATRON_SINOPSIS);
 				manga.setSinopsis(getFirstMacthDefault(PATRON_SINOPSIS, data, "Without synopsis."));
+			
+			//status
+				manga.setFinalizado(data.contains("</label>Completed</li>"));
 
 			// capitulos
 			p = Pattern.compile(PATTERN_CAPITULOS);

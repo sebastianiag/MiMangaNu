@@ -45,6 +45,7 @@ import ar.rulosoft.mimanganu.componentes.Database;
 import ar.rulosoft.mimanganu.componentes.Manga;
 import ar.rulosoft.mimanganu.componentes.UnescroledViewPager;
 import ar.rulosoft.mimanganu.servers.ServerBase;
+import ar.rulosoft.mimanganu.ActivityCapitulos.Direccion;
 import ar.rulosoft.mimanganu.R;
 
 public class ActivityLector extends ActionBarActivity implements DescargaListener, OnSeekBarChangeListener, TapListener {
@@ -66,12 +67,14 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 	TextView seekerPage;
 	MenuItem displayMenu;
 	SharedPreferences pm;
+	Direccion direccion = Direccion.L2R;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		pm = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		AJUSTE_PAGINA = DisplayType.valueOf(pm.getString(AJUSTE_KEY, DisplayType.FIT_TO_WIDTH.toString()));
+		direccion = Direccion.values()[pm.getInt(ActivityCapitulos.DIRECCION, Direccion.R2L.ordinal())];
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		actionBar = getSupportActionBar();
 		actionBar.hide();
@@ -95,13 +98,20 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 
 			@Override
 			public void onPageSelected(int arg0) {
-				if (arg0 < capitulo.getPaginas())
-					capitulo.setPagLeidas(arg0 + 1);
-				else {
-					capitulo.setPagLeidas(arg0);
-				}
+				if (direccion == Direccion.R2L)
+					if (arg0 < capitulo.getPaginas())
+						capitulo.setPagLeidas(arg0 + 1);
+					else {
+						capitulo.setPagLeidas(arg0);
+					}
+				else
+					capitulo.setPagLeidas(capitulo.getPaginas() - arg0 + 1);
+
 				if (actionBar.isShowing()) {
-					seekBar.setProgress(arg0);
+					if (direccion == Direccion.R2L)
+						seekBar.setProgress(arg0);
+					else
+						seekBar.setProgress(capitulo.getPaginas() - arg0);
 				}
 			}
 
@@ -145,7 +155,11 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		if (capitulo.getPagLeidas() > 1) {
-			mViewPager.setCurrentItem(capitulo.getPagLeidas() - 1);
+			if (direccion == Direccion.R2L)
+				mViewPager.setCurrentItem(capitulo.getPagLeidas() - 1);
+			else
+				mViewPager.setCurrentItem(capitulo.getPaginas() - capitulo.getPagLeidas() + 1);
+
 		}
 		super.onResume();
 	}
@@ -190,7 +204,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 			@Override
 			public void run() {
 				Fragment fragment = mSectionsPagerAdapter.getIfOnMemory(pagina);
-				if (fragment != null) {
+				if (fragment != null && !((PlaceholderFragment) fragment).imageLoaded) {
 					((PlaceholderFragment) fragment).new SetImagen().execute();
 				}
 			}
@@ -204,7 +218,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 		ArrayList<PlaceholderFragment> fragments = new ArrayList<PlaceholderFragment>(6);
-		int[] pos = { -1, -1, -1, -1 , -1, -1 };
+		int[] pos = { -1, -1, -1, -1, -1, -1 };
 		int idx = 0;
 		FragmentManager fm = null;
 
@@ -225,10 +239,19 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 		@Override
 		public Fragment getItem(int position) {
 			Fragment rsta = null;
-			if (position == capitulo.getPaginas())
-				rsta = ultimaPaginaFragment;
+			if (direccion == Direccion.R2L)
+				if (position == capitulo.getPaginas())
+					rsta = ultimaPaginaFragment;
+				else {
+					rsta = getFragmentIn(position);
+				}
 			else {
-				rsta = getFragmentIn(position);
+				if (position == 0)
+					rsta = ultimaPaginaFragment;
+				else {
+					int pos = (capitulo.getPaginas() - position);
+					rsta = getFragmentIn(pos);
+				}
 			}
 			return rsta;
 		}
@@ -296,6 +319,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 		ProgressBar cargando;
 		TapListener mTapListener;
 		Runnable r = null;
+		boolean imageLoaded = false;
 
 		private String ruta = null;
 
@@ -367,6 +391,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 
 			}
 			visor.setImageBitmap(null);
+			imageLoaded = false;
 			super.onPause();
 		}
 
@@ -380,7 +405,8 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 
 		public void setImagen(String ruta) {
 			this.ruta = ruta;
-			new SetImagen().execute();
+			if (!imageLoaded)
+				new SetImagen().execute();
 		}
 
 		public class SetImagen extends AsyncTask<Void, Void, Bitmap> {
@@ -404,6 +430,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 			@Override
 			protected void onPostExecute(Bitmap result) {
 				if (result != null) {
+					imageLoaded = true;
 					visor.setScaleEnabled(true);
 					visor.setImageBitmap(result);
 					cargando.setVisibility(ProgressBar.INVISIBLE);
@@ -449,7 +476,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 					if (i > 0) {
 						c1 = caps.get(i - 1);
 					}
-					if (i < caps.size() - 2) {
+					if (i < caps.size() - 1) {
 						c2 = caps.get(i + 1);
 					}
 				}
@@ -545,11 +572,16 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		if (seekerPage != null)
-			seekerPage.setText("" + progress);
+			seekerPage.setText("" + (progress + 1) );
 	}
 
 	@Override
 	public void onStartTrackingTouch(SeekBar seekBar) {
+		if (direccion == Direccion.R2L)
+			seekerPage.setText("" + (mViewPager.getCurrentItem() + 1));
+		else {
+			seekerPage.setText("" + (capitulo.getPaginas() - mViewPager.getCurrentItem()));
+		}
 		seekerPage.setText("" + mViewPager.getCurrentItem());
 		seekerPage.setVisibility(SeekBar.VISIBLE);
 	}
@@ -557,7 +589,11 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		seekerPage.setVisibility(SeekBar.INVISIBLE);
-		mViewPager.setCurrentItem(seekBar.getProgress());
+		if (direccion == Direccion.R2L)
+			mViewPager.setCurrentItem(seekBar.getProgress());
+		else {
+			mViewPager.setCurrentItem(capitulo.getPaginas() - seekBar.getProgress());
+		}
 	}
 
 	@Override
@@ -570,7 +606,11 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 			seekLayout.setVisibility(LinearLayout.INVISIBLE);
 		} else {
 			actionBar.show();
-			seekBar.setProgress(mViewPager.getCurrentItem());
+			if (direccion == Direccion.R2L)
+				seekBar.setProgress(mViewPager.getCurrentItem());
+			else {
+				seekBar.setProgress((capitulo.getPaginas() - mViewPager.getCurrentItem()));
+			}
 			seekLayout.setVisibility(LinearLayout.VISIBLE);
 			LayoutParams params = (LayoutParams) seekLayout.getLayoutParams();
 			params.height = LayoutParams.WRAP_CONTENT;

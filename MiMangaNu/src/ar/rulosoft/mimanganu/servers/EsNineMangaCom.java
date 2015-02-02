@@ -85,13 +85,11 @@ public class EsNineMangaCom extends ServerBase {
 		// sinopsis
 		String sinopsis = getFirstMacthDefault("<p itemprop=\"description\">(.+?)&nbsp;Show less", source, "Sin sinopsis").replaceAll("<.+?>", "");
 		m.setSinopsis(sinopsis);
-
+		
+		//estado
+		m.setFinalizado(getFirstMacthDefault("Estado(.+?)</a>", source, "").contains("Completado"));
+		
 		// capítulos
-		/*
-		 * if (source.indexOf("html?waring=1") != -1) source = new
-		 * Navegador().get(m.getPath() + "?waring=1");/
-		 */
-
 		Pattern p = Pattern.compile("<a class=\"chapter_list_a\" href=\"(/chapter.+?)\" title=\"(.+?)\">(.+?)</a>");
 		Matcher matcher = p.matcher(source);
 		ArrayList<Capitulo> capitulos = new ArrayList<Capitulo>();

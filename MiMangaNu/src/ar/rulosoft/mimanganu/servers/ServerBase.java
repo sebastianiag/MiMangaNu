@@ -100,6 +100,8 @@ public abstract class ServerBase {
 	public abstract String[] getOrdenes();
 
 	public abstract boolean tieneListado();
+	
+//	public abstract boolean supportStatus();
 
 	public int buscarNuevosCapitulos(Manga manga, Context context) throws Exception {
 		int returnValue = 0;

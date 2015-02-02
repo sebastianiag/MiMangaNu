@@ -6,9 +6,11 @@ import java.util.List;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -26,6 +28,10 @@ import ar.rulosoft.mimanganu.R;
 
 public class ActivityCapitulos extends ActionBarActivity {
 
+	public static enum Direccion {L2R, R2L};
+	public static final String DIRECCION = "direccion_de_lectura";
+
+
 	public static final String CAPITULO_ID = "cap_id";
 
 	SectionsPagerAdapter mSectionsPagerAdapter;
@@ -33,9 +39,12 @@ public class ActivityCapitulos extends ActionBarActivity {
 	FragmentCapitulos fragmentCapitulos;
 	FragmentDetalles fragmentDetalles;
 	FragmentDescarga fragmentDescarga;
+	SharedPreferences pm;
 	ViewPager mViewPager;
+	MenuItem sentido;
 	SetCapitulos listenerCapitulos;
 	public Manga manga;
+	public Direccion direccion;
 	int id;
 
 	@Override
@@ -68,6 +77,8 @@ public class ActivityCapitulos extends ActionBarActivity {
 		PagerTabStrip pagerTabStrip = (PagerTabStrip) findViewById(R.id.pager_strip);
 		pagerTabStrip.setDrawFullUnderline(true);
 		pagerTabStrip.setTabIndicatorColor(Color.BLACK);
+
+		pm = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 	}
 
 	@Override
@@ -80,19 +91,25 @@ public class ActivityCapitulos extends ActionBarActivity {
 		Database.updateMangaNuevos(ActivityCapitulos.this, manga, -100);
 		BuscarNuevo.onActivityResumed(ActivityCapitulos.this);
 	}
-	
+
 	@Override
 	protected void onPause() {
 		BuscarNuevo.onActivityPaused();
 		super.onPause();
 	}
 
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_capitulos, menu);
+		sentido = menu.findItem(R.id.action_sentido);
+		int direccion = pm.getInt(DIRECCION, Direccion.R2L.ordinal());
+		if(direccion == Direccion.R2L.ordinal()){
+			this.direccion = Direccion.R2L;
+			sentido.setIcon(R.drawable.ic_action_clasico);
+		}else{
+			this.direccion = Direccion.L2R;
+			sentido.setIcon(R.drawable.ic_action_inverso);
+		}
 		return true;
 	}
 
@@ -120,6 +137,17 @@ public class ActivityCapitulos extends ActionBarActivity {
 			fragmentCapitulos.onCalpitulosCargados(ActivityCapitulos.this, Database.getCapitulos(ActivityCapitulos.this, this.id));
 		} else if (id == R.id.action_buscarnuevos) {
 			new BuscarNuevo().setActivity(ActivityCapitulos.this).execute(manga);
+		} else if (id == R.id.action_sentido) {
+			int direccion = pm.getInt(DIRECCION, Direccion.R2L.ordinal());
+			if(direccion == Direccion.R2L.ordinal()){
+				sentido.setIcon(R.drawable.ic_action_inverso);
+				pm.edit().putInt(DIRECCION, Direccion.L2R.ordinal()).commit();
+				this.direccion = Direccion.L2R;
+			}else{
+				sentido.setIcon(R.drawable.ic_action_clasico);
+				pm.edit().putInt(DIRECCION, Direccion.R2L.ordinal()).commit();
+				this.direccion = Direccion.R2L;
+			}
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -193,9 +221,9 @@ public class ActivityCapitulos extends ActionBarActivity {
 		}
 
 	}
-	
-public static class BuscarNuevo extends AsyncTask<Manga, String, Integer> {
-		
+
+	public static class BuscarNuevo extends AsyncTask<Manga, String, Integer> {
+
 		Activity activity;
 		ProgressDialog progreso;
 		static boolean running = false;
@@ -251,24 +279,25 @@ public static class BuscarNuevo extends AsyncTask<Manga, String, Integer> {
 		protected Integer doInBackground(Manga... params) {
 			int result = 0;
 			Database.removerCapitulosHuerfanos(activity);
-				ServerBase s = ServerBase.getServer(params[0].getServerId());
-				mangaId = params[0].getId();
-				try {
-					onProgressUpdate(params[0].getTitulo());
-					params[0].setCapitulos(null);
-					s.cargarCapitulos(params[0]);
-					int diff = s.buscarNuevosCapitulos(params[0], activity);
-					result += diff;
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+			ServerBase s = ServerBase.getServer(params[0].getServerId());
+			mangaId = params[0].getId();
+			try {
+				onProgressUpdate(params[0].getTitulo());
+				params[0].setCapitulos(null);
+				s.cargarCapitulos(params[0]);
+				int diff = s.buscarNuevosCapitulos(params[0], activity);
+				result += diff;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			return result;
 		}
 
 		@Override
 		protected void onPostExecute(Integer result) {
-			if(((ActivityCapitulos)activity).fragmentCapitulos != null && result > 0)
-				((ActivityCapitulos)activity).fragmentCapitulos.onCalpitulosCargados(activity, Database.getCapitulos(activity, mangaId));;
+			if (((ActivityCapitulos) activity).fragmentCapitulos != null && result > 0)
+				((ActivityCapitulos) activity).fragmentCapitulos.onCalpitulosCargados(activity, Database.getCapitulos(activity, mangaId));
+			;
 			if (progreso != null && progreso.isShowing()) {
 				try {
 					progreso.dismiss();

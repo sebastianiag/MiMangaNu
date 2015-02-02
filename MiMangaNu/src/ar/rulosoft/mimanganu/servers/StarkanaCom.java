@@ -65,10 +65,11 @@ public class StarkanaCom extends ServerBase {
 		// portada
 		String portada = getFirstMacthDefault("<img class=\"a_img\" src=\"(.+?)\"", source, "");
 		m.setImages(portada);
-		;
 		// Sinopsis
 		String sinopsis = getFirstMacthDefault("<b>Summary:.+?<div>(.+?)<", source, "Without synopsis");
 		m.setSinopsis(sinopsis);
+		//status
+		m.setFinalizado(source.contains("<b>Completed</b></span>"));
 		// capitulos
 		Pattern p = Pattern.compile("<a class=\"download-link\" href=\"(.+?)\">(.+?)</a>");
 		Matcher matcher = p.matcher(source);

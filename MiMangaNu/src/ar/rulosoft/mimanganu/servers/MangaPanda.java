@@ -86,6 +86,8 @@ public class MangaPanda extends ServerBase {
 		manga.setSinopsis(getFirstMacthDefault("<p>(.+)</p>", data, "Without synopsis"));
 		// portada
 		manga.setImages(getFirstMacthDefault("mangaimg\"><img src=\"([^\"]+)", data, ""));
+		//status
+		manga.setFinalizado(data.contains("</td><td>Completed</td>"));
 
 	}
 

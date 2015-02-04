@@ -159,7 +159,9 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 				mViewPager.setCurrentItem(capitulo.getPagLeidas() - 1);
 			else
 				mViewPager.setCurrentItem(capitulo.getPaginas() - capitulo.getPagLeidas() + 1);
-
+		}else{
+			if (direccion == Direccion.L2R)
+				mViewPager.setCurrentItem(capitulo.getPaginas() + 1);
 		}
 		super.onResume();
 	}

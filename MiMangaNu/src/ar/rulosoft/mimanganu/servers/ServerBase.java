@@ -100,8 +100,8 @@ public abstract class ServerBase {
 	public abstract String[] getOrdenes();
 
 	public abstract boolean tieneListado();
-	
-//	public abstract boolean supportStatus();
+
+	// public abstract boolean supportStatus();
 
 	public int buscarNuevosCapitulos(Manga manga, Context context) throws Exception {
 		int returnValue = 0;
@@ -116,37 +116,43 @@ public abstract class ServerBase {
 			simpleListC.addAll(mangaDb.getCapitulos().subList(0, diff));
 			simpleListC.addAll(mangaDb.getCapitulos().subList(mangaDb.getCapitulos().size() - diff, mangaDb.getCapitulos().size()));
 			for (Capitulo c : simpleListC) {
-				for(Capitulo csl: simpleList){
-					if(c.getPath().equalsIgnoreCase(csl.getPath())){
+				for (Capitulo csl : simpleList) {
+					if (c.getPath().equalsIgnoreCase(csl.getPath())) {
 						simpleList.remove(csl);
 						break;
 					}
 				}
 			}
 			if (!(simpleList.size() >= diff)) {
-				for (Capitulo c : mangaDb.getCapitulos()) {
-					for(Capitulo csl: manga.getCapitulos()){
-						if(c.getPath().equalsIgnoreCase(csl.getPath())){
-							manga.getCapitulos().remove(csl);
+				simpleList = new ArrayList<Capitulo>();
+				for (Capitulo c : manga.getCapitulos()) {
+					boolean masUno = true;
+					for (Capitulo csl : mangaDb.getCapitulos()) {
+						if (c.getPath().equalsIgnoreCase(csl.getPath())) {
+							mangaDb.getCapitulos().remove(csl);
+							masUno = false;
 							break;
 						}
 					}
+					if (masUno) {
+						simpleList.add(c);
+					}
 				}
-				simpleList = manga.getCapitulos();
+				// simpleList = manga.getCapitulos();
 			}
-			for(Capitulo c: simpleList){
+			for (Capitulo c : simpleList) {
 				c.setMangaID(mangaDb.getId());
 				c.setEstadoLectura(Capitulo.NUEVO);
 				Database.addCapitulo(context, c, mangaDb.getId());
 			}
-			
-			if(simpleList.size() > 0){
+
+			if (simpleList.size() > 0) {
 				Database.updateMangaLeido(context, mangaDb.getId());
-				Database.updateMangaNuevos(context, mangaDb, diff);		
+				Database.updateMangaNuevos(context, mangaDb, diff);
 			}
-			
+
 			returnValue = simpleList.size();
-		} 
+		}
 		return returnValue;
 	}
 
@@ -190,13 +196,13 @@ public abstract class ServerBase {
 		}
 		throw new Exception(errorMsj);
 	}
-	
+
 	public String getFirstMacthDefault(String patron, String source, String mDefault) throws Exception {
 		Pattern p = Pattern.compile(patron);
 		Matcher m = p.matcher(source);
 		if (m.find()) {
 			return m.group(1);
-		}else{
+		} else {
 			return mDefault;
 		}
 	}

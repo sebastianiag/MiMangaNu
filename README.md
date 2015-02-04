@@ -3,6 +3,9 @@
 
 Lector Manga online 
 
+Cambios 1.13
+Mejorada la búsqueda de actualizaciones, las actualizaciones aparecen ordenadas (al menos que haya errores en las paginas de origen), areglado esninemanga y minorfix. 
+
 Cambios 1.12
 Agregada opcion sentido de lectura issue #29, fixed #28, #27, #24, #23, #21 y agregado lo pedido en #22
 

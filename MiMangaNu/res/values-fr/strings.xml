@@ -40,6 +40,13 @@
     <string name="esconder_leido">Cacher déjà lu</string>
     <string name="macartodoleido">Marquer tout comme lu</string>
     <string name="macartodonoleido">Marquer tout comme non lu</string>
+    <string name="sentido">Direction</string>
+    <string name="finalizado">Statut: Terminé.</string>
+    <string name="en_progreso">Statut: En cours.</string>
+    <string name="encola">(En attente)</string>
+    <string name="descargando">(Téléchargement)</string>
+    <string name="descargado">(Téléchargé)</string>
+    <string name="error">(Erreur)</string>
     <string name="mit">The MIT License (MIT)
         Copyright © 2014 rulosoft (Raul Haag)
         Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:

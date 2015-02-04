@@ -32,7 +32,7 @@ public class FragmentDescarga extends Fragment {
 	@SuppressLint("NewApi")
 	@Override
 	public void onResume() {
-		adap = new DescargaAdapter(getActivity(), new ArrayList<DescargaCapitulo>());
+		adap = new DescargaAdapter(getActivity(), new ArrayList<DescargaCapitulo>(), (ActivityCapitulos) getActivity());
 		lista.setAdapter(adap);
 		md = new MostrarDescargas();
 		if (Build.VERSION.SDK_INT >= 11)

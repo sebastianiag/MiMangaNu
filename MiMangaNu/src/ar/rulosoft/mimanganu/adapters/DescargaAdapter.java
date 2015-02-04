@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import ar.rulosoft.mimanganu.ActivityCapitulos;
 import ar.rulosoft.mimanganu.R;
 import ar.rulosoft.mimanganu.services.DescargaCapitulo;
 
@@ -19,9 +20,11 @@ public class DescargaAdapter extends ArrayAdapter<DescargaCapitulo> {
 	private LayoutInflater li;
 	private static int listItem = R.layout.listitem_descarga;
 	ArrayList<DescargaCapitulo> descargas = new ArrayList<DescargaCapitulo>();
+	public static String[] estados;
 
-	public DescargaAdapter(Context context, ArrayList<DescargaCapitulo> objects) {
+	public DescargaAdapter(Context context, ArrayList<DescargaCapitulo> objects, ActivityCapitulos activityCapitulos) {
 		super(context, listItem);
+		estados = activityCapitulos.getResources().getStringArray(R.array.estados_descarga);
 		li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
@@ -54,7 +57,7 @@ public class DescargaAdapter extends ArrayAdapter<DescargaCapitulo> {
 		final DescargaCapitulo item = getItem(position);
 
 		if (item != null) {
-			String textInfo = " " + item.estado.name();
+			String textInfo = " " + estados[item.estado.ordinal()];
 			holder.textViewNombre.setText(item.getCapitulo().getTitulo() + textInfo);
 			holder.cargandoProgressBar.setMax(item.getCapitulo().getPaginas());
 			holder.cargandoProgressBar.setProgress(item.getProgreso());

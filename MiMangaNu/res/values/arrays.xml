@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <string-array
+        name="estados_descarga">
+        <item>@string/encola</item>
+        <item>@string/descargando</item>
+        <item>@string/descargado</item>
+        <item>@string/error</item>
+    </string-array> 
+</resources>

@@ -3,6 +3,9 @@
 
 Lector Manga online 
 
+Cambios 1.14
+Fix todos los servers funcionando al 100% al 5/2/15, agregados junit para test de server fix iniciar en lectura izq a der. 
+
 Cambios 1.13
 Mejorada la búsqueda de actualizaciones, las actualizaciones aparecen ordenadas (al menos que haya errores en las paginas de origen), areglado esninemanga y minorfix. 
 

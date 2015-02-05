@@ -34,14 +34,14 @@ public class StarkanaCom extends ServerBase {
 	@Override
 	public ArrayList<Manga> getMangas() throws Exception {
 		String source = new Navegador().get("http://starkana.com/manga/list");
-		Pattern p = Pattern.compile("<img src=\"http://starkana.com/img/icons/tick_(.+?).png\".+?href=\"(.+?)\">(.+?)<");
+		Pattern p = Pattern.compile("http://starkana.(jp|com)/img/icons/tick_(.+?).png\".+?href=\"(.+?)\">(.+?)<");
 		Matcher m = p.matcher(source);
 		ArrayList<Manga> mangas = new ArrayList<Manga>();
 		while (m.find()) {
-			if (m.group(1).length() == 4) {
-				mangas.add(new Manga(STARKANACOM, m.group(3), "http://starkana.com" + m.group(2), false));
+			if (m.group(2).length() == 4) {
+				mangas.add(new Manga(STARKANACOM, m.group(4), "http://starkana.com" + m.group(3), false));
 			} else {
-				mangas.add(new Manga(STARKANACOM, m.group(3), "http://starkana.com" + m.group(2), true));
+				mangas.add(new Manga(STARKANACOM, m.group(4), "http://starkana.com" + m.group(3), true));
 			}
 		}
 		return mangas;

@@ -38,7 +38,7 @@ public class LectureEnLigne extends ServerBase {
 
 	@Override
 	public void cargarCapitulos(Manga manga) throws Exception {
-		if(manga.getCapitulos() == null || manga.getCapitulos().size() == 0)
+		if (manga.getCapitulos() == null || manga.getCapitulos().size() == 0)
 			cargarPortada(manga);
 	}
 
@@ -48,15 +48,14 @@ public class LectureEnLigne extends ServerBase {
 		String data = new Navegador().get((manga.getPath()));// :</p><p>(.+?)</p>
 
 		manga.setSinopsis(getFirstMacthDefault("</p>[\\s]+<p>(.+?)</p>", data, "Sans synopsis"));
-		manga.setImages("http://www.lecture-en-ligne.com/"
-				+ getFirstMacthDefault("<img src=\"([^\"]+)\" alt=\"[^\"]+\" class=\"imagemanga\"", data, ""));
+		manga.setImages("http://www.lecture-en-ligne.com/" + getFirstMacthDefault("<img src=\"([^\"]+)\" alt=\"[^\"]+\" class=\"imagemanga\"", data, ""));
 
 		// capitulos
 		ArrayList<Capitulo> capitulos = new ArrayList<Capitulo>();
 		Pattern p = Pattern.compile("<td class=\"td\">(.+?)</td>[^\\.]+\\.\\./\\.\\.(.+?)\"");
 		Matcher ma = p.matcher(data);
 		while (ma.find()) {
-			capitulos.add(0,new Capitulo(ma.group(1), "http://www.lecture-en-ligne.com/" + ma.group(2)));
+			capitulos.add(0, new Capitulo(ma.group(1), "http://www.lecture-en-ligne.com/" + ma.group(2)));
 		}
 		manga.setCapitulos(capitulos);
 	}
@@ -69,13 +68,13 @@ public class LectureEnLigne extends ServerBase {
 	@Override
 	public String getImagen(Capitulo c, int pagina) throws Exception {
 		String data = new Navegador().get(this.getPagina(c, pagina));
-		return "http://www.lecture-en-ligne.com" + getFirstMacth("<img id=\"image\" src=\"(.+?)\"", data, "Error: no se pudo obtener el enlace a la imagen");
+		return getFirstMacth("<img id='image' src='(.+?)'", data, "Error: no se pudo obtener el enlace a la imagen");
 	}
 
 	@Override
 	public void iniciarCapitulo(Capitulo c) throws Exception {
 		String data = new Navegador().get(c.getPath());
-		String paginas = getFirstMacth("\"\\d+\">(\\d+)</option>	+</select>[^<]", data, "Error: no se pudo obtener el numero de paginas");
+		String paginas = getFirstMacth("<select class=\"pages\">.+?(\\d+)</option>[\\s]*</select>", data, "Error: no se pudo obtener el numero de paginas");
 		c.setPaginas(Integer.parseInt(paginas));
 	}
 

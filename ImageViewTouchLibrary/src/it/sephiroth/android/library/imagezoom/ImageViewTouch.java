@@ -213,6 +213,26 @@ public class ImageViewTouch extends ImageViewTouchBase {
 		double bitmapScrollRectDelta = Math.abs(bitmapRect.left - mScrollRect.left);
 		return bitmapScrollRectDelta > SCROLL_DELTA_THRESHOLD;
 	}
+	
+	public boolean canScrollV(int direction) {
+		RectF bitmapRect = getBitmapRect();
+		updateRect(bitmapRect, mScrollRect);
+		Rect imageViewRect = new Rect();
+		getGlobalVisibleRect(imageViewRect);
+
+		if (null == bitmapRect) {
+			return false;
+		}
+
+		if (bitmapRect.bottom >= imageViewRect.bottom) {
+			if (direction < 0) {
+				return Math.abs(bitmapRect.bottom - imageViewRect.bottom) > SCROLL_DELTA_THRESHOLD;
+			}
+		}
+
+		double bitmapScrollRectDelta = Math.abs(bitmapRect.top - mScrollRect.top);
+		return bitmapScrollRectDelta > SCROLL_DELTA_THRESHOLD;
+	}
 
 	public class GestureListener extends GestureDetector.SimpleOnGestureListener {
 

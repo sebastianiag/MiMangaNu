@@ -28,7 +28,7 @@ import ar.rulosoft.mimanganu.R;
 
 public class ActivityCapitulos extends ActionBarActivity {
 
-	public static enum Direccion {L2R, R2L};
+	public static enum Direccion {L2R, R2L, VERTICAL};
 	public static final String DIRECCION = "direccion_de_lectura";
 
 

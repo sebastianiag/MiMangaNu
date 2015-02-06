@@ -297,7 +297,6 @@ public class ActivityCapitulos extends ActionBarActivity {
 		protected void onPostExecute(Integer result) {
 			if (((ActivityCapitulos) activity).fragmentCapitulos != null && result > 0)
 				((ActivityCapitulos) activity).fragmentCapitulos.onCalpitulosCargados(activity, Database.getCapitulos(activity, mangaId));
-			;
 			if (progreso != null && progreso.isShowing()) {
 				try {
 					progreso.dismiss();

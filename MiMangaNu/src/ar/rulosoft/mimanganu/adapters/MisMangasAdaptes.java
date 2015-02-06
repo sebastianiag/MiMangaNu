@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import ar.rulosoft.mimanganu.componentes.ControlTapaSerie;
 import ar.rulosoft.mimanganu.componentes.Manga;
+import ar.rulosoft.mimanganu.servers.ServerBase;
 import ar.rulosoft.mimanganu.R;
 
 public class MisMangasAdaptes extends ArrayAdapter<Manga> {
@@ -37,31 +38,35 @@ public class MisMangasAdaptes extends ArrayAdapter<Manga> {
 			holder = new ViewHolder();
 			holder.serie = (ControlTapaSerie) item.findViewById(R.id.tapa);
 			holder.notif = (ImageView) item.findViewById(R.id.notif);
+			holder.server = (ImageView) item.findViewById(R.id.server);
 			item.setTag(holder);
 		} else {
 			holder = (ViewHolder) item.getTag();
 		}
 
 		Manga s = (Manga) getItem(position);
+		ServerBase server = ServerBase.getServer(s.getServerId());
 		holder.serie.setText(s.getTitulo());
 		imageLoader.DisplayImage(s.getImages(), holder.serie);
-		if(s.getNuevos()>0){
+		holder.server.setImageResource(server.getIcon());
+		if (s.getNuevos() > 0) {
 			holder.notif.setVisibility(ImageView.VISIBLE);
-		}else{
+		} else {
 			holder.notif.setVisibility(ImageView.INVISIBLE);
 		}
-		
+
 		return (item);
 	}
-	
-	public void addAll(ArrayList<Manga> mangasNuevos){
+
+	public void addAll(ArrayList<Manga> mangasNuevos) {
 		for (Manga manga : mangasNuevos) {
 			add(manga);
-		}	
+		}
 	}
 
 	static class ViewHolder {
 		public ImageView notif;
+		public ImageView server;
 		public ControlTapaSerie serie;
 	}
 

@@ -71,4 +71,8 @@ public class ControlTapaSerie extends RelativeLayout implements Imaginable{
 		}
 	}
 	
+	public void setImageLeft(int dra){
+		texto.setCompoundDrawablesWithIntrinsicBounds(dra, 0, 0, 0);
+	}
+	
 }

@@ -106,9 +106,12 @@ public class ActivityCapitulos extends ActionBarActivity {
 		if(direccion == Direccion.R2L.ordinal()){
 			this.direccion = Direccion.R2L;
 			sentido.setIcon(R.drawable.ic_action_clasico);
-		}else{
+		}else if(direccion == Direccion.L2R.ordinal()){
 			this.direccion = Direccion.L2R;
 			sentido.setIcon(R.drawable.ic_action_inverso);
+		}else{
+			this.direccion = Direccion.VERTICAL;
+			sentido.setIcon(R.drawable.ic_action_verical);
 		}
 		return true;
 	}
@@ -143,6 +146,10 @@ public class ActivityCapitulos extends ActionBarActivity {
 				sentido.setIcon(R.drawable.ic_action_inverso);
 				pm.edit().putInt(DIRECCION, Direccion.L2R.ordinal()).commit();
 				this.direccion = Direccion.L2R;
+			}else if(direccion == Direccion.L2R.ordinal()){
+				sentido.setIcon(R.drawable.ic_action_verical);
+				pm.edit().putInt(DIRECCION, Direccion.VERTICAL.ordinal()).commit();
+				this.direccion = Direccion.VERTICAL;
 			}else{
 				sentido.setIcon(R.drawable.ic_action_clasico);
 				pm.edit().putInt(DIRECCION, Direccion.R2L.ordinal()).commit();

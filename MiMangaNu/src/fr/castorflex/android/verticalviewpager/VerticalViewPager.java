@@ -51,6 +51,7 @@ import java.util.Comparator;
  * Created by castorflex on 12/29/13.
  * Just a copy of the original ViewPager modified to support vertical Scrolling
  */
+
 public class VerticalViewPager extends ViewGroup {
 
     private static final String TAG = "ViewPager";

@@ -16,7 +16,7 @@ public class UnescroledViewPagerVertical extends VerticalViewPager {
 	@Override
 	protected boolean canScroll(View v, boolean checkV, int dx, int x, int y) {
 		try {
-			return ((PlaceholderFragment)((SectionsPagerAdapter)getAdapter()).getCurrentFragment()).canScrollV(-dx);
+			return ((PlaceholderFragment)((SectionsPagerAdapter)getAdapter()).getCurrentFragment()).canScrollV(dx);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

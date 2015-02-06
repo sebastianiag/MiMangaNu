@@ -75,9 +75,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 		super.onCreate(savedInstanceState);
 		pm = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		AJUSTE_PAGINA = DisplayType.valueOf(pm.getString(AJUSTE_KEY, DisplayType.FIT_TO_WIDTH.toString()));
-		// TODO direccion =
-		// Direccion.values()[pm.getInt(ActivityCapitulos.DIRECCION,
-		// Direccion.R2L.ordinal())];
+		direccion = Direccion.values()[pm.getInt(ActivityCapitulos.DIRECCION, Direccion.R2L.ordinal())];
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		actionBar = getSupportActionBar();
 		actionBar.hide();
@@ -86,7 +84,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 
 			@Override
 			public void onPageSelected(int arg0) {
-				if (direccion == Direccion.R2L)
+				if (direccion == Direccion.R2L || direccion == Direccion.VERTICAL)
 					if (arg0 < capitulo.getPaginas())
 						capitulo.setPagLeidas(arg0 + 1);
 					else {
@@ -96,7 +94,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 					capitulo.setPagLeidas(capitulo.getPaginas() - arg0 + 1);
 
 				if (actionBar.isShowing()) {
-					if (direccion == Direccion.R2L)
+					if (direccion == Direccion.R2L || direccion == Direccion.VERTICAL)
 						seekBar.setProgress(arg0);
 					else
 						seekBar.setProgress(capitulo.getPaginas() - arg0);
@@ -276,7 +274,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 		@Override
 		public Fragment getItem(int position) {
 			Fragment rsta = null;
-			if (direccion == Direccion.R2L)
+			if (direccion == Direccion.R2L || direccion == Direccion.VERTICAL)
 				if (position == capitulo.getPaginas())
 					rsta = ultimaPaginaFragment;
 				else {
@@ -623,7 +621,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 
 	@Override
 	public void onStartTrackingTouch(SeekBar seekBar) {
-		if (direccion == Direccion.R2L)
+		if (direccion == Direccion.R2L || direccion == Direccion.VERTICAL)
 			seekerPage.setText("" + (getCurrentItem() + 1));
 		else {
 			seekerPage.setText("" + (capitulo.getPaginas() - getCurrentItem()));
@@ -635,7 +633,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		seekerPage.setVisibility(SeekBar.INVISIBLE);
-		if (direccion == Direccion.R2L)
+		if (direccion == Direccion.R2L || direccion == Direccion.VERTICAL)
 			setCurrentItem(seekBar.getProgress());
 		else {
 			setCurrentItem(capitulo.getPaginas() - seekBar.getProgress());
@@ -652,7 +650,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 			seekLayout.setVisibility(LinearLayout.INVISIBLE);
 		} else {
 			actionBar.show();
-			if (direccion == Direccion.R2L)
+			if (direccion == Direccion.R2L || direccion == Direccion.VERTICAL)
 				seekBar.setProgress(getCurrentItem());
 			else {
 				seekBar.setProgress((capitulo.getPaginas() - getCurrentItem()));

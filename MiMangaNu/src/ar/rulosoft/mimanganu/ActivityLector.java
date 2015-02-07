@@ -3,6 +3,7 @@ package ar.rulosoft.mimanganu;
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 import it.sephiroth.android.library.imagezoom.ImageViewTouch.TapListener;
 import it.sephiroth.android.library.imagezoom.ImageViewTouchBase.DisplayType;
+import it.sephiroth.android.library.imagezoom.ImageViewTouchBase.InitialPosition;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -475,7 +476,9 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 				if (result != null) {
 					imageLoaded = true;
 					visor.setScaleEnabled(true);
+					visor.setInitialPosition(InitialPosition.LEFT_BOTTOM);
 					visor.setImageBitmap(result);
+					visor.scrollToOrigin();
 					cargando.setVisibility(ProgressBar.INVISIBLE);
 				} else if (ruta != null) {
 					File f = new File(ruta);

@@ -223,6 +223,10 @@ public class ImageViewTouch extends ImageViewTouchBase {
 		if (null == bitmapRect) {
 			return false;
 		}
+		
+		if(bitmapRect.bottom - bitmapRect.top < imageViewRect.bottom - imageViewRect.top){
+			return false;
+		}
 
 		if (bitmapRect.bottom >= imageViewRect.bottom) {
 			if (direction < 0) {
@@ -232,6 +236,11 @@ public class ImageViewTouch extends ImageViewTouchBase {
 
 		double bitmapScrollRectDelta = Math.abs(bitmapRect.top - mScrollRect.top);
 		return bitmapScrollRectDelta > SCROLL_DELTA_THRESHOLD;
+	}
+	
+	public void scrollToOrigin(){
+		RectF bitmapRect = getBitmapRect();
+		scrollBy(-bitmapRect.right, -bitmapRect.top);
 	}
 
 	public class GestureListener extends GestureDetector.SimpleOnGestureListener {

@@ -4,12 +4,12 @@ import it.sephiroth.android.library.easing.Cubic;
 import it.sephiroth.android.library.easing.Easing;
 import it.sephiroth.android.library.imagezoom.graphics.FastBitmapDrawable;
 import it.sephiroth.android.library.imagezoom.utils.IDisposable;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -64,8 +64,10 @@ public abstract class ImageViewTouchBase extends ImageView implements IDisposabl
 		NONE,
 		/** Image will be always presented using this view's bounds */
 		FIT_TO_SCREEN,
-		/*/** Image will be scaled only if bigger than the bounds of this view 
-		FIT_IF_BIGGER,/*/
+		/*
+		 * /** Image will be scaled only if bigger than the bounds of this view
+		 * FIT_IF_BIGGER,/
+		 */
 		/** La imagen se escala al ancho */
 		FIT_TO_WIDTH,
 		/** La imagen se escala al alto */
@@ -87,7 +89,9 @@ public abstract class ImageViewTouchBase extends ImageView implements IDisposabl
 		/** Image align right center vertical */
 		RIGHT_CENTER,
 		/** Image align right center vertical */
-		LEFT_CENTER
+		LEFT_CENTER,
+		/** Image align left bottom */
+		LEFT_BOTTOM
 	}
 
 	public static final String LOG_TAG = "ImageViewTouchBase";
@@ -199,7 +203,7 @@ public abstract class ImageViewTouchBase extends ImageView implements IDisposabl
 		return mInitialPosition;
 	}
 
-	public void setmInitialPosition(InitialPosition mInitialPosition) {
+	public void setInitialPosition(InitialPosition mInitialPosition) {
 		this.mInitialPosition = mInitialPosition;
 	}
 
@@ -357,29 +361,34 @@ public abstract class ImageViewTouchBase extends ImageView implements IDisposabl
 
 				center(true, true);
 
-				// Set initiol position
+				// Set initial position
+				RectF bitmapRect = getBitmapRect();
+				Rect imageViewRect = new Rect();
+				getGlobalVisibleRect(imageViewRect);
 
 				switch (mInitialPosition) {
 				case CENTER_UP:
-					panBy(0, -getDrawable().getIntrinsicHeight());
+					panBy(0, -bitmapRect.top);
 					break;
 				case RIGHT_UP:
-					panBy(-getDrawable().getIntrinsicWidth(), -getDrawable().getIntrinsicHeight());
+					panBy(imageViewRect.right - bitmapRect.right, -bitmapRect.top);
 					break;
 				case LEFT_UP:
-					panBy(getDrawable().getIntrinsicWidth(), -getDrawable().getIntrinsicHeight());
+					panBy(-bitmapRect.right, -bitmapRect.top);
 					break;
 				case RIGHT_CENTER:
-					panBy(-getDrawable().getIntrinsicWidth(), 0);
+					panBy(imageViewRect.right - bitmapRect.right, 0);
 					break;
 				case LEFT_CENTER:
-					panBy(getDrawable().getIntrinsicWidth(), 0);
+					panBy(-bitmapRect.right, 0);
+					break;
+				case LEFT_BOTTOM:
+					panBy(-bitmapRect.right, imageViewRect.bottom - bitmapRect.bottom);
 					break;
 				default:
 					break;
 				}
 
-				panBy(0, getDrawable().getIntrinsicHeight());
 				if (mBitmapChanged)
 					onDrawableChanged(drawable);
 				if (changed || mBitmapChanged || mScaleTypeChanged)
@@ -441,10 +450,11 @@ public abstract class ImageViewTouchBase extends ImageView implements IDisposabl
 		if (type == DisplayType.FIT_TO_SCREEN) {
 			// always fit to screen
 			return 1f;
-		} /*else if (type == DisplayType.FIT_IF_BIGGER) {
-			// normal scale if smaller, fit to screen otherwise
-			return Math.min(1f, 1f / getScale(mBaseMatrix));
-		}/*/ else if (type == DisplayType.FIT_TO_WIDTH) {
+		} /*
+		 * else if (type == DisplayType.FIT_IF_BIGGER) { // normal scale if
+		 * smaller, fit to screen otherwise return Math.min(1f, 1f /
+		 * getScale(mBaseMatrix)); }/
+		 */else if (type == DisplayType.FIT_TO_WIDTH) {
 			if (getWidth() != 0 && getHeight() != 0) {
 				float mImageOriginalWidth = getDrawable().getIntrinsicWidth();
 				float mImageOriginalHeight = getDrawable().getMinimumHeight();
@@ -570,8 +580,12 @@ public abstract class ImageViewTouchBase extends ImageView implements IDisposabl
 			mMinZoomDefined = true;
 			mMaxZoomDefined = true;
 
-			if (mScaleType == DisplayType.FIT_TO_SCREEN || /*mScaleType == DisplayType.FIT_IF_BIGGER ||/*/ mScaleType == DisplayType.FIT_TO_WIDTH
-					|| mScaleType == DisplayType.FIT_TO_HEIGHT) {
+			if (mScaleType == DisplayType.FIT_TO_SCREEN || /*
+															 * mScaleType ==
+															 * DisplayType
+															 * .FIT_IF_BIGGER
+															 * ||/
+															 */mScaleType == DisplayType.FIT_TO_WIDTH || mScaleType == DisplayType.FIT_TO_HEIGHT) {
 
 				if (mMinZoom >= 1) {
 					mMinZoomDefined = false;

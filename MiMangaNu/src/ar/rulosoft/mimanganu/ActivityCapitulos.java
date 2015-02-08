@@ -24,13 +24,19 @@ import ar.rulosoft.mimanganu.componentes.Database;
 import ar.rulosoft.mimanganu.componentes.Manga;
 import ar.rulosoft.mimanganu.servers.ServerBase;
 import ar.rulosoft.mimanganu.services.ServicioColaDeDescarga;
-import ar.rulosoft.mimanganu.R;
 
 public class ActivityCapitulos extends ActionBarActivity {
 
-	public static enum Direccion {L2R, R2L, VERTICAL};
-	public static final String DIRECCION = "direccion_de_lectura";
+	public static enum Direccion {
+		L2R, R2L, VERTICAL
+	};
 
+	public static enum Orden {
+		ASD, DSC
+	};
+
+	public static final String DIRECCION = "direccion_de_lectura";
+	public static final String ORDEN = "orden_de_capitulos";
 
 	public static final String CAPITULO_ID = "cap_id";
 
@@ -41,10 +47,11 @@ public class ActivityCapitulos extends ActionBarActivity {
 	FragmentDescarga fragmentDescarga;
 	SharedPreferences pm;
 	ViewPager mViewPager;
-	MenuItem sentido;
+	MenuItem sentido, mOrden;
 	SetCapitulos listenerCapitulos;
 	public Manga manga;
 	public Direccion direccion;
+	public Orden cOrden;
 	int id;
 
 	@Override
@@ -79,12 +86,14 @@ public class ActivityCapitulos extends ActionBarActivity {
 		pagerTabStrip.setTabIndicatorColor(Color.BLACK);
 
 		pm = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		int orden = pm.getInt(ORDEN, Orden.DSC.ordinal());
+		cOrden = Orden.values()[orden];
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		manga = Database.getFullManga(getApplicationContext(), id);
+		manga = Database.getFullManga(getApplicationContext(), id, cOrden == Orden.ASD);
 		listenerCapitulos.onCalpitulosCargados(this, manga.getCapitulos());
 		fragmentDetalles.m = manga;
 		Database.updateMangaLeido(this, manga.getId());
@@ -102,16 +111,22 @@ public class ActivityCapitulos extends ActionBarActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_capitulos, menu);
 		sentido = menu.findItem(R.id.action_sentido);
+		mOrden = menu.findItem(R.id.action_orden);
 		int direccion = pm.getInt(DIRECCION, Direccion.R2L.ordinal());
-		if(direccion == Direccion.R2L.ordinal()){
+		if (direccion == Direccion.R2L.ordinal()) {
 			this.direccion = Direccion.R2L;
 			sentido.setIcon(R.drawable.ic_action_clasico);
-		}else if(direccion == Direccion.L2R.ordinal()){
+		} else if (direccion == Direccion.L2R.ordinal()) {
 			this.direccion = Direccion.L2R;
 			sentido.setIcon(R.drawable.ic_action_inverso);
-		}else{
+		} else {
 			this.direccion = Direccion.VERTICAL;
 			sentido.setIcon(R.drawable.ic_action_verical);
+		}
+		if (cOrden == Orden.DSC) {
+			mOrden.setIcon(R.drawable.ic_action_9a1);
+		} else {
+			mOrden.setIcon(R.drawable.ic_action_1a9);
 		}
 		return true;
 	}
@@ -126,11 +141,11 @@ public class ActivityCapitulos extends ActionBarActivity {
 
 		int id = item.getItemId();
 		if (id == R.id.action_descargar_restantes) {
-			ArrayList<Capitulo> capitulos = Database.getCapitulos(ActivityCapitulos.this, ActivityCapitulos.this.id, Database.COL_CAP_DESCARGADO + " != 1");
+			ArrayList<Capitulo> capitulos = Database.getCapitulos(ActivityCapitulos.this, ActivityCapitulos.this.id, Database.COL_CAP_DESCARGADO + " != 1", true);
 			Capitulo[] arr = new Capitulo[capitulos.size()];
 			arr = capitulos.toArray(arr);
 			new DascargarDemas().execute(arr);
-			// TODO mecanimos
+			// TODO mecanimos mostrar progreso
 			return true;
 		} else if (id == R.id.action_marcar_todo_leido) {
 			Database.marcarTodoComoLeido(ActivityCapitulos.this, this.id);
@@ -142,19 +157,30 @@ public class ActivityCapitulos extends ActionBarActivity {
 			new BuscarNuevo().setActivity(ActivityCapitulos.this).execute(manga);
 		} else if (id == R.id.action_sentido) {
 			int direccion = pm.getInt(DIRECCION, Direccion.R2L.ordinal());
-			if(direccion == Direccion.R2L.ordinal()){
+			if (direccion == Direccion.R2L.ordinal()) {
 				sentido.setIcon(R.drawable.ic_action_inverso);
 				pm.edit().putInt(DIRECCION, Direccion.L2R.ordinal()).commit();
 				this.direccion = Direccion.L2R;
-			}else if(direccion == Direccion.L2R.ordinal()){
+			} else if (direccion == Direccion.L2R.ordinal()) {
 				sentido.setIcon(R.drawable.ic_action_verical);
 				pm.edit().putInt(DIRECCION, Direccion.VERTICAL.ordinal()).commit();
 				this.direccion = Direccion.VERTICAL;
-			}else{
+			} else {
 				sentido.setIcon(R.drawable.ic_action_clasico);
 				pm.edit().putInt(DIRECCION, Direccion.R2L.ordinal()).commit();
 				this.direccion = Direccion.R2L;
 			}
+		} else if (id == R.id.action_orden) {
+			if (cOrden == Orden.DSC) {
+				mOrden.setIcon(R.drawable.ic_action_1a9);
+				this.cOrden = Orden.ASD;
+			} else if (cOrden == Orden.ASD) {
+				mOrden.setIcon(R.drawable.ic_action_9a1);
+				this.cOrden = Orden.DSC;
+			}
+			manga = Database.getFullManga(getApplicationContext(), this.id, cOrden == Orden.ASD);
+			listenerCapitulos.onCalpitulosCargados(this, manga.getCapitulos());
+			pm.edit().putInt(ORDEN, cOrden.ordinal()).commit();
 		}
 		return super.onOptionsItemSelected(item);
 	}

@@ -102,8 +102,15 @@ public class ServicioColaDeDescarga extends Service implements CambioEstado {
 						dc.setErrorIdx(sig - 1);
 						slots++;
 					}
-				} else {
+				} else if(slots == 1){
 					break;
+				}else{
+					try {
+						Thread.sleep(500);	
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					slots++;
 				}
 			} else {
 				try {

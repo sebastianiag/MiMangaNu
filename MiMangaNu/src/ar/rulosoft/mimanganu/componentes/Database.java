@@ -204,16 +204,35 @@ public class Database extends SQLiteOpenHelper {
 		return manga;
 	}
 
+	public static Manga getFullManga(Context c, int mangaID, boolean asc) {
+		Manga manga = null;
+		try {
+			Manga m = getMangasCondotion(c, COL_ID + "=" + mangaID).get(0);
+			m.setCapitulos(getCapitulos(c, mangaID, "1", asc));
+			manga = m;
+		} catch (Exception e) {
+
+		}
+		return manga;
+	}
+
 	public static ArrayList<Capitulo> getCapitulos(Context c, int MangaId) {
 		return getCapitulos(c, MangaId, "1");
 	}
 
 	public static ArrayList<Capitulo> getCapitulos(Context c, int MangaId, String condicion) {
+		return getCapitulos(c, MangaId, condicion, false);
+	}
+
+	public static ArrayList<Capitulo> getCapitulos(Context c, int MangaId, String condicion, boolean asc) {
 		ArrayList<Capitulo> capitulos = new ArrayList<Capitulo>();
+		String orden = " DESC";
+		if (asc)
+			orden = " ASC";
 		Cursor cursor = getDatabase(c).query(
 				TABLE_CAPITULOS,
 				new String[] { COL_CAP_ID, COL_CAP_ID_MANGA, COL_CAP_NOMBRE, COL_CAP_PATH, COL_CAP_PAGINAS, COL_CAP_PAG_LEIDAS, COL_CAP_ESTADO,
-						COL_CAP_DESCARGADO }, COL_CAP_ID_MANGA + "=" + MangaId + " AND " + condicion, null, null, null, COL_CAP_ID + " DESC");
+						COL_CAP_DESCARGADO }, COL_CAP_ID_MANGA + "=" + MangaId + " AND " + condicion, null, null, null, COL_CAP_ID + orden);
 		if (cursor.moveToFirst()) {
 			int colId = cursor.getColumnIndex(COL_CAP_ID);
 			int colTitulo = cursor.getColumnIndex(COL_CAP_NOMBRE);
@@ -312,14 +331,14 @@ public class Database extends SQLiteOpenHelper {
 		cursor.close();
 		return manga;
 	}
-	
-	public static void marcarTodoComoLeido(Context c, int mangaId){
+
+	public static void marcarTodoComoLeido(Context c, int mangaId) {
 		ContentValues cv = new ContentValues();
 		cv.put(COL_CAP_ESTADO, Capitulo.LEIDO);
 		getDatabase(c).update(TABLE_CAPITULOS, cv, COL_CAP_ID_MANGA + " = " + mangaId, null);
 	}
-	
-	public static void marcarTodoComoNoLeido(Context c, int mangaId){
+
+	public static void marcarTodoComoNoLeido(Context c, int mangaId) {
 		ContentValues cv = new ContentValues();
 		cv.put(COL_CAP_ESTADO, Capitulo.SIN_LEER);
 		getDatabase(c).update(TABLE_CAPITULOS, cv, COL_CAP_ID_MANGA + " = " + mangaId, null);

@@ -69,7 +69,8 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 	TextView seekerPage;
 	MenuItem displayMenu;
 	SharedPreferences pm;
-	Direccion direccion = Direccion.VERTICAL;
+	public Direccion direccion = Direccion.VERTICAL;
+	public InitialPosition iniPosition = InitialPosition.LEFT_UP;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +83,16 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 		actionBar.hide();
 		capitulo = Database.getCapitulo(this, getIntent().getExtras().getInt(ActivityCapitulos.CAPITULO_ID));
 		OnPageChangeListener pageChangeListener = new OnPageChangeListener() {
+			int anterior = -1;
 
 			@Override
 			public void onPageSelected(int arg0) {
+				if (anterior < arg0) {
+					iniPosition = InitialPosition.LEFT_UP;
+				} else {
+					iniPosition = InitialPosition.LEFT_BOTTOM;
+				}
+				anterior = arg0;
 				if (direccion == Direccion.R2L || direccion == Direccion.VERTICAL)
 					if (arg0 < capitulo.getPaginas())
 						capitulo.setPagLeidas(arg0 + 1);
@@ -312,7 +320,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 				Fragment old = fragments.get(idx);
 				fm.beginTransaction().remove(old).commit();
 				old = null;
-				fragments.set(idx, PlaceholderFragment.newInstance(ruta));
+				fragments.set(idx, PlaceholderFragment.newInstance(ruta, ActivityLector.this));
 				f = fragments.get(idx);
 				f.setTapListener(ActivityLector.this);
 			}
@@ -352,6 +360,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 	public static class PlaceholderFragment extends Fragment {
 
 		public ImageViewTouch visor;
+		ActivityLector activity;
 		ProgressBar cargando;
 		TapListener mTapListener;
 		Runnable r = null;
@@ -361,10 +370,11 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 
 		private static final String RUTA = "ruta";
 
-		public static PlaceholderFragment newInstance(String ruta) {
+		public static PlaceholderFragment newInstance(String ruta, ActivityLector activity) {
 			PlaceholderFragment fragment = new PlaceholderFragment();
 			Bundle args = new Bundle();
 			args.putString(RUTA, ruta);
+			fragment.activity = activity;
 			fragment.setArguments(args);
 			return fragment;
 		}
@@ -476,9 +486,11 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 				if (result != null) {
 					imageLoaded = true;
 					visor.setScaleEnabled(true);
-					visor.setInitialPosition(InitialPosition.LEFT_BOTTOM);
+					if (activity.direccion == Direccion.VERTICAL)
+						visor.setInitialPosition(activity.iniPosition);
+					else
+						visor.setInitialPosition(InitialPosition.LEFT_UP);
 					visor.setImageBitmap(result);
-					visor.scrollToOrigin();
 					cargando.setVisibility(ProgressBar.INVISIBLE);
 				} else if (ruta != null) {
 					File f = new File(ruta);

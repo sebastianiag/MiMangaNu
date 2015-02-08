@@ -3,6 +3,9 @@
 
 Lector Manga online 
 
+Cambios 1.15
+Lectura vertical especial para celulares #34, orden de capitulos y fixes, etc. 
+
 Cambios 1.14
 Fix todos los servers funcionando al 100% al 5/2/15, agregados junit para test de server fix iniciar en lectura izq a der. 
 

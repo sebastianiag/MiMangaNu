@@ -20,7 +20,7 @@ public class MangaHere extends ServerBase {
 	private static final String PATTERN_CAPITULOS = "<li>[^<]*<span class=\"left\">[^<]*<a class=\"color_0077\" href=\"([^\"]*)\" >([^<]*)</a>";
 
 	private static final String PATRON_LAST = ">(\\d+)</option>[^<]+?</select>";
-	private static final String PATRON_IMAGEN = "src=\"([^\"]+?.(jpg|gif|jpeg|png|bmp))";
+	private static final String PATRON_IMAGEN = "src=\"([^\"]+?.(jpg|gif|jpeg|png|bmp).*?)\"";
 
 	public static final String[] generos = { "All", "Action", "Adventure", "Comedy", "Doujinshi", "Drama", "Ecchi", "Fantasy", "Gender Bender", "Harem",
 			"Historical", "Horror", "Josei", "Martial Arts", "Mature", "Mecha", "Mystery", "One Shot", "Psychological", "Romance", "School Life", "Sci-fi",

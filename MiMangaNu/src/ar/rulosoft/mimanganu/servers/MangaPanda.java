@@ -18,7 +18,7 @@ public class MangaPanda extends ServerBase {
 	private static final String PATTERN_CAPITULOS = "<a href=\"([^\"]+)\">([^\"]+?)</td>";
 
 	private static final String PATRON_LAST = "of (\\d+)</div>";
-	private static final String PATRON_IMAGEN = "src=\"([^\"]+?.(jpg|gif|jpeg|png|bmp))";
+	private static final String PATRON_IMAGEN = "src=\"([^\"]+?.(jpg|gif|jpeg|png|bmp)).*?\"";
 
 	private static final String PATRON_VISUAL = "url\\('(.+?)'.+?href=\"(.+?)\">(.+?)</a>";
 

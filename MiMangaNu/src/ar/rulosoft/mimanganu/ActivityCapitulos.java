@@ -149,10 +149,12 @@ public class ActivityCapitulos extends ActionBarActivity {
 			return true;
 		} else if (id == R.id.action_marcar_todo_leido) {
 			Database.marcarTodoComoLeido(ActivityCapitulos.this, this.id);
-			fragmentCapitulos.onCalpitulosCargados(ActivityCapitulos.this, Database.getCapitulos(ActivityCapitulos.this, this.id));
+			manga = Database.getFullManga(getApplicationContext(), this.id, cOrden == Orden.ASD);
+			listenerCapitulos.onCalpitulosCargados(this, manga.getCapitulos());
 		} else if (id == R.id.action_marcar_todo_no_leido) {
 			Database.marcarTodoComoNoLeido(ActivityCapitulos.this, this.id);
-			fragmentCapitulos.onCalpitulosCargados(ActivityCapitulos.this, Database.getCapitulos(ActivityCapitulos.this, this.id));
+			manga = Database.getFullManga(getApplicationContext(), this.id, cOrden == Orden.ASD);
+			listenerCapitulos.onCalpitulosCargados(this, manga.getCapitulos());
 		} else if (id == R.id.action_buscarnuevos) {
 			new BuscarNuevo().setActivity(ActivityCapitulos.this).execute(manga);
 		} else if (id == R.id.action_sentido) {

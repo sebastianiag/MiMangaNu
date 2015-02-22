@@ -51,7 +51,7 @@ public class ActivityCapitulos extends ActionBarActivity {
 	SetCapitulos listenerCapitulos;
 	public Manga manga;
 	public Direccion direccion;
-	public Orden cOrden;
+	public static Orden cOrden;
 	int id;
 
 	@Override
@@ -141,7 +141,8 @@ public class ActivityCapitulos extends ActionBarActivity {
 
 		int id = item.getItemId();
 		if (id == R.id.action_descargar_restantes) {
-			ArrayList<Capitulo> capitulos = Database.getCapitulos(ActivityCapitulos.this, ActivityCapitulos.this.id, Database.COL_CAP_DESCARGADO + " != 1", true);
+			ArrayList<Capitulo> capitulos = Database.getCapitulos(ActivityCapitulos.this, ActivityCapitulos.this.id, Database.COL_CAP_DESCARGADO + " != 1",
+					true);
 			Capitulo[] arr = new Capitulo[capitulos.size()];
 			arr = capitulos.toArray(arr);
 			new DascargarDemas().execute(arr);
@@ -149,10 +150,12 @@ public class ActivityCapitulos extends ActionBarActivity {
 			return true;
 		} else if (id == R.id.action_marcar_todo_leido) {
 			Database.marcarTodoComoLeido(ActivityCapitulos.this, this.id);
-			fragmentCapitulos.onCalpitulosCargados(ActivityCapitulos.this, Database.getCapitulos(ActivityCapitulos.this, this.id));
+			manga = Database.getFullManga(getApplicationContext(), this.id, cOrden == Orden.ASD);
+			listenerCapitulos.onCalpitulosCargados(this, manga.getCapitulos());
 		} else if (id == R.id.action_marcar_todo_no_leido) {
 			Database.marcarTodoComoNoLeido(ActivityCapitulos.this, this.id);
-			fragmentCapitulos.onCalpitulosCargados(ActivityCapitulos.this, Database.getCapitulos(ActivityCapitulos.this, this.id));
+			manga = Database.getFullManga(getApplicationContext(), this.id, cOrden == Orden.ASD);
+			listenerCapitulos.onCalpitulosCargados(this, manga.getCapitulos());
 		} else if (id == R.id.action_buscarnuevos) {
 			new BuscarNuevo().setActivity(ActivityCapitulos.this).execute(manga);
 		} else if (id == R.id.action_sentido) {
@@ -173,10 +176,10 @@ public class ActivityCapitulos extends ActionBarActivity {
 		} else if (id == R.id.action_orden) {
 			if (cOrden == Orden.DSC) {
 				mOrden.setIcon(R.drawable.ic_action_1a9);
-				this.cOrden = Orden.ASD;
+				cOrden = Orden.ASD;
 			} else if (cOrden == Orden.ASD) {
 				mOrden.setIcon(R.drawable.ic_action_9a1);
-				this.cOrden = Orden.DSC;
+				cOrden = Orden.DSC;
 			}
 			manga = Database.getFullManga(getApplicationContext(), this.id, cOrden == Orden.ASD);
 			listenerCapitulos.onCalpitulosCargados(this, manga.getCapitulos());
@@ -328,8 +331,10 @@ public class ActivityCapitulos extends ActionBarActivity {
 
 		@Override
 		protected void onPostExecute(Integer result) {
-			if (((ActivityCapitulos) activity).fragmentCapitulos != null && result > 0)
-				((ActivityCapitulos) activity).fragmentCapitulos.onCalpitulosCargados(activity, Database.getCapitulos(activity, mangaId));
+			if (((ActivityCapitulos) activity).fragmentCapitulos != null && result > 0){
+				Manga manga = Database.getFullManga(activity, mangaId, cOrden == Orden.ASD);
+				((ActivityCapitulos) activity).fragmentCapitulos.onCalpitulosCargados(activity, manga.getCapitulos());
+			}
 			if (progreso != null && progreso.isShowing()) {
 				try {
 					progreso.dismiss();

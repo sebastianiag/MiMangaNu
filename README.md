@@ -4,7 +4,7 @@
 Lector Manga online 
 
 Cambios 1.16
-Agregado soporte para imagenes realmente grandes soportando solo desde api10 fixed #39 y fixed #40
+Semi fixed #39 y fixed #40
 
 Cambios 1.15
 Lectura vertical especial para celulares #34, orden de capitulos y fixes, etc. 

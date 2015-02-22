@@ -8,6 +8,7 @@ import it.sephiroth.android.library.imagezoom.ImageViewTouchBase.InitialPosition
 import java.io.File;
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +17,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -52,6 +54,8 @@ import ar.rulosoft.mimanganu.services.ServicioColaDeDescarga;
 public class ActivityLector extends ActionBarActivity implements DescargaListener, OnSeekBarChangeListener, TapListener {
 
 	public static final String AJUSTE_KEY = "ajustea";
+
+	public static final int MAX_TEXTURE = 2048;
 
 	public static DisplayType AJUSTE_PAGINA = DisplayType.FIT_TO_WIDTH;
 
@@ -481,6 +485,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 				return bitmap;
 			}
 
+			@SuppressLint("NewApi")
 			@Override
 			protected void onPostExecute(Bitmap result) {
 				if (result != null) {
@@ -490,6 +495,9 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 						visor.setInitialPosition(activity.iniPosition);
 					else
 						visor.setInitialPosition(InitialPosition.LEFT_UP);
+					if ((result.getHeight() > MAX_TEXTURE || result.getWidth() > MAX_TEXTURE) && Build.VERSION.SDK_INT >= 11) {
+						visor.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+					}
 					visor.setImageBitmap(result);
 					cargando.setVisibility(ProgressBar.INVISIBLE);
 				} else if (ruta != null) {

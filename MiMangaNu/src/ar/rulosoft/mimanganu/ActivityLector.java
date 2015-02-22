@@ -6,7 +6,12 @@ import it.sephiroth.android.library.imagezoom.ImageViewTouchBase.DisplayType;
 import it.sephiroth.android.library.imagezoom.ImageViewTouchBase.InitialPosition;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+
+import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
+import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable.OnInitializeListener;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -249,7 +254,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 			public void run() {
 				Fragment fragment = mSectionsPagerAdapter.getIfOnMemory(pagina);
 				if (fragment != null && !((PlaceholderFragment) fragment).imageLoaded) {
-					((PlaceholderFragment) fragment).new SetImagen().execute();
+					((PlaceholderFragment) fragment).setImagen();
 				}
 			}
 		});
@@ -424,7 +429,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 			if (visor == null) {
 				cargando.setVisibility(ProgressBar.VISIBLE);
 			} else if (ruta != null)
-				new SetImagen().execute();
+				setImagen();
 
 			super.onResume();
 		}
@@ -457,10 +462,49 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 			}
 		}
 
+		public void setImagen() {
+			if (!imageLoaded && visor != null)
+			// new SetImagen().execute();
+			{
+				try {
+					TileBitmapDrawable.attachTileBitmapDrawable(visor, new FileInputStream(ruta), null, new OnInitializeListener() {
+						boolean error = false;
+
+						@Override
+						public void onStartInitialization() {
+							if (cargando != null)
+								cargando.setVisibility(ProgressBar.VISIBLE);
+						}
+
+						@Override
+						public void onError(Exception ex) {
+							error = true;
+						}
+
+						@Override
+						public void onEndInitialization() {
+							if (cargando != null)
+								cargando.setVisibility(ProgressBar.INVISIBLE);
+							if (!error) {
+								imageLoaded = true;
+								imageLoaded = true;
+								visor.setScaleEnabled(true);
+								if (activity.direccion == Direccion.VERTICAL)
+									visor.setInitialPosition(activity.iniPosition);
+								else
+									visor.setInitialPosition(InitialPosition.LEFT_UP);
+							}
+						}
+					});
+				} catch (FileNotFoundException e) {
+					imageLoaded = false;
+				}
+			}
+		}
+
 		public void setImagen(String ruta) {
 			this.ruta = ruta;
-			if (!imageLoaded)
-				new SetImagen().execute();
+			setImagen();
 		}
 
 		public class SetImagen extends AsyncTask<Void, Void, Bitmap> {

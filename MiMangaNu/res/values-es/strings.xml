@@ -49,4 +49,7 @@
     <string name="descargado">(Descargado)</string>
     <string name="error">(Error)</string>
     <string name="orden">Orden</string>
+    <string name="apachelic">Licencia Apache</string>
+    <string name="mitlic">Licencia MIT y Agradecimientos</string>
+
 </resources>

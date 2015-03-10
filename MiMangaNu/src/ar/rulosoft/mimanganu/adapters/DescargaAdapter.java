@@ -58,7 +58,7 @@ public class DescargaAdapter extends ArrayAdapter<DescargaCapitulo> {
 
 		if (item != null) {
 			String textInfo = " " + estados[item.estado.ordinal()];
-			holder.textViewNombre.setText(item.getCapitulo().getTitulo() + textInfo);
+			holder.textViewNombre.setText(android.text.Html.fromHtml(item.getCapitulo().getTitulo() + textInfo));
 			holder.cargandoProgressBar.setMax(item.getCapitulo().getPaginas());
 			holder.cargandoProgressBar.setProgress(item.getProgreso());
 			holder.botonImageView.setOnClickListener(new OnClickListener() {

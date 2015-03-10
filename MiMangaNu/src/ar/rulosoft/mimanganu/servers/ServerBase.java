@@ -23,6 +23,8 @@ public abstract class ServerBase {
 	public static final int ESNINEMANGA = 10;
 	public static final int LECTUREENLIGNE = 11;
 	public static final int KISSMANGA = 12;
+	public static final int ITNINEMANGA = 13;
+	public static final int TUSMANGAS = 14;
 
 	private String serverName;
 	private int icon;
@@ -68,6 +70,12 @@ public abstract class ServerBase {
 			break;
 		case KISSMANGA:
 			s = new KissManga();
+			break;
+		case ITNINEMANGA:
+			s = new ItNineMangaCom();
+			break;
+		case TUSMANGAS:
+			s = new TusMangasOnlineCom();
 			break;
 		default:
 			break;

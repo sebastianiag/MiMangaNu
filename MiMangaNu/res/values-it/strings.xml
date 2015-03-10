@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Mi Manga Nu</string>
+    <string name="title_activity_server_listade_mangas">Lista dei Manga</string>
+    <string name="title_activity_activity_detalles">Dettagli</string>
+    <string name="title_activity_activity_capitulos">Capitoli</string>
+    <string name="title_activity_activity_lector">Lettore</string>    <string name="title_activity_server_visual_navegacion">Manga in</string>
+    <string name="title_activity_activity_resultado_de_busqueda">Cerca risultati</string>
+    <string name="action_ajustar_a">Adatta</string>
+    <string name="cargando">Caricando&#8230;</string>
+    <string name="capitulos">Capitoli</string>
+    <string name="info">Dettagli</string>
+    <string name="descargas">Scaricati</string>
+    <string name="datosde">Dettagli</string>
+    <string name="agregando">Sto aggiungendo al database</string>
+    <string name="agregado">Manga aggiunto</string>
+    <string name="iniciando">Caricamento numero delle pagine</string>
+    <string name="agregadodescarga">Manga aggiunto agli scaricati</string>
+    <string name="mismangas">Miei Manga</string>
+    <string name="masmangas">Aggiungi Manga</string>
+    <string name="buscandonuevo">Ricerca aggiornamenti</string>
+    <string name="busquedanores">La ricerca non ha generato risultati</string>
+    <string name="listaen">Lista dei Manga da</string>
+    <string name="buscarupdates">Cerca aggiornamenti</string>
+    <string name="nobuscarupdate">Non cercare aggiornamenti</string>
+    <string name="licencia">Licenza</string>
+    <string name="esconder">Nascondi dalla galleria</string>
+    <string name="descargarestantes">Scaricamenti rimasti</string>
+    <string name="borrado_imagenes">Immagini cancellate</string>
+    <string name="agregar">Aggiungi</string>
+    <string name="borrar">Cancella</string>
+    <string name="borrarcap">Cancella capitolo</string>
+    <string name="resetcap">Resetta capitolo</string>
+    <string name="buscarnuevos">Cerca aggiornamenti</string>
+    <string name="mas">Altro</string>
+    <string name="escondergaleria">Nascondi dalla galleria</string>
+    <string name="filtrar">Filtra</string>
+    <string name="vercomolista">Mostra come elenco</string>
+    <string name="esconder_leido">Nascondi già letti</string>
+    <string name="macartodoleido">Marca tutti come letti</string>
+    <string name="macartodonoleido">Marca tutti come non letti</string>
+    <string name="sentido">Verso</string>
+    <string name="finalizado">Stato: Finito.</string>
+    <string name="en_progreso">Stato: In corso.</string>
+    <string name="encola">(In coda)</string>
+    <string name="descargando">(Scaricando)</string>
+    <string name="descargado">(Scaricato)</string>
+    <string name="error">(Errore)</string>
+    <string name="orden">Ordine.</string>
+    <string name="apachelic">Licenza Apache</string>
+    <string name="mitlic">Licenza MIT e Ringraziamenti</string>
+
+</resources>

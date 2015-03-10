@@ -155,7 +155,7 @@ public class FragmentCapitulos extends Fragment implements SetCapitulos {
 
 		@Override
 		protected void onPostExecute(Capitulo result) {
-			if (error.length() > 1) {
+			if (error != null && error.length() > 1) {
 				Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
 			} else {
 				asyncdialog.dismiss();

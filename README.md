@@ -3,6 +3,9 @@
 
 Lector Manga online 
 
+Cambios 1.17
+Agregado tumangaonline e itNineManga, agregada traduccion al italiano de parte de falybros.
+
 Cambios 1.16
 Semi fixed #39 y fixed #40
 

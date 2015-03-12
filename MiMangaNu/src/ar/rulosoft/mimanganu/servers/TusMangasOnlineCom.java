@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.text.Html;
 import ar.rulosoft.mimanganu.R;
 import ar.rulosoft.mimanganu.componentes.Capitulo;
 import ar.rulosoft.mimanganu.componentes.Manga;
@@ -93,9 +94,10 @@ public class TusMangasOnlineCom extends ServerBase {
 		Pattern p = Pattern.compile("<h5><a[^C]+Click=\"listaCapitulos\\((.+?),(.+?)\\)\".+?>(.+?)<");
 		Matcher ma = p.matcher(source);
 		while (ma.find()) {
-			Capitulo c = new Capitulo(ma.group(3), "http://www.tumangaonline.com/index.php?option=com_controlmanga&view=capitulos&format=raw&idManga="
-					+ ma.group(1) + "&idCapitulo=" + ma.group(2));
-			caps.add(c);
+			Capitulo c = new Capitulo(Html.fromHtml(ma.group(3)).toString(),
+					"http://www.tumangaonline.com/index.php?option=com_controlmanga&view=capitulos&format=raw&idManga=" + ma.group(1) + "&idCapitulo="
+							+ ma.group(2));
+			caps.add(0, c);
 		}
 		m.setCapitulos(caps);
 	}
@@ -124,7 +126,7 @@ public class TusMangasOnlineCom extends ServerBase {
 				throw new Exception("Error obteniendo Imagenes");
 			}
 			String[] strip = imgStrip.split("%");
-			for(String s: strip){
+			for (String s : strip) {
 				imagenes = imagenes + "|" + imgBase + s;
 			}
 			c.setExtra(imagenes);

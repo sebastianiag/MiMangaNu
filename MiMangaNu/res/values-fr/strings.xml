@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">Mi Manga Nu</string>
     <string name="title_activity_server_listade_mangas">Liste des Mangas</string>
     <string name="title_activity_activity_detalles">Détails</string>
@@ -47,4 +48,6 @@
     <string name="descargando">(Téléchargement)</string>
     <string name="descargado">(Téléchargé)</string>
     <string name="error">(Erreur)</string>
+    <string name="descarga_no_leidos">Télécharger non lus</string>
+
 </resources>

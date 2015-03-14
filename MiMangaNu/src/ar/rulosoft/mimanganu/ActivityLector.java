@@ -55,7 +55,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 
 	public static final String AJUSTE_KEY = "ajustea";
 
-	public static final int MAX_TEXTURE = 2048;
+	public static int MAX_TEXTURE = 2048;
 
 	public static DisplayType AJUSTE_PAGINA = DisplayType.FIT_TO_WIDTH;
 
@@ -112,6 +112,10 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 					else
 						seekBar.setProgress(capitulo.getPaginas() - arg0);
 				}
+				if (arg0 >= capitulo.getPaginas() - 1) {
+					capitulo.setEstadoLectura(Capitulo.LEIDO);
+					Database.updateCapitulo(ActivityLector.this, capitulo);
+				}
 			}
 
 			@Override
@@ -124,6 +128,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 				// TODO Auto-generated method stub
 			}
 		};
+
 		if (direccion == Direccion.VERTICAL) {
 			setContentView(R.layout.activity_lector_v);
 			mViewPagerV = (UnescroledViewPagerVertical) findViewById(R.id.pager);
@@ -145,7 +150,8 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 		seekLayout = (LinearLayout) findViewById(R.id.seeker_layout);
 		seekerPage = (TextView) findViewById(R.id.page);
 
-		capitulo.setEstadoLectura(Capitulo.LEIDO);
+		if (capitulo.getEstadoLectura() != Capitulo.LEIDO)
+			capitulo.setEstadoLectura(Capitulo.LEYENDO);
 		Database.updateCapitulo(ActivityLector.this, capitulo);
 	}
 

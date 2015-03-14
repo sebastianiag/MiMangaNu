@@ -184,6 +184,12 @@ public class ActivityCapitulos extends ActionBarActivity {
 			manga = Database.getFullManga(getApplicationContext(), this.id, cOrden == Orden.ASD);
 			listenerCapitulos.onCalpitulosCargados(this, manga.getCapitulos());
 			pm.edit().putInt(ORDEN, cOrden.ordinal()).commit();
+		} else if(id == R.id.action_descargar_no_leidos){
+			ArrayList<Capitulo> capitulos = Database.getCapitulos(ActivityCapitulos.this, ActivityCapitulos.this.id, Database.COL_CAP_ESTADO + " < 1",
+					true);
+			Capitulo[] arr = new Capitulo[capitulos.size()];
+			arr = capitulos.toArray(arr);
+			new DascargarDemas().execute(arr);
 		}
 		return super.onOptionsItemSelected(item);
 	}

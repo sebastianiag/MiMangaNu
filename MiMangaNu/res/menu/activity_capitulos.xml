@@ -31,6 +31,9 @@
                 android:id="@+id/action_descargar_restantes"
                 android:title="@string/descargarestantes"/>
             <item
+                android:id="@+id/action_descargar_no_leidos"
+                android:title="@string/descarga_no_leidos"/>
+            <item
                 android:id="@+id/action_marcar_todo_no_leido"
                 android:title="@string/macartodonoleido"/>
             <item

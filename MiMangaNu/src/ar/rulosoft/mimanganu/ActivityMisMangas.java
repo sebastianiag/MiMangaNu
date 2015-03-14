@@ -121,7 +121,12 @@ public class ActivityMisMangas extends ActionBarActivity {
 				item.setChecked(true);
 				pm.edit().putInt(FragmentMisMangas.SELECTOR_MODO, FragmentMisMangas.MODO_SIN_LEER).commit();
 			}
+			try{
 			fragmentMisMangas.cargarMangas();
+			}catch(Exception e){
+				e.printStackTrace();
+				//TODO
+			}
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -248,14 +253,17 @@ public class ActivityMisMangas extends ActionBarActivity {
 
 		@Override
 		protected void onPostExecute(Integer result) {
+			try{
 			if(((ActivityMisMangas) activity).fragmentMisMangas != null && result > 0)
 				((ActivityMisMangas) activity).fragmentMisMangas.cargarMangas();
+			}catch(Exception e){
+				//TODO
+				e.printStackTrace();
+			}
 			if (progreso != null && progreso.isShowing()) {
 				try {
 					progreso.dismiss();
-				} catch (Exception e) {
-
-				}
+				} catch (Exception e) {}
 			}
 			running = false;
 			actual = null;

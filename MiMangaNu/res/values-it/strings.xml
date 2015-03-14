@@ -5,7 +5,8 @@
     <string name="title_activity_server_listade_mangas">Lista dei Manga</string>
     <string name="title_activity_activity_detalles">Dettagli</string>
     <string name="title_activity_activity_capitulos">Capitoli</string>
-    <string name="title_activity_activity_lector">Lettore</string>    <string name="title_activity_server_visual_navegacion">Manga in</string>
+    <string name="title_activity_activity_lector">Lettore</string>
+    <string name="title_activity_server_visual_navegacion">Manga in</string>
     <string name="title_activity_activity_resultado_de_busqueda">Cerca risultati</string>
     <string name="action_ajustar_a">Adatta</string>
     <string name="cargando">Caricando&#8230;</string>
@@ -50,5 +51,5 @@
     <string name="orden">Ordine.</string>
     <string name="apachelic">Licenza Apache</string>
     <string name="mitlic">Licenza MIT e Ringraziamenti</string>
-
+    <string name="descarga_no_leidos">Scarica Unread</string>
 </resources>

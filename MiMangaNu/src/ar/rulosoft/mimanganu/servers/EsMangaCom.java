@@ -12,8 +12,8 @@ import ar.rulosoft.navegadores.Navegador;
 
 public class EsMangaCom extends ServerBase {
 
-	public static String[] generos = new String[] { "Todos", "Acci髇", "Artes Marciales", "Aventura", "Ciencia Ficci髇", "Comedia", "Deportes", "Drama",
-			"Ecchi", "Escolar", "Fantas韆", "Harem", "Hentai", "Hist髍ico", "Horror", "Josei", "Mecha", "Misterio", "Oneshot", "Psicol骻ico", "Romance",
+	public static String[] generos = new String[] { "Todos", "Acci贸n", "Artes Marciales", "Aventura", "Ciencia Ficci贸n", "Comedia", "Deportes", "Drama",
+			"Ecchi", "Escolar", "Fantas铆a", "Harem", "Hentai", "Hist贸rico", "Horror", "Josei", "Mecha", "Misterio", "Oneshot", "Psicol贸gico", "Romance",
 			"Seinen", "Shojo", "Shounen", "Sobrenatural", "Tragedia", "Vida Cotidiana", "Yuri" };
 	public static String[] generosV = new String[] { "/lista-mangas", "/genero/accion", "/genero/artes-marciales", "/genero/aventura",
 			"/genero/ciencia-ficcion", "/genero/comedia", "/genero/deportes", "/genero/drama", "/genero/ecchi", "/genero/escolar", "/genero/fantasia",
@@ -93,7 +93,7 @@ public class EsMangaCom extends ServerBase {
 	public void iniciarCapitulo(Capitulo c) throws Exception {
 		Navegador nav = new Navegador();
 		String source = nav.get(c.getPath());
-		String textNum = getFirstMacth("option value=\"(\\d+)[^=]+</option></select>", source, "Error en plugin (obtener p醙inas)");
+		String textNum = getFirstMacth("option value=\"(\\d+)[^=]+</option></select>", source, "Error en plugin (obtener p锟絞inas)");
 		c.setPaginas(Integer.parseInt(textNum));
 	}
 

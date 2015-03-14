@@ -12,9 +12,9 @@ import ar.rulosoft.navegadores.Navegador;
 
 public class EsNineMangaCom extends ServerBase {
 
-	public static String[] generos = new String[] { "Acci髇", "Action", "Adult", "Adventure", "Artes Marciales", "Aventura", "Ciencia Ficci驨", "Comedia",
-			"Comedy", "Deporte", "Deportes", "Drama", "Ecchi", "Escolar", "Fantas鞟", "Fantasy", "Gender Bender", "Genial", "Harem", "Historical", "Hist驲ico",
-			"Horror", "Josei", "Maduro", "Martial", "Martial Arts", "Mecha", "Misterio", "Mystery", "None", "One Shot", "Oneshot", "Parodia", "Psicol驡ico",
+	public static String[] generos = new String[] { "Acci贸n", "Action", "Adult", "Adventure", "Artes Marciales", "Aventura", "Ciencia Ficci贸n", "Comedia",
+			"Comedy", "Deporte", "Deportes", "Drama", "Ecchi", "Escolar", "Fantas铆a", "Fantasy", "Gender Bender", "Genial", "Harem", "Historical", "Hist贸Rico",
+			"Horror", "Josei", "Maduro", "Martial", "Martial Arts", "Mecha", "Misterio", "Mystery", "None", "One Shot", "Oneshot", "Parodia", "Psicol贸gico",
 			"Psychological", "Romance", "School Life", "Sci-Fi", "Seinen", "Shojo", "Shojo Ai", "Shonen", "Shoujo", "Shoujo Ai", "Shounen", "Shounen Ai",
 			"Slice Of Life", "Smut", "Sobrenatural", "Sports", "Supernatural", "Tragedia", "Tragedy", "Vida Cotidiana", "Webcomic", "Yuri" };
 	public static String[] generosV = new String[] { "http://es.ninemanga.com/category/Acci%C3%B3n_.html", "http://es.ninemanga.com/category/Action_.html",
@@ -89,7 +89,7 @@ public class EsNineMangaCom extends ServerBase {
 		//estado
 		m.setFinalizado(getFirstMacthDefault("Estado(.+?)</a>", source, "").contains("Completado"));
 		
-		// cap韙ulos
+		// cap锟絫ulos
 		Pattern p = Pattern.compile("<a class=\"chapter_list_a\" href=\"(/chapter.+?)\" title=\"(.+?)\">(.+?)</a>");
 		Matcher matcher = p.matcher(source);
 		ArrayList<Capitulo> capitulos = new ArrayList<Capitulo>();
@@ -127,7 +127,7 @@ public class EsNineMangaCom extends ServerBase {
 	@Override
 	public void iniciarCapitulo(Capitulo c) throws Exception {
 		String source = new Navegador().get(c.getPath());
-		String nop = getFirstMacth("\\d+/(\\d+)</option>[\\s]*</select>", source, "Error al obtener el n鷐ero de p醙inas");
+		String nop = getFirstMacth("\\d+/(\\d+)</option>[\\s]*</select>", source, "Error al obtener el n锟絤ero de p锟絞inas");
 		c.setPaginas(Integer.parseInt(nop));
 	}
 

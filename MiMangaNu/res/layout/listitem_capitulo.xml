@@ -14,8 +14,10 @@
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/capitulo_paginas"
         android:gravity="center_vertical"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"
         android:text="Cap 1222"
-        android:textSize="18sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/capitulo_paginas"
@@ -42,8 +44,8 @@
 
     <ImageView
         android:id="@+id/boton"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/capitulo_titulo"
         android:layout_centerVertical="true"

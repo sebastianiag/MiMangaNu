@@ -5,6 +5,7 @@ public class Capitulo {
 	public static final int NUEVO = - 1;
 	public static final int SIN_LEER = 0;
 	public static final int LEIDO = 1;
+	public static final int LEYENDO = 2;
 	
 	int id, paginas, mangaID;
 	int pagLeidas, estadoLectura;

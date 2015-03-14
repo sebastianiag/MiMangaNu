@@ -29,6 +29,8 @@ public class CapituloAdapter extends ArrayAdapter<Capitulo> {
 
 	public static int TRANSPARENTE = Color.parseColor("#00FFFFFF");
 	public static int GRIS = Color.argb(15, 0, 0, 0);
+	public static int GRIS_CLARO = Color.argb(30, 0, 0, 0);
+
 
 	private LayoutInflater li;
 	private static int listItem = R.layout.listitem_capitulo;
@@ -72,16 +74,20 @@ public class CapituloAdapter extends ArrayAdapter<Capitulo> {
 			switch (item.getEstadoLectura()) {
 			case Capitulo.NUEVO:
 				holder.textViewEstado.setText("Nuevo");
+				convertView.setBackgroundColor(TRANSPARENTE);
 				break;
 			case Capitulo.LEIDO:
 				convertView.setBackgroundColor(GRIS);
+				break;
+			case Capitulo.LEYENDO:
+				convertView.setBackgroundColor(GRIS_CLARO);
 				break;
 			default:
 				convertView.setBackgroundColor(TRANSPARENTE);
 			}
 			holder.textViewPaginas.setText("       ");
 			if (item.getPaginas() > 0) {
-					holder.textViewPaginas.setText(item.getPagLeidas() + "/" + item.getPaginas());
+				holder.textViewPaginas.setText(item.getPagLeidas() + "/" + item.getPaginas());
 			}
 			if (item.isDescargado()) {
 				holder.imageButton.setImageResource(R.drawable.ic_borrar);

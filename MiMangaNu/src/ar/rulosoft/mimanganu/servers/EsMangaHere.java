@@ -22,13 +22,13 @@ public class EsMangaHere extends ServerBase {
 	private static final String PATRON_LAST = ">(\\d+)</option>[^<]+?</select>";
 	private static final String PATRON_IMAGEN = "src=\"([^\"]+?.(jpg|gif|jpeg|png|bmp))";
 
-	public static String[] categorias = { "Todo", "Acci髇", "Aventura", "Comedia", "Doujinshi", "Drama", "Ecchi", "Fantas韆", "Gender Bender", "Harem",
-			"Hist髍ico", "Horror", "Josei", "Artes Marciales", "Maduro", "Mecha", "Misterio", "Oneshot", "Psicol骻ico", "Romance", "Escolar",
-			"Ciencia Ficci髇", "Seinen", "Shojo", "Shojo Ai", "Shounen", "Vida Cotidiana", "Deportes", "Sobrenatural", "Tragedia", "Yuri" };
+	public static String[] categorias = { "Todo", "Acci贸n", "Aventura", "Comedia", "Doujinshi", "Drama", "Ecchi", "Fantas铆a", "Gender Bender", "Harem",
+			"Hist贸rico", "Horror", "Josei", "Artes Marciales", "Maduro", "Mecha", "Misterio", "Oneshot", "Psicol贸gico", "Romance", "Escolar",
+			"Ciencia Ficci贸n", "Seinen", "Shojo", "Shojo Ai", "Shounen", "Vida Cotidiana", "Deportes", "Sobrenatural", "Tragedia", "Yuri" };
 
-	public static String[] categoriasV = { "directory/", "acci髇/", "aventura/", "comedia/", "doujinshi/", "drama/", "ecchi/", "fantas韆/",
-			"gender_bender/", "harem/", "hist髍ico/", "horror/", "josei/", "artes_marciales/", "maduro/", "mecha/", "misterio/", "oneshot/", "psicol骻ico/",
-			"romance/", "escolar/", "ciencia_ficci髇/", "seinen/", "shojo/", "shojo_ai/", "shounen/", "vida_cotidiana/", "deportes/", "sobrenatural/",
+	public static String[] categoriasV = { "directory/", "acci贸n/", "aventura/", "comedia/", "doujinshi/", "drama/", "ecchi/", "fantas铆a/",
+			"gender_bender/", "harem/", "hist贸rico/", "horror/", "josei/", "artes_marciales/", "maduro/", "mecha/", "misterio/", "oneshot/", "psicol贸gico/",
+			"romance/", "escolar/", "ciencia_ficci贸n/", "seinen/", "shojo/", "shojo_ai/", "shounen/", "vida_cotidiana/", "deportes/", "sobrenatural/",
 			"tragedia/", "yuri/" };
 	
 	public static String[] orden = {"Lecturas", "A - Z", "Mejor Calificados", "Ultimos Actualizados"};
@@ -71,7 +71,7 @@ public class EsMangaHere extends ServerBase {
 			manga.setFinalizado(getFirstMacthDefault("<li><label>Estado:</label>(.+?)</li>", data, "En desarrollo").length() == 9);
 
 			// capitulos
-			data = getFirstMacth(PATRON_SEG_CAP, data, "Error al obtener lista de cap韙ulos");
+			data = getFirstMacth(PATRON_SEG_CAP, data, "Error al obtener lista de cap锟絫ulos");
 			p = Pattern.compile(PATTERN_CAPITULOS);
 			m = p.matcher(data);
 

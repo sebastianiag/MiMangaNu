@@ -3,6 +3,9 @@
 
 Lector Manga online 
 
+Cambios 1.18
+Servers Fix en español para la compilacion de Fdroid. Agregado descargar no leidos (fix #37), marcar como leido cuando llega al final (fix #20).
+
 Cambios 1.17
 Agregado tumangaonline e itNineManga, agregada traduccion al italiano de parte de falybros.
 
@@ -50,7 +53,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-Thanks to sephiroth74 for the library ImageViewTouch and  thest1 for LazyList.
+Thanks to sephiroth74 for the library ImageViewTouch, thest1 for LazyList and castorflex for VerticalViewPager.
 
 Este programa solo automatiza funciones que se podrian hacer con un navegador de internet el creador no se resposabiliza por su mal uso.
 

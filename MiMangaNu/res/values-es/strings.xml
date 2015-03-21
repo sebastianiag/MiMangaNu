@@ -52,5 +52,21 @@
     <string name="apachelic">Licencia Apache</string>
     <string name="mitlic">Licencia MIT y Agradecimientos</string>
     <string name="descarga_no_leidos">Descargar no leidos</string>
-
+    <string name="demaciados_errores">Demasiado errores (Descarga suspendida) \n Esto puede ser causado:\n  * Error de coneccion \n  * Error en el servidor \n  * Una mala subida, etc. \nIntente mas tarde </string>
+    <string name="configuraciones">Configuraciones</string>
+    <string name="opciones_mm">Opciones Mis Mangas</string>
+    <string name="opciones_caps">Opciones de Capítulos</string>
+    <string name="orden_de_capitulos">Orden de Capítulos</string>
+    <string name="orden_asc">Ascendente</string>
+    <string name="orden_dsc">Descendiente</string>
+    <string name="opciones_lec">Opciones de Lector</string>
+    <string name="sentido_lectura">Sentido de Lectura por Defecto</string>
+    <string name="r2l">De derecha a izquierda</string>
+    <string name="l2r">De izquierda a derecha</string>
+    <string name="vertical">Vertical</string>
+    <string name="ajuste_imagen">Ajuste de imagen por defecto</string>
+    <string name="no_scale">Tamaño original</string>
+    <string name="mejor_ajuste">Mejor ajuste</string>
+    <string name="ajuste_ancho">Ajustar en ancho</string>
+    <string name="ajuste_alto">Ajustar en altura</string>
 </resources>

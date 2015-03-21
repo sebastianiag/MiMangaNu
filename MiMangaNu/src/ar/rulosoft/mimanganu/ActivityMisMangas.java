@@ -1,14 +1,8 @@
 package ar.rulosoft.mimanganu;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -16,19 +10,21 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import ar.rulosoft.mimanganu.componentes.Database;
 import ar.rulosoft.mimanganu.componentes.Manga;
 import ar.rulosoft.mimanganu.servers.ServerBase;
-import ar.rulosoft.mimanganu.R;
 
 public class ActivityMisMangas extends ActionBarActivity {
 
@@ -53,6 +49,8 @@ public class ActivityMisMangas extends ActionBarActivity {
 		fragmentAddManga = new FragmentAddManga();
 		fragmentMisMangas = new FragmentMisMangas();
 
+		fragmentAddManga.setRetainInstance(true);
+		
 		mSectionsPagerAdapter.add(fragmentMisMangas);
 		mSectionsPagerAdapter.add(fragmentAddManga);
 
@@ -70,12 +68,9 @@ public class ActivityMisMangas extends ActionBarActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.mis_mangas, menu);
-		MenuItem menuMostrarGaleria = (MenuItem) menu.findItem(R.id.action_mostrar_en_galeria);
 		MenuItem menuEsconderSinLectura = (MenuItem) menu.findItem(R.id.action_esconder_leidos);
-		boolean checked = pm.getInt(MOSTRAR_EN_GALERIA, 0) > 0;
 		boolean checkedLeidos = pm.getInt(FragmentMisMangas.SELECTOR_MODO, FragmentMisMangas.MODO_ULTIMA_LECTURA_Y_NUEVOS) > 0;
-		menuMostrarGaleria.setChecked(checked);
-		menuEsconderSinLectura.setChecked(checkedLeidos);	
+		menuEsconderSinLectura.setChecked(checkedLeidos);
 		return true;
 	}
 
@@ -92,41 +87,25 @@ public class ActivityMisMangas extends ActionBarActivity {
 			if (!BuscarNuevo.running)
 				new BuscarNuevo().setActivity(ActivityMisMangas.this).execute();
 			return true;
-		} else if (id == R.id.action_mostrar_en_galeria) {
-			File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/MiMangaNu/", ".nomedia");
-			if (item.isChecked()) {
-				item.setChecked(false);
-				pm.edit().putInt(MOSTRAR_EN_GALERIA, 0).commit();
-				if (f.exists())
-					f.delete();
-			} else {
-				item.setChecked(true);
-				pm.edit().putInt(MOSTRAR_EN_GALERIA, 1).commit();
-				if (!f.exists())
-					try {
-						f.createNewFile();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-			}
-			return true;
 		} else if (id == R.id.licencia) {
 			Intent intent = new Intent(this, ActivityLicencia.class);
 			startActivity(intent);
-		} else if(id == R.id.action_esconder_leidos){
-			if (item.isChecked()){
+		} else if (id == R.id.action_esconder_leidos) {
+			if (item.isChecked()) {
 				item.setChecked(false);
 				pm.edit().putInt(FragmentMisMangas.SELECTOR_MODO, FragmentMisMangas.MODO_ULTIMA_LECTURA_Y_NUEVOS).commit();
-			}else{
+			} else {
 				item.setChecked(true);
 				pm.edit().putInt(FragmentMisMangas.SELECTOR_MODO, FragmentMisMangas.MODO_SIN_LEER).commit();
 			}
-			try{
-			fragmentMisMangas.cargarMangas();
-			}catch(Exception e){
+			try {
+				fragmentMisMangas.cargarMangas();
+			} catch (Exception e) {
 				e.printStackTrace();
-				//TODO
+				// TODO
 			}
+		} else if (id == R.id.action_configurar) {
+			startActivity(new Intent(ActivityMisMangas.this, OpcionesActivity.class));
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -180,7 +159,7 @@ public class ActivityMisMangas extends ActionBarActivity {
 	}
 
 	public static class BuscarNuevo extends AsyncTask<Void, String, Integer> {
-		
+
 		Activity activity;
 		ProgressDialog progreso;
 		static boolean running = false;
@@ -253,17 +232,18 @@ public class ActivityMisMangas extends ActionBarActivity {
 
 		@Override
 		protected void onPostExecute(Integer result) {
-			try{
-			if(((ActivityMisMangas) activity).fragmentMisMangas != null && result > 0)
-				((ActivityMisMangas) activity).fragmentMisMangas.cargarMangas();
-			}catch(Exception e){
-				//TODO
+			try {
+				if (((ActivityMisMangas) activity).fragmentMisMangas != null && result > 0)
+					((ActivityMisMangas) activity).fragmentMisMangas.cargarMangas();
+			} catch (Exception e) {
+				// TODO
 				e.printStackTrace();
 			}
 			if (progreso != null && progreso.isShowing()) {
 				try {
 					progreso.dismiss();
-				} catch (Exception e) {}
+				} catch (Exception e) {
+				}
 			}
 			running = false;
 			actual = null;

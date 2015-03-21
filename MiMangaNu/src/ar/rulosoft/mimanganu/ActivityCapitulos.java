@@ -35,8 +35,8 @@ public class ActivityCapitulos extends ActionBarActivity {
 		ASD, DSC
 	};
 
-	public static final String DIRECCION = "direccion_de_lectura";
-	public static final String ORDEN = "orden_de_capitulos";
+	public static final String DIRECCION = "direcciondelectura";
+	public static final String ORDEN = "ordendecapitulos";
 
 	public static final String CAPITULO_ID = "cap_id";
 
@@ -86,7 +86,7 @@ public class ActivityCapitulos extends ActionBarActivity {
 		pagerTabStrip.setTabIndicatorColor(Color.BLACK);
 
 		pm = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-		int orden = pm.getInt(ORDEN, Orden.DSC.ordinal());
+		int orden = Integer.parseInt(pm.getString(ORDEN, "" + Orden.DSC.ordinal()));
 		cOrden = Orden.values()[orden];
 	}
 
@@ -112,7 +112,13 @@ public class ActivityCapitulos extends ActionBarActivity {
 		getMenuInflater().inflate(R.menu.activity_capitulos, menu);
 		sentido = menu.findItem(R.id.action_sentido);
 		mOrden = menu.findItem(R.id.action_orden);
-		int direccion = pm.getInt(DIRECCION, Direccion.R2L.ordinal());
+		int direccion = -1;
+		if (manga.getSentidoLectura() != -1) {
+			direccion = manga.getSentidoLectura();
+		} else {
+			direccion = Integer.parseInt(pm.getString(DIRECCION, "" + Direccion.R2L.ordinal()));
+		}
+
 		if (direccion == Direccion.R2L.ordinal()) {
 			this.direccion = Direccion.R2L;
 			sentido.setIcon(R.drawable.ic_action_clasico);
@@ -159,20 +165,26 @@ public class ActivityCapitulos extends ActionBarActivity {
 		} else if (id == R.id.action_buscarnuevos) {
 			new BuscarNuevo().setActivity(ActivityCapitulos.this).execute(manga);
 		} else if (id == R.id.action_sentido) {
-			int direccion = pm.getInt(DIRECCION, Direccion.R2L.ordinal());
+			// TODO check database
+			int direccion = -1;
+			if (manga.getSentidoLectura() != -1) {
+				direccion = manga.getSentidoLectura();
+			} else {
+				direccion = Integer.parseInt(pm.getString(DIRECCION, "" + Direccion.R2L.ordinal()));
+			}
 			if (direccion == Direccion.R2L.ordinal()) {
 				sentido.setIcon(R.drawable.ic_action_inverso);
-				pm.edit().putInt(DIRECCION, Direccion.L2R.ordinal()).commit();
 				this.direccion = Direccion.L2R;
 			} else if (direccion == Direccion.L2R.ordinal()) {
 				sentido.setIcon(R.drawable.ic_action_verical);
-				pm.edit().putInt(DIRECCION, Direccion.VERTICAL.ordinal()).commit();
 				this.direccion = Direccion.VERTICAL;
 			} else {
 				sentido.setIcon(R.drawable.ic_action_clasico);
-				pm.edit().putInt(DIRECCION, Direccion.R2L.ordinal()).commit();
 				this.direccion = Direccion.R2L;
 			}
+			manga.setSentidoLectura(this.direccion.ordinal());
+			Database.updadeSentidoLectura(ActivityCapitulos.this, this.direccion.ordinal(), manga.getId());
+
 		} else if (id == R.id.action_orden) {
 			if (cOrden == Orden.DSC) {
 				mOrden.setIcon(R.drawable.ic_action_1a9);
@@ -183,10 +195,9 @@ public class ActivityCapitulos extends ActionBarActivity {
 			}
 			manga = Database.getFullManga(getApplicationContext(), this.id, cOrden == Orden.ASD);
 			listenerCapitulos.onCalpitulosCargados(this, manga.getCapitulos());
-			pm.edit().putInt(ORDEN, cOrden.ordinal()).commit();
-		} else if(id == R.id.action_descargar_no_leidos){
-			ArrayList<Capitulo> capitulos = Database.getCapitulos(ActivityCapitulos.this, ActivityCapitulos.this.id, Database.COL_CAP_ESTADO + " < 1",
-					true);
+			pm.edit().putString(ORDEN, "" + cOrden.ordinal()).commit();
+		} else if (id == R.id.action_descargar_no_leidos) {
+			ArrayList<Capitulo> capitulos = Database.getCapitulos(ActivityCapitulos.this, ActivityCapitulos.this.id, Database.COL_CAP_ESTADO + " < 1", true);
 			Capitulo[] arr = new Capitulo[capitulos.size()];
 			arr = capitulos.toArray(arr);
 			new DascargarDemas().execute(arr);
@@ -337,7 +348,7 @@ public class ActivityCapitulos extends ActionBarActivity {
 
 		@Override
 		protected void onPostExecute(Integer result) {
-			if (((ActivityCapitulos) activity).fragmentCapitulos != null && result > 0){
+			if (((ActivityCapitulos) activity).fragmentCapitulos != null && result > 0) {
 				Manga manga = Database.getFullManga(activity, mangaId, cOrden == Orden.ASD);
 				((ActivityCapitulos) activity).fragmentCapitulos.onCalpitulosCargados(activity, manga.getCapitulos());
 			}

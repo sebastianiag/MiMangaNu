@@ -52,6 +52,7 @@
     <string name="apachelic">Apache Licence</string>
     <string name="mitlic">MIT Licence and Thanks</string>
     <string name="descarga_no_leidos">Download unread</string>
+    <string name="demaciados_errores">Too many errors (Download suspended) \n This may be caused: \n *  Error connecting \n *  Error on the server side \n *  A bad upload, etc. \nTry later</string>
     <string name="mit">The MIT License (MIT)
         Copyright &#169; 2014 rulosoft (Raul Haag)
         Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -63,5 +64,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 Thanks to sephiroth74 for the library ImageViewTouch, castorflex for VeticalViewPager and  thest1 for LazyList.
 
 Este programa solo automatiza funciones que se podrian hacer con un navegador de internet el creador no se resposabiliza por su mal uso.</string>
+    <string name="title_activity_preference">Preferencias</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

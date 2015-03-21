@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -48,12 +49,13 @@ import ar.rulosoft.mimanganu.componentes.Manga;
 import ar.rulosoft.mimanganu.componentes.UnescroledViewPager;
 import ar.rulosoft.mimanganu.componentes.UnescroledViewPagerVertical;
 import ar.rulosoft.mimanganu.servers.ServerBase;
+import ar.rulosoft.mimanganu.services.DescargaCapitulo.OnErrorListener;
 import ar.rulosoft.mimanganu.services.DescargaListener;
 import ar.rulosoft.mimanganu.services.ServicioColaDeDescarga;
 
-public class ActivityLector extends ActionBarActivity implements DescargaListener, OnSeekBarChangeListener, TapListener {
+public class ActivityLector extends ActionBarActivity implements DescargaListener, OnSeekBarChangeListener, TapListener, OnErrorListener {
 
-	public static final String AJUSTE_KEY = "ajustea";
+	public static final String AJUSTE_KEY = "ajustar_a";
 
 	public static int MAX_TEXTURE = 2048;
 
@@ -81,11 +83,15 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 		super.onCreate(savedInstanceState);
 		pm = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		AJUSTE_PAGINA = DisplayType.valueOf(pm.getString(AJUSTE_KEY, DisplayType.FIT_TO_WIDTH.toString()));
-		direccion = Direccion.values()[pm.getInt(ActivityCapitulos.DIRECCION, Direccion.R2L.ordinal())];
+		capitulo = Database.getCapitulo(this, getIntent().getExtras().getInt(ActivityCapitulos.CAPITULO_ID));
+		manga = Database.getFullManga(this, capitulo.getMangaID());
+		if (manga.getSentidoLectura() != -1)
+			direccion = Direccion.values()[manga.getSentidoLectura()];
+		else
+			direccion = Direccion.values()[Integer.parseInt(pm.getString(ActivityCapitulos.DIRECCION, "" + Direccion.R2L.ordinal()))];
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		actionBar = getSupportActionBar();
 		actionBar.hide();
-		capitulo = Database.getCapitulo(this, getIntent().getExtras().getInt(ActivityCapitulos.CAPITULO_ID));
 		OnPageChangeListener pageChangeListener = new OnPageChangeListener() {
 			int anterior = -1;
 
@@ -142,7 +148,6 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 		seekBar.setOnSeekBarChangeListener(this);
 		seekBar.setMax(capitulo.getPaginas());
 		actionBar.setTitle(capitulo.getTitulo());
-		manga = Database.getFullManga(this, capitulo.getMangaID());
 		s = ServerBase.getServer(manga.getServerId());
 		if (ServicioColaDeDescarga.actual != null)
 			ServicioColaDeDescarga.actual.setDescargaListener(this);
@@ -194,6 +199,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 			if (direccion == Direccion.L2R)
 				mViewPager.setCurrentItem(capitulo.getPaginas() + 1);
 		}
+		ServicioColaDeDescarga.attachListener(this, capitulo.getId());
 		super.onResume();
 	}
 
@@ -386,6 +392,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 			args.putString(RUTA, ruta);
 			fragment.activity = activity;
 			fragment.setArguments(args);
+			fragment.setRetainInstance(false);
 			return fragment;
 		}
 
@@ -712,5 +719,18 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 			setCurrentItem(++act);
 		}
 
+	}
+
+	@Override
+	public void onError(final Capitulo capitulo) {
+		ActivityLector.this.runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				new AlertDialog.Builder(ActivityLector.this).setTitle(capitulo.getTitulo() + " " + getString(R.string.error))
+						.setMessage(getString(R.string.demaciados_errores)).setIcon(R.drawable.ic_launcher)
+						.setNeutralButton(getString(android.R.string.ok), null).show();
+			}
+		});
 	}
 }

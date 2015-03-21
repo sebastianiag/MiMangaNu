@@ -131,6 +131,16 @@ public abstract class ServerBase {
 					}
 				}
 			}
+			if(simpleList.size() == 1){
+				Capitulo c = simpleList.get(0);
+				for(Capitulo cap : manga.getCapitulos()){
+					if(cap.getPath().equalsIgnoreCase(c.getPath())){
+						simpleList.remove(0);
+						break;
+					}
+				}
+			}
+			
 			if (!(simpleList.size() >= diff)) {
 				simpleList = new ArrayList<Capitulo>();
 				for (Capitulo c : manga.getCapitulos()) {

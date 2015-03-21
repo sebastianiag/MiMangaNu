@@ -58,11 +58,13 @@ public class DescargaIndividual implements Runnable {
 					if (code != 200) {
 						if (code == 404) {
 							changeStatus(Estados.ERROR_404);
-							// TODO write dummy images
 						} else {
 							changeStatus(Estados.ERROR_CONECCION);
 						}
 						reintentos = 0;
+						ot.delete();
+						writeErrorImage(ot);
+						ot.renameTo(o);
 						break;
 					}
 					contentLenght = con.getContentLength();
@@ -116,16 +118,7 @@ public class DescargaIndividual implements Runnable {
 								ot.renameTo(o);
 							} else {
 								ot.delete();
-								InputStream ims = ServicioColaDeDescarga.actual.getAssets().open("error_image.jpg");
-								output = new FileOutputStream(ot);;
-								byte[] buffer = new byte[4096];
-								int bytesRead = 0;
-								while ((bytesRead = ims.read(buffer, 0, buffer.length)) >= 0) {
-									output.write(buffer, 0, bytesRead);
-								}
-								ims.close();
-								output.flush();
-								output.close();
+								writeErrorImage(ot);
 								ot.renameTo(o);
 							}
 							Log.i("MIMANGA DOWNLOAD", "descarga ok =" + o.getPath());
@@ -139,6 +132,19 @@ public class DescargaIndividual implements Runnable {
 				changeStatus(Estados.DESCARGA_OK);
 			}
 		}
+	}
+	
+	void writeErrorImage(File ot) throws IOException{
+		InputStream ims = ServicioColaDeDescarga.actual.getAssets().open("error_image.jpg");
+		FileOutputStream output = new FileOutputStream(ot);;
+		byte[] buffer = new byte[4096];
+		int bytesRead = 0;
+		while ((bytesRead = ims.read(buffer, 0, buffer.length)) >= 0) {
+			output.write(buffer, 0, bytesRead);
+		}
+		ims.close();
+		output.flush();
+		output.close();
 	}
 
 	void changeStatus(Estados estado) {

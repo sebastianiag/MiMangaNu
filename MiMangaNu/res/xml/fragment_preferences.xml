@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:key="first_preferencescreen" >
+
+    <PreferenceCategory android:title="@string/opciones_mm" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="mostrar_en_galeria"
+            android:title="@string/escondergaleria" >
+        </CheckBoxPreference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/opciones_caps" >
+        <ListPreference
+            android:dialogTitle="@string/orden_de_capitulos"
+            android:entries="@array/ordenes_array"
+            android:entryValues="@array/ordenes_valores"
+            android:key="ordendecapitulos"
+            android:title="@string/orden_de_capitulos" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/opciones_lec" >
+        <ListPreference
+            android:dialogTitle="@string/sentido_lectura"
+            android:entries="@array/sentido_lectura"
+            android:entryValues="@array/sentido_lectura_val"
+            android:key="direcciondelectura"
+            android:title="@string/sentido_lectura" />
+        <ListPreference android:title="@string/ajuste_imagen"
+            android:key="ajustar_a"
+            android:entries="@array/ajustar_a"
+            android:entryValues="@array/ajustar_valores"
+            android:dialogTitle="@string/ajuste_imagen"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

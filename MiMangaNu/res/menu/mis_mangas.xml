@@ -10,29 +10,21 @@
         android:title="@string/buscarnuevos"
         app:showAsAction="always"/>
     <item
-        android:icon="@drawable/ic_action_core_overflow"
-        android:orderInCategory="100"
-        android:title="@string/mas"
-        app:showAsAction="always">
-        <menu>
-            <group android:checkableBehavior="all" >
-                <item
-                    android:id="@+id/action_mostrar_en_galeria"
-                    android:orderInCategory="100"
-                    android:title="@string/escondergaleria"/>
-            </group>
-            <group android:checkableBehavior="all" >
-                <item
-                    android:id="@+id/action_esconder_leidos"
-                    android:orderInCategory="100"
-                    android:title="@string/esconder_leido"/>
-            </group>
+        android:id="@+id/action_configurar"
+        android:icon="@drawable/ic_action_action_settings"
+        android:title="@string/configuraciones"
+        app:showAsAction="never"/>
 
-            <item
-                android:id="@+id/licencia"
-                android:orderInCategory="100"
-                android:title="@string/licencia"/>
-        </menu>
-    </item>
+    <group android:checkableBehavior="all" >
+        <item
+            android:id="@+id/action_esconder_leidos"
+            android:orderInCategory="100"
+            android:title="@string/esconder_leido"/>
+    </group>
+
+    <item
+        android:id="@+id/licencia"
+        android:orderInCategory="100"
+        android:title="@string/licencia"/>
 
 </menu>

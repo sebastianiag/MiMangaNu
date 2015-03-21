@@ -18,9 +18,11 @@ public class Database extends SQLiteOpenHelper {
 	public static final String COL_SINOPSIS = "sinopsis";
 	public static final String COL_LAST_REAS = "ultima";
 	public static final String COL_ID = "id";
-	public static final String COL_LAST_INDEX = "last_index";
-	public static final String COL_NUEVOS = "nuevos";
-	public static final String COL_BUSCAR = "burcar";
+	public static final String COL_LAST_INDEX = "last_index";// indice listview
+	public static final String COL_NUEVOS = "nuevos";// hay nuevos?
+	public static final String COL_BUSCAR = "burcar";// buscar updates
+	private static final String COL_SENTIDO = "orden_lectura";// sentido de
+																// lectura
 
 	public static final String TABLE_CAPITULOS = "capitulos";
 	public static final String COL_CAP_ID_MANGA = "manga_id";
@@ -33,12 +35,13 @@ public class Database extends SQLiteOpenHelper {
 	public static final String COL_CAP_ID = "id";
 
 	private static final String DATABASE_NAME = "mangas.db";
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 7;
 
 	// Database creation sql statement
 	private static final String DATABASE_MANGA_CREATE = "create table " + TABLE_MANGA + "(" + COL_ID + " integer primary key autoincrement, " + COL_NOMBRE
 			+ " text not null," + COL_PATH + " text not null UNIQUE, " + COL_IMAGE + " text," + COL_SINOPSIS + " text," + COL_SERVER_ID + "," + COL_LAST_REAS
-			+ " int," + COL_NUEVOS + " int DEFAULT 0," + COL_LAST_INDEX + " int DEFAULT 0, " + COL_BUSCAR + " int DEFAULT 0 );";
+			+ " int," + COL_NUEVOS + " int DEFAULT 0," + COL_LAST_INDEX + " int DEFAULT 0, " + COL_BUSCAR + " int DEFAULT 0, " + COL_SENTIDO
+			+ " int not null DEFAULT -1);";
 
 	private static final String DATABASE_CAPITULOS_CREATE = "create table " + TABLE_CAPITULOS + "(" + COL_CAP_ID + " integer primary key autoincrement, "
 			+ COL_CAP_NOMBRE + " text not null," + COL_CAP_PATH + " text not null UNIQUE, " + COL_CAP_PAGINAS + " int," + COL_CAP_ID_MANGA + " int,"
@@ -61,7 +64,7 @@ public class Database extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		localDB = db;
-		db.execSQL("ALTER TABLE " + TABLE_MANGA + " ADD COLUMN " + COL_BUSCAR + " int DEFAULT 0;");
+		db.execSQL("ALTER TABLE " + TABLE_MANGA + " ADD COLUMN " + COL_SENTIDO + " int not null DEFAULT -1;");
 	}
 
 	public static SQLiteDatabase getDatabase(Context c) {
@@ -158,9 +161,10 @@ public class Database extends SQLiteOpenHelper {
 	}
 
 	public static ArrayList<Manga> getMangasCondotion(Context c, String condition) {
-		Cursor cursor = getDatabase(c).query(TABLE_MANGA,
-				new String[] { COL_ID, COL_NOMBRE, COL_PATH, COL_IMAGE, COL_SINOPSIS, COL_LAST_REAS, COL_SERVER_ID, COL_NUEVOS, COL_BUSCAR, COL_LAST_INDEX },
-				condition, null, null, null, COL_LAST_REAS + " DESC");
+		Cursor cursor = getDatabase(c).query(
+				TABLE_MANGA,
+				new String[] { COL_ID, COL_NOMBRE, COL_PATH, COL_IMAGE, COL_SINOPSIS, COL_LAST_REAS, COL_SERVER_ID, COL_NUEVOS, COL_BUSCAR, COL_LAST_INDEX,
+						COL_SENTIDO }, condition, null, null, null, COL_LAST_REAS + " DESC");
 		return getMangasFromCursor(cursor);
 	}
 
@@ -176,6 +180,7 @@ public class Database extends SQLiteOpenHelper {
 			int conNuevos = cursor.getColumnIndex(COL_NUEVOS);
 			int colBuscar = cursor.getColumnIndex(COL_BUSCAR);
 			int colLastIdx = cursor.getColumnIndex(COL_LAST_INDEX);
+			int colSentido = cursor.getColumnIndex(COL_SENTIDO);
 
 			do {
 				Manga m = new Manga(cursor.getInt(colServerId), cursor.getString(colTitulo), cursor.getString(colWeb), false);
@@ -185,6 +190,7 @@ public class Database extends SQLiteOpenHelper {
 				m.setNuevos(cursor.getInt(conNuevos));
 				m.setFinalizado(cursor.getInt(colBuscar) > 0);
 				m.setLastIndex(cursor.getInt(colLastIdx));
+				m.setSentidoLectura(cursor.getInt(colSentido));
 				mangas.add(m);
 			} while (cursor.moveToNext());
 		}
@@ -308,7 +314,7 @@ public class Database extends SQLiteOpenHelper {
 	public static Manga getManga(Context context, int mangaID) {
 		Manga manga = null;
 		Cursor cursor = getDatabase(context).query(TABLE_MANGA,
-				new String[] { COL_ID, COL_NOMBRE, COL_PATH, COL_IMAGE, COL_SINOPSIS, COL_LAST_REAS, COL_SERVER_ID, COL_NUEVOS, COL_LAST_INDEX },
+				new String[] { COL_ID, COL_NOMBRE, COL_PATH, COL_IMAGE, COL_SINOPSIS, COL_LAST_REAS, COL_SERVER_ID, COL_NUEVOS, COL_LAST_INDEX, COL_SENTIDO },
 				COL_ID + "=" + mangaID, null, null, null, COL_LAST_REAS + " DESC");
 		if (cursor.moveToFirst()) {
 			int colId = cursor.getColumnIndex(COL_ID);
@@ -319,6 +325,7 @@ public class Database extends SQLiteOpenHelper {
 			int colWeb = cursor.getColumnIndex(COL_PATH);
 			int conNuevos = cursor.getColumnIndex(COL_NUEVOS);
 			int colLastIndex = cursor.getColumnIndex(COL_LAST_INDEX);
+			int colSentido = cursor.getColumnIndex(COL_SENTIDO);
 
 			Manga m = new Manga(cursor.getInt(colServerId), cursor.getString(colTitulo), cursor.getString(colWeb), false);
 			m.setSinopsis(cursor.getString(colSinopsis));
@@ -326,6 +333,8 @@ public class Database extends SQLiteOpenHelper {
 			m.setId(cursor.getInt(colId));
 			m.setNuevos(cursor.getInt(conNuevos));
 			m.setLastIndex(cursor.getInt(colLastIndex));
+			m.setSentidoLectura(cursor.getInt(colSentido));
+
 			manga = m;
 		}
 		cursor.close();
@@ -346,5 +355,12 @@ public class Database extends SQLiteOpenHelper {
 
 	public static void removerCapitulosHuerfanos(Context c) {
 		getDatabase(c).delete(TABLE_CAPITULOS, COL_CAP_ID_MANGA + "= -1", null);
+	}
+
+	public static void updadeSentidoLectura(Context c, int ordinal, int mid) {
+		ContentValues cv = new ContentValues();
+		cv.put(COL_SENTIDO, ordinal);
+		getDatabase(c).update(TABLE_MANGA, cv, COL_ID + "=" + mid, null);
+		
 	}
 }

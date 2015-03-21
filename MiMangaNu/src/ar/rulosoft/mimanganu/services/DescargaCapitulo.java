@@ -1,5 +1,6 @@
 package ar.rulosoft.mimanganu.services;
 
+import android.util.Log;
 import ar.rulosoft.mimanganu.componentes.Capitulo;
 import ar.rulosoft.mimanganu.componentes.Database;
 import ar.rulosoft.mimanganu.services.DescargaIndividual.Estados;
@@ -8,9 +9,9 @@ public class DescargaCapitulo implements CambioEstado {
 	public static enum DescargaEstado {
 		EN_COLA, DESCARGANDO, DESCARGADO, ERROR
 	};
-
+	
+	OnErrorListener errorListener = null;
 	CambioEstado cambioListener = null;
-
 	static final int MAX_ERRORS = 5;
 	public DescargaEstado estado;
 	Capitulo capitulo;
@@ -57,6 +58,11 @@ public class DescargaCapitulo implements CambioEstado {
 				errors++;
 				if (errors > MAX_ERRORS) {
 					cambiarEstado(DescargaEstado.ERROR);
+					Log.e("ERROR", "DEMASIADOS ERRORES DC");
+					if(errorListener != null){
+						Log.e("ERROR", "DEMASIADOS ERRORES DC IF");
+						errorListener.onError(capitulo);
+					}
 					break;
 				}
 			}
@@ -96,15 +102,15 @@ public class DescargaCapitulo implements CambioEstado {
 	public void setCambioListener(CambioEstado cambioListener) {
 		this.cambioListener = cambioListener;
 	}
-	
-	public void setErrorIdx(int idx){
+
+	public void setErrorIdx(int idx) {
 		paginasStatus[idx] = Estados.ERROR_SUBIDA;
-		progreso++;	
+		progreso++;
 		hayErrores();
 		chackProgreso();
 	}
-	
-	public void chackProgreso(){
+
+	public void chackProgreso() {
 		if (progreso == capitulo.getPaginas()) {
 			Database.UpdateCapituloDescargado(ServicioColaDeDescarga.actual, capitulo.getId(), 1);
 			cambiarEstado(DescargaEstado.DESCARGADO);
@@ -118,5 +124,17 @@ public class DescargaCapitulo implements CambioEstado {
 		chackProgreso();
 		if (cambioListener != null)
 			cambioListener.onCambio(descargaIndividual);
+	}
+	
+	public interface OnErrorListener{
+		void onError(Capitulo capitulo);
+	}
+
+	public void setErrorListener(OnErrorListener errorListener) {
+		this.errorListener = errorListener;
+		if(this.estado == DescargaEstado.ERROR){
+			errorListener.onError(capitulo);
+			Log.e("ERROR", "DEMASIADOS ERRORES SL");
+		}
 	}
 }

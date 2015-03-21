@@ -9,6 +9,8 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Environment;
 import android.os.IBinder;
+import android.util.Log;
+import ar.rulosoft.mimanganu.ActivityLector;
 import ar.rulosoft.mimanganu.componentes.Capitulo;
 import ar.rulosoft.mimanganu.componentes.Database;
 import ar.rulosoft.mimanganu.componentes.Manga;
@@ -130,15 +132,26 @@ public class ServicioColaDeDescarga extends Service implements CambioEstado {
 				intentPrending = true;
 				activity.startService(new Intent(activity, ServicioColaDeDescarga.class));
 			}
+			DescargaCapitulo dc = new DescargaCapitulo(capitulo);
 			if (lectura)
-				descargas.add(0, new DescargaCapitulo(capitulo));
+				descargas.add(0, dc);
 			else
-				descargas.add(new DescargaCapitulo(capitulo));
+				descargas.add(dc);
 		}
 	}
 
 	public static void quitarDescarga(int index) {
 		descargas.remove(index);
+	}
+	
+	public static void attachListener(ActivityLector lector, int cid){
+		for(DescargaCapitulo dc : descargas){
+			if(dc.capitulo.getId() == cid){
+				Log.e("ERROR", "DEMASIADOS ERRORES SDD");
+				dc.setErrorListener(lector);
+				break;
+			}
+		}
 	}
 
 	public static String generarRutaBase(ServerBase s, Manga m, Capitulo c) {

@@ -346,6 +346,12 @@ public class Database extends SQLiteOpenHelper {
 		cv.put(COL_CAP_ESTADO, Capitulo.LEIDO);
 		getDatabase(c).update(TABLE_CAPITULOS, cv, COL_CAP_ID_MANGA + " = " + mangaId, null);
 	}
+	
+	public static void marcarComoLeido(Context c, int capId) {
+		ContentValues cv = new ContentValues();
+		cv.put(COL_CAP_ESTADO, Capitulo.LEIDO);
+		getDatabase(c).update(TABLE_CAPITULOS, cv, COL_CAP_ID + " = " + capId, null);
+	}
 
 	public static void marcarTodoComoNoLeido(Context c, int mangaId) {
 		ContentValues cv = new ContentValues();

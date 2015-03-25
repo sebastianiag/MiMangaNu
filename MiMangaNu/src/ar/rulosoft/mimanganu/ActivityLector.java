@@ -83,6 +83,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 		super.onCreate(savedInstanceState);
 		pm = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		AJUSTE_PAGINA = DisplayType.valueOf(pm.getString(AJUSTE_KEY, DisplayType.FIT_TO_WIDTH.toString()));
+		MAX_TEXTURE = Integer.parseInt(pm.getString("max_texture", "2048"));
 		capitulo = Database.getCapitulo(this, getIntent().getExtras().getInt(ActivityCapitulos.CAPITULO_ID));
 		manga = Database.getFullManga(this, capitulo.getMangaID());
 		if (manga.getSentidoLectura() != -1)
@@ -233,6 +234,7 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 	@Override
 	protected void onPause() {
 		Database.UpdateCapituloPagina(ActivityLector.this, capitulo.getId(), capitulo.getPagLeidas());
+		ServicioColaDeDescarga.detachListener(capitulo.getId());
 		super.onPause();
 	}
 
@@ -724,12 +726,15 @@ public class ActivityLector extends ActionBarActivity implements DescargaListene
 	@Override
 	public void onError(final Capitulo capitulo) {
 		ActivityLector.this.runOnUiThread(new Runnable() {
-
 			@Override
 			public void run() {
+				try{
 				new AlertDialog.Builder(ActivityLector.this).setTitle(capitulo.getTitulo() + " " + getString(R.string.error))
 						.setMessage(getString(R.string.demaciados_errores)).setIcon(R.drawable.ic_launcher)
 						.setNeutralButton(getString(android.R.string.ok), null).show();
+				}catch(Exception e){
+					//lost references fixed con detachListener
+				}
 			}
 		});
 	}

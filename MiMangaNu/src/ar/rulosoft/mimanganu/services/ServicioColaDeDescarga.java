@@ -6,10 +6,12 @@ import java.util.Arrays;
 
 import android.app.Activity;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.IBinder;
-import android.util.Log;
+import android.preference.PreferenceManager;
 import ar.rulosoft.mimanganu.ActivityLector;
 import ar.rulosoft.mimanganu.componentes.Capitulo;
 import ar.rulosoft.mimanganu.componentes.Database;
@@ -19,10 +21,13 @@ import ar.rulosoft.mimanganu.services.DescargaCapitulo.DescargaEstado;
 import ar.rulosoft.mimanganu.services.DescargaIndividual.Estados;
 
 public class ServicioColaDeDescarga extends Service implements CambioEstado {
+	
+	public static int SLOTS = 2;
+	
 	public static ServicioColaDeDescarga actual = null;
 	public static boolean intentPrending = false;
 	public static ArrayList<DescargaCapitulo> descargas = new ArrayList<DescargaCapitulo>();
-	int slots = 2;
+	public int slots = SLOTS;
 	DescargaListener descargaListener = null;
 
 	@Override
@@ -104,11 +109,11 @@ public class ServicioColaDeDescarga extends Service implements CambioEstado {
 						dc.setErrorIdx(sig - 1);
 						slots++;
 					}
-				} else if(slots == 1){
+				} else if (slots == 1) {
 					break;
-				}else{
+				} else {
 					try {
-						Thread.sleep(500);	
+						Thread.sleep(500);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -128,30 +133,79 @@ public class ServicioColaDeDescarga extends Service implements CambioEstado {
 
 	public static void agregarDescarga(Activity activity, Capitulo capitulo, boolean lectura) {
 		if (!capitulo.isDescargado()) {
+			if (descargaNueva(capitulo.getId())) {
+				DescargaCapitulo dc = new DescargaCapitulo(capitulo);
+				if (lectura)
+					descargas.add(0, dc);
+				else
+					descargas.add(dc);
+			} else {
+				for (DescargaCapitulo dc : descargas) {
+					if (dc.capitulo.getId() == capitulo.getId()) {
+						if (dc.estado == DescargaEstado.ERROR) {
+							dc.capitulo.borrarImagenes(activity);
+							descargas.remove(dc);
+							dc = null;
+							DescargaCapitulo ndc = new DescargaCapitulo(capitulo);
+							if (lectura) {
+								descargas.add(0, ndc);
+							} else {
+								descargas.add(ndc);
+							}
+						} else {
+							if (lectura) {
+								descargas.remove(dc);
+								descargas.add(0, dc);
+							}
+						}
+						break;
+					}
+				}
+			}
+			initValues(activity);
 			if (!intentPrending && actual == null) {
 				intentPrending = true;
 				activity.startService(new Intent(activity, ServicioColaDeDescarga.class));
 			}
-			DescargaCapitulo dc = new DescargaCapitulo(capitulo);
-			if (lectura)
-				descargas.add(0, dc);
-			else
-				descargas.add(dc);
 		}
+	}
+	
+	public static void initValues(Context context){
+		SharedPreferences pm = PreferenceManager.getDefaultSharedPreferences(context);
+		int descargas = Integer.parseInt(pm.getString("download_threads", "2"));
+		int tolerancia = Integer.parseInt(pm.getString("error_tolerancia", "5"));
+		int reintentos = Integer.parseInt(pm.getString("reintentos", "4"));
+		DescargaCapitulo.MAX_ERRORS = tolerancia;
+		DescargaIndividual.REINTENTOS = reintentos;
+		ServicioColaDeDescarga.SLOTS = descargas;
+	}
+
+	public static boolean descargaNueva(int cid) {
+		boolean result = true;
+		for (DescargaCapitulo dc : descargas) {
+			if (dc.capitulo.getId() == cid) {
+				result = false;
+				break;
+			}
+		}
+		return result;
 	}
 
 	public static void quitarDescarga(int index) {
 		descargas.remove(index);
 	}
-	
-	public static void attachListener(ActivityLector lector, int cid){
-		for(DescargaCapitulo dc : descargas){
-			if(dc.capitulo.getId() == cid){
-				Log.e("ERROR", "DEMASIADOS ERRORES SDD");
+
+	public static void attachListener(ActivityLector lector, int cid) {
+		for (DescargaCapitulo dc : descargas) {
+			if (dc.capitulo.getId() == cid) {
 				dc.setErrorListener(lector);
 				break;
 			}
 		}
+	}
+
+	public static void detachListener(int cid) {
+		attachListener(null, cid);
 	}
 
 	public static String generarRutaBase(ServerBase s, Manga m, Capitulo c) {

@@ -1,21 +1,26 @@
 package ar.rulosoft.mimanganu;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.SparseBooleanArray;
+import android.view.ActionMode;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -28,7 +33,6 @@ import ar.rulosoft.mimanganu.componentes.Database;
 import ar.rulosoft.mimanganu.componentes.Manga;
 import ar.rulosoft.mimanganu.servers.ServerBase;
 import ar.rulosoft.mimanganu.services.ServicioColaDeDescarga;
-import ar.rulosoft.mimanganu.R;
 
 public class FragmentCapitulos extends Fragment implements SetCapitulos {
 
@@ -42,6 +46,7 @@ public class FragmentCapitulos extends Fragment implements SetCapitulos {
 		return rView;
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		lista.setOnItemClickListener(new OnItemClickListener() {
@@ -53,7 +58,81 @@ public class FragmentCapitulos extends Fragment implements SetCapitulos {
 			}
 		});
 
-		registerForContextMenu(lista);
+		if (android.os.Build.VERSION.SDK_INT < 11)
+			registerForContextMenu(lista);
+		else {
+			lista.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+			lista.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+
+				@Override
+				public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+					return false;
+				}
+
+				@Override
+				public void onDestroyActionMode(ActionMode mode) {
+					capitulosAdapter.clearSelection();
+				}
+
+				@Override
+				public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+					MenuInflater inflater = getActivity().getMenuInflater();
+					inflater.inflate(R.menu.listitem_capitulo_menu_cab, menu);
+					return true;
+				}
+
+				@Override
+				public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+
+					SparseBooleanArray selection = capitulosAdapter.getSelection();
+					Manga manga = ((ActivityCapitulos) getActivity()).manga;
+					ServerBase s = ServerBase.getServer(manga.getServerId());
+
+					switch (item.getItemId()) {
+					case R.id.borrar:
+						int[] selecionados = new int[selection.size()];
+						for (int j = 0; j < selection.size(); j++) {
+							selecionados[j] = selection.keyAt(j);
+						}
+						Arrays.sort(selecionados);
+						for (int i = selection.size() - 1; i >= 0; i--) {
+							Capitulo c = capitulosAdapter.getItem(selection.keyAt(i));
+							c.borrar(getActivity(), manga, s);
+							capitulosAdapter.remove(c);
+
+						}
+						break;
+
+					case R.id.reset:
+						for (int i = 0; i < selection.size(); i++) {
+							Capitulo c = capitulosAdapter.getItem(selection.keyAt(i));
+							c.reset(getActivity(), manga, s);
+						}
+						break;
+
+					case R.id.marcar_leido:
+						for (int i = selection.size() - 1; i >= 0; i--) {
+							Capitulo c = capitulosAdapter.getItem(selection.keyAt(i));
+							c.marcarComoLeido(getActivity());
+						}
+						break;
+					}
+					capitulosAdapter.notifyDataSetChanged();
+					mode.finish();
+					return false;
+				}
+
+				@Override
+				public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+					if (checked) {
+						capitulosAdapter.setNewSelection(position, checked);
+					} else {
+						capitulosAdapter.removeSelection(position);
+					}
+				}
+			});
+		}
+
 		super.onActivityCreated(savedInstanceState);
 	}
 
@@ -85,7 +164,7 @@ public class FragmentCapitulos extends Fragment implements SetCapitulos {
 		MenuInflater inflater = getActivity().getMenuInflater();
 
 		if (v.getId() == R.id.lista)
-			;//TODO
+			;// TODO
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 		menu.setHeaderTitle(lista.getAdapter().getItem(info.position).toString());
 		inflater.inflate(R.menu.listitem_capitulo_menu, menu);
@@ -98,24 +177,11 @@ public class FragmentCapitulos extends Fragment implements SetCapitulos {
 
 		if (item.getItemId() == R.id.borrar) {
 			Capitulo c = (Capitulo) lista.getAdapter().getItem(info.position);
-			Manga manga = ((ActivityCapitulos) getActivity()).manga;
-			ServerBase s = ServerBase.getServer(manga.getServerId());
-			String ruta = ServicioColaDeDescarga.generarRutaBase(s, manga, c);
-			FragmentMisMangas.DeleteRecursive(new File(ruta));
-			Database.borrarCapitulo(getActivity(), c);
-			capitulosAdapter.remove(c);
+			c.borrar(getActivity());
 			capitulosAdapter.notifyDataSetChanged();
 		} else if (item.getItemId() == R.id.reset) {
 			Capitulo c = (Capitulo) lista.getAdapter().getItem(info.position);
-			Manga manga = ((ActivityCapitulos) getActivity()).manga;
-			ServerBase s = ServerBase.getServer(manga.getServerId());
-			String ruta = ServicioColaDeDescarga.generarRutaBase(s, manga, c);
-			FragmentMisMangas.DeleteRecursive(new File(ruta));
-			c.setPaginas(0);
-			c.setDescargado(false);
-			c.setPagLeidas(0);
-			Database.updateCapitulo(getActivity(), c);
-			Database.UpdateCapituloDescargado(getActivity(), c.getId(), 0);
+			c.reset(getActivity());
 			capitulosAdapter.notifyDataSetChanged();
 		}
 		return super.onContextItemSelected(item);

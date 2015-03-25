@@ -1,12 +1,19 @@
 package ar.rulosoft.mimanganu.componentes;
 
+import java.io.File;
+
+import android.content.Context;
+import ar.rulosoft.mimanganu.FragmentMisMangas;
+import ar.rulosoft.mimanganu.servers.ServerBase;
+import ar.rulosoft.mimanganu.services.ServicioColaDeDescarga;
+
 public class Capitulo {
-	
-	public static final int NUEVO = - 1;
+
+	public static final int NUEVO = -1;
 	public static final int SIN_LEER = 0;
 	public static final int LEIDO = 1;
 	public static final int LEYENDO = 2;
-	
+
 	int id, paginas, mangaID;
 	int pagLeidas, estadoLectura;
 	String titulo, path, extra;
@@ -94,12 +101,55 @@ public class Capitulo {
 	public void setDescargado(boolean descargado) {
 		this.descargado = descargado;
 	}
-	
+
 	public String getExtra() {
 		return extra;
 	}
 
 	public void setExtra(String extra) {
 		this.extra = extra;
+	}
+
+	public void borrar(Context context, Manga manga, ServerBase s) {
+		borrarImagenes(context, manga, s);
+		Database.borrarCapitulo(context, this);
+	}
+
+	public void borrar(Context context) {
+		Manga manga = Database.getManga(context, getMangaID());
+		ServerBase s = ServerBase.getServer(manga.getServerId());
+		borrar(context, manga, s);
+	}
+	
+	public void borrarImagenes(Context context){
+		Manga manga = Database.getManga(context, getMangaID());
+		ServerBase s = ServerBase.getServer(manga.getServerId());
+		borrarImagenes(context, manga, s);
+	}
+
+	private void borrarImagenes(Context context, Manga manga, ServerBase s) {
+		String ruta = ServicioColaDeDescarga.generarRutaBase(s, manga, this);
+		FragmentMisMangas.DeleteRecursive(new File(ruta));
+	}
+
+	public void reset(Context context, Manga manga, ServerBase s) {
+		String ruta = ServicioColaDeDescarga.generarRutaBase(s, manga, this);
+		FragmentMisMangas.DeleteRecursive(new File(ruta));
+		setPaginas(0);
+		setDescargado(false);
+		setPagLeidas(0);
+		Database.updateCapitulo(context, this);
+		Database.UpdateCapituloDescargado(context, getId(), 0);
+	}
+
+	public void reset(Context context) {
+		Manga manga = Database.getManga(context, getMangaID());
+		ServerBase s = ServerBase.getServer(manga.getServerId());
+		reset(context, manga, s);
+	}
+	
+	public void marcarComoLeido(Context c){
+		Database.marcarComoLeido(c, getId());
+		setEstadoLectura(Capitulo.LEIDO);
 	}
 }

@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,8 +31,9 @@ public class CapituloAdapter extends ArrayAdapter<Capitulo> {
 	public static int TRANSPARENTE = Color.parseColor("#00FFFFFF");
 	public static int GRIS = Color.argb(15, 0, 0, 0);
 	public static int GRIS_CLARO = Color.argb(30, 0, 0, 0);
+	public static int SELECCIONADO = Color.parseColor("#33B5E5");
 
-
+	SparseBooleanArray selected = new SparseBooleanArray();
 	private LayoutInflater li;
 	private static int listItem = R.layout.listitem_capitulo;
 	ActivityCapitulos activity;
@@ -85,6 +87,10 @@ public class CapituloAdapter extends ArrayAdapter<Capitulo> {
 			default:
 				convertView.setBackgroundColor(TRANSPARENTE);
 			}
+			
+			if (selected.get(posicion) == true)
+				convertView.setBackgroundColor(SELECCIONADO);
+			
 			holder.textViewPaginas.setText("       ");
 			if (item.getPaginas() > 0) {
 				holder.textViewPaginas.setText(item.getPagLeidas() + "/" + item.getPaginas());
@@ -120,6 +126,25 @@ public class CapituloAdapter extends ArrayAdapter<Capitulo> {
 		}
 
 		return convertView;
+	}
+
+	public void setNewSelection(int position, boolean value) {
+		selected.put(position, value);
+		notifyDataSetChanged();
+	}
+
+	public void removeSelection(int position) {
+		selected.delete(position);
+		notifyDataSetChanged();
+	}
+
+	public void clearSelection() {
+		selected.clear();
+		notifyDataSetChanged();
+	}
+	
+	public SparseBooleanArray getSelection(){
+		return selected;
 	}
 
 	private class AgregarCola extends AsyncTask<Capitulo, Void, Capitulo> {

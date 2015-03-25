@@ -1,6 +1,5 @@
 package ar.rulosoft.mimanganu.services;
 
-import android.util.Log;
 import ar.rulosoft.mimanganu.componentes.Capitulo;
 import ar.rulosoft.mimanganu.componentes.Database;
 import ar.rulosoft.mimanganu.services.DescargaIndividual.Estados;
@@ -9,10 +8,11 @@ public class DescargaCapitulo implements CambioEstado {
 	public static enum DescargaEstado {
 		EN_COLA, DESCARGANDO, DESCARGADO, ERROR
 	};
-	
+
+	public static int MAX_ERRORS = 5;
+
 	OnErrorListener errorListener = null;
 	CambioEstado cambioListener = null;
-	static final int MAX_ERRORS = 5;
 	public DescargaEstado estado;
 	Capitulo capitulo;
 	Estados[] paginasStatus;
@@ -20,6 +20,10 @@ public class DescargaCapitulo implements CambioEstado {
 
 	public DescargaCapitulo(Capitulo capitulo) {
 		this.capitulo = capitulo;
+		reset();
+	}
+
+	public void reset() {
 		paginasStatus = new Estados[capitulo.getPaginas()];
 		for (int i = 0; i < paginasStatus.length; i++) {
 			paginasStatus[i] = Estados.EN_COLA;
@@ -58,9 +62,7 @@ public class DescargaCapitulo implements CambioEstado {
 				errors++;
 				if (errors > MAX_ERRORS) {
 					cambiarEstado(DescargaEstado.ERROR);
-					Log.e("ERROR", "DEMASIADOS ERRORES DC");
-					if(errorListener != null){
-						Log.e("ERROR", "DEMASIADOS ERRORES DC IF");
+					if (errorListener != null) {
 						errorListener.onError(capitulo);
 					}
 					break;
@@ -125,16 +127,15 @@ public class DescargaCapitulo implements CambioEstado {
 		if (cambioListener != null)
 			cambioListener.onCambio(descargaIndividual);
 	}
-	
-	public interface OnErrorListener{
+
+	public interface OnErrorListener {
 		void onError(Capitulo capitulo);
 	}
 
 	public void setErrorListener(OnErrorListener errorListener) {
 		this.errorListener = errorListener;
-		if(this.estado == DescargaEstado.ERROR){
+		if (this.estado == DescargaEstado.ERROR && errorListener != null) {
 			errorListener.onError(capitulo);
-			Log.e("ERROR", "DEMASIADOS ERRORES SL");
 		}
 	}
 }

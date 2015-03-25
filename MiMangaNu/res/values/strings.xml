@@ -64,8 +64,25 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 Thanks to sephiroth74 for the library ImageViewTouch, castorflex for VeticalViewPager and  thest1 for LazyList.
 
 Este programa solo automatiza funciones que se podrian hacer con un navegador de internet el creador no se resposabiliza por su mal uso.</string>
-    <string name="title_activity_preference">Preferencias</string>
-    <string name="hello_world">Hello world!</string>
+
+    <string name="title_activity_preference">Preferencies</string>
     <string name="action_settings">Settings</string>
+    <string name="marcarleido">Marcar como leído</string>
+    <string name="configuraciones">Configuraciones</string>
+    <string name="opciones_mm">Opciones Mis Mangas</string>
+    <string name="opciones_caps">Opciones de Capítulos</string>
+    <string name="orden_de_capitulos">Orden de Capítulos</string>
+    <string name="orden_asc">Ascendente</string>
+    <string name="orden_dsc">Descendiente</string>
+    <string name="opciones_lec">Opciones de Lector</string>
+    <string name="sentido_lectura">Sentido de Lectura por Defecto</string>
+    <string name="r2l">De derecha a izquierda</string>
+    <string name="l2r">De izquierda a derecha</string>
+    <string name="vertical">Vertical</string>
+    <string name="ajuste_imagen">Ajuste de imagen por defecto</string>
+    <string name="no_scale">Tamaño original</string>
+    <string name="mejor_ajuste">Mejor ajuste</string>
+    <string name="ajuste_ancho">Ajustar en ancho</string>
+    <string name="ajuste_alto">Ajustar en altura</string>
 
 </resources>

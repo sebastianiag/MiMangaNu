@@ -6,9 +6,13 @@ import java.io.IOException;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
+import ar.rulosoft.mimanganu.services.DescargaCapitulo;
+import ar.rulosoft.mimanganu.services.DescargaIndividual;
+import ar.rulosoft.mimanganu.services.ServicioColaDeDescarga;
 
 public class OpcionesActivity extends PreferenceActivity {
 	@SuppressWarnings("deprecation")
@@ -41,7 +45,42 @@ public class OpcionesActivity extends PreferenceActivity {
 				return true;
 			}
 		});
-		
-		
+
+		ListPreference listPreferenceDT = (ListPreference) getPreferenceManager().findPreference("download_threads");
+		listPreferenceDT.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				int threads = Integer.parseInt((String) newValue);
+				int antes = ServicioColaDeDescarga.SLOTS;
+				ServicioColaDeDescarga.SLOTS = threads;
+				if (ServicioColaDeDescarga.actual != null) {
+					ServicioColaDeDescarga.actual.slots += (threads - antes);
+				}
+				return true;
+			}
+		});
+
+		ListPreference listPreferenceET = (ListPreference) getPreferenceManager().findPreference("error_tolerancia");
+		listPreferenceET.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				int tol = Integer.parseInt((String) newValue);
+				DescargaCapitulo.MAX_ERRORS = tol;
+				return true;
+			}
+		});
+
+		ListPreference listPreferenceRT = (ListPreference)getPreferenceManager().findPreference("reintentos");
+		listPreferenceRT.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				int rt = Integer.parseInt((String)newValue);
+				DescargaIndividual.REINTENTOS = rt;
+				return true;
+			}
+		});
 	}
 }

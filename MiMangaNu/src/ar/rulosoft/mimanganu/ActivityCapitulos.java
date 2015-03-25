@@ -17,6 +17,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import ar.rulosoft.mimanganu.componentes.Capitulo;
@@ -53,6 +54,7 @@ public class ActivityCapitulos extends ActionBarActivity {
 	public Direccion direccion;
 	public static Orden cOrden;
 	int id;
+	ActionMode mActionMode;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -336,7 +338,7 @@ public class ActivityCapitulos extends ActionBarActivity {
 			mangaId = params[0].getId();
 			try {
 				onProgressUpdate(params[0].getTitulo());
-				params[0].setCapitulos(null);
+				params[0].clearCapitulos();
 				s.cargarCapitulos(params[0]);
 				int diff = s.buscarNuevosCapitulos(params[0], activity);
 				result += diff;

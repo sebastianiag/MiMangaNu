@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Manga {
 	int id, serverId, nuevos, lastIndex, sentidoLectura = -1;
 	String titulo, sinopsis, images, path;
-	ArrayList<Capitulo> capitulos;
+	ArrayList<Capitulo> capitulos = new ArrayList<Capitulo>();;
 
 	boolean finalizado;
 
@@ -14,7 +14,6 @@ public class Manga {
 		this.serverId = serverId;
 		this.titulo = titulo;
 		this.path = path;
-		capitulos = new ArrayList<Capitulo>();
 	}
 
 	public int getId() {
@@ -93,6 +92,11 @@ public class Manga {
 	public void setCapitulos(ArrayList<Capitulo> caps) {
 		capitulos = caps;
 	}
+	
+	public void clearCapitulos(){
+		capitulos.clear();
+	}
+	
 
 	public int getNuevos() {
 		return nuevos;

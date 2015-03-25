@@ -16,13 +16,14 @@ public class DescargaIndividual implements Runnable {
 	String origen, destino;
 	CambioEstado cambioListener = null;
 	int index, cid;
+	public static int REINTENTOS = 3;
 
 	static enum Estados {
 		EN_COLA, INICIADA, DESCARGANDO, REINTENTANDO, POSTERGADA, DESCARGA_OK, ERROR_CONECCION, ERROR_404, ERROR_TIMEOUT, ERROR_SUBIDA, ERROR_URL_INVALIDA, ERROR_ESCRIBIR_ARCHIVO, ERROR_ABRIR_ARCHIVO
 	};
 
 	Estados estado = Estados.EN_COLA;
-	int reintentos = 3;
+	int reintentos = REINTENTOS;
 
 	public DescargaIndividual(String origen, String destino, int index, int cid) {
 		super();

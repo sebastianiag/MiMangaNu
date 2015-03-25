@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/borrar"
+        android:icon="@drawable/ic_action_ic_borrar_light"
+        android:title="@string/borrarcap">
+    </item>
+    <item
+        android:id="@+id/reset"
+        android:icon="@drawable/ic_action_av_reload"
+        android:title="@string/resetcap">
+    </item>
+    <item
+        android:title="@string/marcarleido"
+        android:id="@+id/marcar_leido"
+        android:icon="@drawable/ic_action_readed"/>
+
+</menu>

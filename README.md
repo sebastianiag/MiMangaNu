@@ -3,6 +3,8 @@
 
 Lector Manga online 
 
+Cambios 1.19 Agregado feedback en errores de descarga, menu de configuracion, sentido de lectura individual, cab en opciones de capitulos, opciones de descarga y otras tantas cosas.
+
 Cambios 1.18
 Servers Fix en español para la compilacion de Fdroid. Agregado descargar no leidos (fix #37), marcar como leido cuando llega al final (fix #20).
 

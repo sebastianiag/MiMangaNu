@@ -49,5 +49,37 @@
     <string name="descargado">(Téléchargé)</string>
     <string name="error">(Erreur)</string>
     <string name="descarga_no_leidos">Télécharger non lus</string>
+    <string name="title_activity_preference">"Préférences"</string>
+    <string name="demaciados_errores">"Trop d'erreurs (Télécharger suspendu) \n Cela peut être dû: \n * Erreur de connexion \n * Erreur sur le côté serveur \n * Un mauvais téléchargement, etc. \nEssayez tard"</string>
+    <string name="action_settings">"Paramètres"</string>
+    <string name="esconder_de_galeria_subtitle">"Cacher téléchargés images de la galerie"</string>
+    <string name="configuraciones">"Paramètres"</string>
+    <string name="opciones_mm">"Mes Mangas paramètres"</string>
+    <string name="opciones_caps">"Paramètres chapitres"</string>
+    <string name="orden_de_capitulos">"Chapitres paramètres"</string>
+    <string name="orden_de_capitulos_subtitle">"Ascendant, descendant"</string>
+    <string name="orden_asc">"Ascendant"</string>
+    <string name="orden_dsc">"Descendant"</string>
+    <string name="opciones_lec">"Reader paramètres"</string>
+    <string name="sentido_lectura">"Lire direction"</string>
+    <string name="sentido_lectura_subtitle">"Par défaut"</string>
+    <string name="r2l">"De droite à gauche"</string>
+    <string name="l2r">"De gauche à droite"</string>
+    <string name="vertical">"Vertical"</string>
+    <string name="ajuste_imagen">"Adapter l'image par défaut"</string>
+    <string name="ajuste_imagen_subtitle">"(Original, hauteur, largeur, o meilleur ajustement)"</string>
+    <string name="no_scale">"Taille originale"</string>
+    <string name="mejor_ajuste">"Meilleur ajustement"</string>
+    <string name="ajuste_ancho">"Ajuster à la largeur"</string>
+    <string name="ajuste_alto">"Ajuster à la hauteur"</string>
+    <string name="max_texture_title">"Taille de texture maximale supportée par e accélérateur de dispositif"</string>
+    <string name="max_texture_subtitle">"0 pour désactiver l'accélération"</string>
+    <string name="opciones_descarga">"Paramètres de téléchargement"</string>
+    <string name="cantidad_descargas_title">"Télécharger fente"</string>
+    <string name="cantidad_descargas_subtitle">"Nombre de téléchargement fils (2 par défaut)"</string>
+    <string name="cantidad_errores_title">"Nombre maximum d'erreurs"</string>
+    <string name="cantidad_errores_subtitle">"Avant d'arrêter le téléchargement d'un chapitre"</string>
+    <string name="cantidad_reintentos_title">"Nombre de tentatives"</string>
+    <string name="cantidad_reintentos_subtitle">"Par l'image"</string>
 
 </resources>

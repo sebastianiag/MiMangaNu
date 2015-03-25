@@ -134,18 +134,21 @@ public class DescargaIndividual implements Runnable {
 			}
 		}
 	}
-	
-	void writeErrorImage(File ot) throws IOException{
-		InputStream ims = ServicioColaDeDescarga.actual.getAssets().open("error_image.jpg");
-		FileOutputStream output = new FileOutputStream(ot);;
-		byte[] buffer = new byte[4096];
-		int bytesRead = 0;
-		while ((bytesRead = ims.read(buffer, 0, buffer.length)) >= 0) {
-			output.write(buffer, 0, bytesRead);
+
+	void writeErrorImage(File ot) throws IOException {
+		if (ServicioColaDeDescarga.actual != null) {
+			InputStream ims = ServicioColaDeDescarga.actual.getAssets().open("error_image.jpg");
+			FileOutputStream output = new FileOutputStream(ot);
+			;
+			byte[] buffer = new byte[4096];
+			int bytesRead = 0;
+			while ((bytesRead = ims.read(buffer, 0, buffer.length)) >= 0) {
+				output.write(buffer, 0, bytesRead);
+			}
+			ims.close();
+			output.flush();
+			output.close();
 		}
-		ims.close();
-		output.flush();
-		output.close();
 	}
 
 	void changeStatus(Estados estado) {

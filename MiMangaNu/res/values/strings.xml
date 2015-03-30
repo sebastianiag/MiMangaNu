@@ -87,7 +87,7 @@ Este programa solo automatiza funciones que se podrian hacer con un navegador de
     <string name="mejor_ajuste">Best fit</string>
     <string name="ajuste_ancho">Fit to width</string>
     <string name="ajuste_alto">Fit to height</string>
-    <string name="max_texture_title">Maximum texture size supported by th device accelerator</string>
+    <string name="max_texture_title">Maximum texture size supported by the device accelerator</string>
     <string name="max_texture_subtitle">0 to disable hardware acceleration</string>
     <string name="opciones_descarga">Download settings</string>
     <string name="cantidad_descargas_title">Download slot</string>

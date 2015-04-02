@@ -132,6 +132,13 @@ public class CapituloAdapter extends ArrayAdapter<Capitulo> {
 		selected.put(position, value);
 		notifyDataSetChanged();
 	}
+	
+	public void selectAll(){
+		for (int i = 0; i < getCount(); i++) {
+			selected.put(i, true);
+		}
+		notifyDataSetChanged();
+	}
 
 	public void removeSelection(int position) {
 		selected.delete(position);

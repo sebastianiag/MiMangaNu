@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/item"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="56dp"
     android:orientation="vertical"
     android:padding="10dp" >
 
@@ -10,8 +10,12 @@
         android:id="@+id/manga_titulo"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:text=""
+        android:padding="@dimen/paddin_textitem"
         android:textColor="#000000"
-        android:textSize="22sp" />
+        android:textSize="@dimen/tamano_texto" />
 
-</LinearLayout>
+</RelativeLayout>

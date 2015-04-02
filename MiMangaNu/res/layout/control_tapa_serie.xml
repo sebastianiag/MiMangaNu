@@ -8,15 +8,23 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:scaleType="fitXY" />
-    
-    <ar.rulosoft.mimanganu.componentes.DarkFrameTextView
+
+    <TextView
         android:id="@+id/texto"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        android:background="#40000000"
         android:gravity="center"
-        android:text="@string/cargando" />
+        android:padding="@dimen/paddin_textitem"
+        android:textColor="#FFF"
+        android:textSize="@dimen/tamano_texto" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground" />
 
 </RelativeLayout>

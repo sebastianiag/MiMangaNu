@@ -2,13 +2,12 @@ package ar.rulosoft.mimanganu.componentes;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import ar.rulosoft.mimanganu.R;
 
 /**
@@ -17,7 +16,7 @@ import ar.rulosoft.mimanganu.R;
 public class ControlTapaSerie extends RelativeLayout implements Imaginable{
 	
 	ImageView imagen;
-	DarkFrameTextView texto;
+	TextView texto;
 
 	public ControlTapaSerie(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -40,9 +39,7 @@ public class ControlTapaSerie extends RelativeLayout implements Imaginable{
 		LayoutInflater li = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		li.inflate(R.layout.control_tapa_serie, this, true);
     	imagen = (ImageView)findViewById(R.id.imagen_portada);
-		texto = (DarkFrameTextView) findViewById(R.id.texto); 
-		texto.setTextColor(Color.WHITE);
-		texto.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+		texto = (TextView) findViewById(R.id.texto); 
 	}
 
 	@Override

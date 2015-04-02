@@ -8,12 +8,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import ar.rulosoft.mimanganu.ActivityCapitulos;
 import ar.rulosoft.mimanganu.R;
 import ar.rulosoft.mimanganu.services.DescargaCapitulo;
+import ar.rulosoft.mimanganu.services.ServicioColaDeDescarga;
 
 public class DescargaAdapter extends ArrayAdapter<DescargaCapitulo> {
 
@@ -64,10 +65,19 @@ public class DescargaAdapter extends ArrayAdapter<DescargaCapitulo> {
 			holder.botonImageView.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					if (ServicioColaDeDescarga.quitarDescarga(item.capitulo.getId(), getContext())) {
+						remove(item);
+						notifyDataSetChanged();
+					}
 				}
 			});
 		}
 		return convertView;
+	}
+
+	@Override
+	public void remove(DescargaCapitulo object) {
+		descargas.remove(object);
 	}
 
 	public void updateAll(ArrayList<DescargaCapitulo> mDescargas) {
@@ -80,6 +90,7 @@ public class DescargaAdapter extends ArrayAdapter<DescargaCapitulo> {
 						esNuevo = false;
 						DescargaCapitulo item = getItem(j);
 						item.setProgreso(aComparar.getProgreso());
+						item.estado = aComparar.estado;
 						break;
 					}
 				}
@@ -93,12 +104,11 @@ public class DescargaAdapter extends ArrayAdapter<DescargaCapitulo> {
 	public static class ViewHolder {
 		private TextView textViewNombre;
 		private ProgressBar cargandoProgressBar;
-		private ImageView botonImageView;
+		private ImageButton botonImageView;
 
 		public ViewHolder(View v) {
 			this.textViewNombre = (TextView) v.findViewById(R.id.nombre);
-			this.botonImageView = (ImageView) v.findViewById(R.id.boton);
-			this.botonImageView.setVisibility(ImageView.INVISIBLE);
+			this.botonImageView = (ImageButton) v.findViewById(R.id.boton);
 			this.cargandoProgressBar = (ProgressBar) v.findViewById(R.id.progreso);
 		}
 	}

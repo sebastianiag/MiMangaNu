@@ -14,7 +14,7 @@ public class DescargaCapitulo implements CambioEstado {
 	OnErrorListener errorListener = null;
 	CambioEstado cambioListener = null;
 	public DescargaEstado estado;
-	Capitulo capitulo;
+	public Capitulo capitulo;
 	Estados[] paginasStatus;
 	int progreso = 0;
 

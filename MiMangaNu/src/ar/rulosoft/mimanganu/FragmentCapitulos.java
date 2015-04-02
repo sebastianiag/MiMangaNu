@@ -89,6 +89,18 @@ public class FragmentCapitulos extends Fragment implements SetCapitulos {
 					ServerBase s = ServerBase.getServer(manga.getServerId());
 
 					switch (item.getItemId()) {
+					case R.id.seleccionar_todo:
+						capitulosAdapter.selectAll();
+						return true;
+					case R.id.seleccionar_nada:
+						capitulosAdapter.clearSelection();
+						return true;
+					case R.id.borrar_imagenes:
+						for (int i = 0; i < selection.size(); i++) {
+							Capitulo c = capitulosAdapter.getItem(selection.keyAt(i));
+							c.borrarImagenesLiberarEspacio(getActivity(), manga, s);
+						}
+						break;
 					case R.id.borrar:
 						int[] selecionados = new int[selection.size()];
 						for (int j = 0; j < selection.size(); j++) {
@@ -102,14 +114,12 @@ public class FragmentCapitulos extends Fragment implements SetCapitulos {
 
 						}
 						break;
-
 					case R.id.reset:
 						for (int i = 0; i < selection.size(); i++) {
 							Capitulo c = capitulosAdapter.getItem(selection.keyAt(i));
 							c.reset(getActivity(), manga, s);
 						}
 						break;
-
 					case R.id.marcar_leido:
 						for (int i = selection.size() - 1; i >= 0; i--) {
 							Capitulo c = capitulosAdapter.getItem(selection.keyAt(i));
@@ -193,8 +203,12 @@ public class FragmentCapitulos extends Fragment implements SetCapitulos {
 
 		@Override
 		protected void onPreExecute() {
-			asyncdialog.setMessage(getResources().getString(R.string.iniciando));
-			asyncdialog.show();
+			try {
+				asyncdialog.setMessage(getResources().getString(R.string.iniciando));
+				asyncdialog.show();
+			} catch (Exception e) {
+				//prevent dialog error
+			}
 		}
 
 		@Override

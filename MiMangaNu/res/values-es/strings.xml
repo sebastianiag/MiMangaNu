@@ -83,4 +83,8 @@
     <string name="cantidad_errores_subtitle">Antes de detener una descarga</string>
     <string name="cantidad_reintentos_title">Cantidad de reintentos</string>
     <string name="cantidad_reintentos_subtitle">Por página descargada</string>
+    <string name="borrar_imagenes">Borrar imagenes</string>
+    <string name="seleccionar_todo">Selecionar todo</string>
+    <string name="quitar_seleccion">Deseleccionar todo</string>
+    <string name="quitar_descarga">No se pueden quitar descargas activas</string>
 </resources>

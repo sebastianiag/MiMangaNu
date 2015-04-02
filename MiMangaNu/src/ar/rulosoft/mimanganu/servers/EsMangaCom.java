@@ -15,7 +15,7 @@ public class EsMangaCom extends ServerBase {
 	public static String[] generos = new String[] { "Todos", "Acción", "Artes Marciales", "Aventura", "Ciencia Ficción", "Comedia", "Deportes", "Drama",
 			"Ecchi", "Escolar", "Fantasía", "Harem", "Hentai", "Histórico", "Horror", "Josei", "Mecha", "Misterio", "Oneshot", "Psicológico", "Romance",
 			"Seinen", "Shojo", "Shounen", "Sobrenatural", "Tragedia", "Vida Cotidiana", "Yuri" };
-	public static String[] generosV = new String[] { "/lista-mangas", "/genero/accion", "/genero/artes-marciales", "/genero/aventura",
+	public static String[] generosV = new String[] { "/lista-mangas/orden/vistas", "/genero/accion", "/genero/artes-marciales", "/genero/aventura",
 			"/genero/ciencia-ficcion", "/genero/comedia", "/genero/deportes", "/genero/drama", "/genero/ecchi", "/genero/escolar", "/genero/fantasia",
 			"/genero/harem", "/genero/hentai", "/genero/historico", "/genero/horror", "/genero/josei", "/genero/mecha", "/genero/misterio", "/genero/oneshot",
 			"/genero/psicologico", "/genero/romance", "/genero/seinen", "/genero/shojo", "/genero/shounen", "/genero/sobrenatural", "/genero/tragedia",
@@ -62,17 +62,17 @@ public class EsMangaCom extends ServerBase {
 		Navegador nav = new Navegador();
 		String source = nav.get(m.getPath());
 		//sinopsis
-		m.setSinopsis(getFirstMacthDefault("<div>Sinopsis:</div></td>[\\s\\S]+?<td class=\"contxt\">([\\s\\S]+?)<", source, "Sin Sinopsis"));
+		m.setSinopsis(getFirstMacthDefault("<b>Sinopsis</b><br>([\\s\\S]+?)</s", source, "Sin Sinopsis").replaceAll("<.+?>", ""));
 		//imagen
-		m.setImages(getFirstMacthDefault("<div class=\"img-anim\">\\s+?<img src=\"(.+?)\"", source, ""));
+		m.setImages(getFirstMacthDefault("(http://esmanga.com/img/mangas/.+?)\"", source, ""));
 		//status
-		m.setFinalizado(getFirstMacthDefault("Estado.+?<td><strong>([^<]+)", source, "En desarrollo").length() == 9);
+		m.setFinalizado(getFirstMacthDefault("<b>Estado:(.+?)</span>", source, "").contains("Finalizado"));
 		// capitulos
 		ArrayList<Capitulo> capitulos = new ArrayList<Capitulo>();
-		Pattern p = Pattern.compile("<li>	<a href=\"(.+?)\".+?>(.+?)<strong>(.+?)<");
+		Pattern p = Pattern.compile("<a href=\"(http://esmanga.com/[^\"]+/c\\d+)\">(.+?)</a><");
 		Matcher ma = p.matcher(source);
 		while (ma.find()) {
-			capitulos.add(0,new Capitulo(ma.group(2).trim() + " " + ma.group(3).trim(), ma.group(1)));
+			capitulos.add(0,new Capitulo(ma.group(2).trim(), ma.group(1)));
 		}
 		m.setCapitulos(capitulos);
 	}
@@ -105,12 +105,12 @@ public class EsMangaCom extends ServerBase {
 	
 	public ArrayList<Manga> getMangasWeb(String web) throws Exception{
 		String source = new Navegador().get(web);
-		Pattern p = Pattern.compile("<article class=\"pli-lg\">.+?href=\"(.+?)\".+?src=\"(.+?)\".alt=\"(.+?)\"");
+		Pattern p = Pattern.compile("src=\"([^\"]+)\".+?<a href=\"(http://esmanga.com/manga/.+?)\">(.+?)<");
 		Matcher m = p.matcher(source);
 		ArrayList<Manga> mangas = new ArrayList<Manga>();
 		while(m.find()){
-			Manga manga = new Manga(ESMANGA, m.group(3), m.group(1), false);
-			manga.setImages(m.group(2));
+			Manga manga = new Manga(ESMANGA, m.group(3), m.group(2), false);
+			manga.setImages(m.group(1));
 			mangas.add(0,manga);
 		}	
 		return mangas;
@@ -123,7 +123,7 @@ public class EsMangaCom extends ServerBase {
 
 	@Override
 	public String[] getOrdenes() {
-		return new String[] { "a-z" };//, "Ranking"
+		return new String[] { "Lecturas" };//, "Ranking"
 	}
 
 	@Override

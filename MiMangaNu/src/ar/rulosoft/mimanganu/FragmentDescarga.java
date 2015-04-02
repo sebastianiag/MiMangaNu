@@ -67,7 +67,12 @@ public class FragmentDescarga extends Fragment {
 
 		@Override
 		protected void onProgressUpdate(Void... values) {
-			adap.notifyDataSetChanged();
+			getActivity().runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					adap.notifyDataSetChanged();
+				}
+			});
 			super.onProgressUpdate(values);
 		}
 

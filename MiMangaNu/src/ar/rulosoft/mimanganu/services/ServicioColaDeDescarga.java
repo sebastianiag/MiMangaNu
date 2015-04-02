@@ -12,7 +12,9 @@ import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 import ar.rulosoft.mimanganu.ActivityLector;
+import ar.rulosoft.mimanganu.R;
 import ar.rulosoft.mimanganu.componentes.Capitulo;
 import ar.rulosoft.mimanganu.componentes.Database;
 import ar.rulosoft.mimanganu.componentes.Manga;
@@ -191,8 +193,20 @@ public class ServicioColaDeDescarga extends Service implements CambioEstado {
 		return result;
 	}
 
-	public static void quitarDescarga(int index) {
-		descargas.remove(index);
+	public static boolean quitarDescarga(int cid, Context c) {
+		boolean result = true;
+		for (DescargaCapitulo dc : descargas) {
+			if (dc.capitulo.getId() == cid) {
+				if(dc.estado.ordinal() != DescargaCapitulo.DescargaEstado.DESCARGANDO.ordinal()){
+					descargas.remove(dc);
+				}else{
+					Toast.makeText(c, R.string.quitar_descarga, Toast.LENGTH_LONG).show();
+					result = false;
+				}
+				break;
+			}
+		}
+		return result;
 	}
 
 	public static void attachListener(ActivityLector lector, int cid) {

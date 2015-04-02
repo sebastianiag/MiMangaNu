@@ -120,8 +120,8 @@ public class Capitulo {
 		ServerBase s = ServerBase.getServer(manga.getServerId());
 		borrar(context, manga, s);
 	}
-	
-	public void borrarImagenes(Context context){
+
+	public void borrarImagenes(Context context) {
 		Manga manga = Database.getManga(context, getMangaID());
 		ServerBase s = ServerBase.getServer(manga.getServerId());
 		borrarImagenes(context, manga, s);
@@ -138,8 +138,19 @@ public class Capitulo {
 		setPaginas(0);
 		setDescargado(false);
 		setPagLeidas(0);
-		Database.updateCapitulo(context, this);
-		Database.UpdateCapituloDescargado(context, getId(), 0);
+		Database.updateCapituloConDescarga(context, this);
+	}
+
+	public void borrarImagenesLiberarEspacio(Context context) {
+		borrarImagenes(context);
+		setDescargado(false);
+		Database.updateCapituloConDescarga(context, this);
+	}
+
+	public void borrarImagenesLiberarEspacio(Context context, Manga manga, ServerBase s) {
+		borrarImagenes(context, manga, s);
+		setDescargado(false);
+		Database.updateCapituloConDescarga(context, this);
 	}
 
 	public void reset(Context context) {
@@ -147,8 +158,8 @@ public class Capitulo {
 		ServerBase s = ServerBase.getServer(manga.getServerId());
 		reset(context, manga, s);
 	}
-	
-	public void marcarComoLeido(Context c){
+
+	public void marcarComoLeido(Context c) {
 		Database.marcarComoLeido(c, getId());
 		setEstadoLectura(Capitulo.LEIDO);
 	}

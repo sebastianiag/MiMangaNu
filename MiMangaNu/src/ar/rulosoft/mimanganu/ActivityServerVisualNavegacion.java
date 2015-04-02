@@ -39,6 +39,7 @@ public class ActivityServerVisualNavegacion extends ActionBarActivity {
 	private int pagina = 1;
 	public boolean mStart = true;
 	private MenuItem buscar;
+	boolean neuvaTarea = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +100,8 @@ public class ActivityServerVisualNavegacion extends ActionBarActivity {
 					mStart = true;
 					s.hayMas = true;
 					new CargarUltima().execute(pagina);
+				}else{
+					neuvaTarea = true;
 				}
 			}
 			
@@ -119,6 +122,8 @@ public class ActivityServerVisualNavegacion extends ActionBarActivity {
 					mStart = true;
 					s.hayMas = true;
 					new CargarUltima().execute(pagina);
+				}else{
+					neuvaTarea = true;
 				}
 			}
 
@@ -218,6 +223,14 @@ public class ActivityServerVisualNavegacion extends ActionBarActivity {
 				}
 				cargando.setVisibility(ProgressBar.INVISIBLE);
 				mStart = false;
+				if(neuvaTarea){
+					adap = null;
+					pagina = 1;
+					mStart = true;
+					s.hayMas = true;
+					new CargarUltima().execute(pagina);
+					neuvaTarea = false;
+				}
 			}
 		}
 	}

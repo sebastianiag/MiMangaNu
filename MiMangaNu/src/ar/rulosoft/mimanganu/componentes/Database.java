@@ -296,6 +296,18 @@ public class Database extends SQLiteOpenHelper {
 		getDatabase(c).update(TABLE_CAPITULOS, cv, COL_CAP_ID + "=" + Integer.toString(cid), null);
 	}
 
+	public static void updateCapituloConDescarga(Context context, Capitulo cap) {
+		ContentValues cv = new ContentValues();
+		cv.put(COL_CAP_NOMBRE, cap.getTitulo());
+		cv.put(COL_CAP_PATH, cap.path);
+		cv.put(COL_CAP_PAGINAS, cap.getPaginas());
+		cv.put(COL_CAP_ESTADO, cap.getEstadoLectura());
+		cv.put(COL_CAP_PAG_LEIDAS, cap.getPagLeidas());
+		cv.put(COL_CAP_DESCARGADO, cap.isDescargado() ? 1 : 0);
+		getDatabase(context).update(TABLE_CAPITULOS, cv, COL_CAP_ID + " = " + cap.id, null);
+
+	}
+
 	public static void UpdateCapituloPagina(Context c, int cid, int pagina) {
 		ContentValues cv = new ContentValues();
 		cv.put(COL_CAP_PAG_LEIDAS, pagina);
@@ -346,7 +358,7 @@ public class Database extends SQLiteOpenHelper {
 		cv.put(COL_CAP_ESTADO, Capitulo.LEIDO);
 		getDatabase(c).update(TABLE_CAPITULOS, cv, COL_CAP_ID_MANGA + " = " + mangaId, null);
 	}
-	
+
 	public static void marcarComoLeido(Context c, int capId) {
 		ContentValues cv = new ContentValues();
 		cv.put(COL_CAP_ESTADO, Capitulo.LEIDO);
@@ -367,6 +379,6 @@ public class Database extends SQLiteOpenHelper {
 		ContentValues cv = new ContentValues();
 		cv.put(COL_SENTIDO, ordinal);
 		getDatabase(c).update(TABLE_MANGA, cv, COL_ID + "=" + mid, null);
-		
+
 	}
 }

@@ -2,13 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:paddingBottom="6dp" >
 
     <ar.rulosoft.mimanganu.componentes.ControlTapaSerie
         android:id="@+id/tapa"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
+        android:layout_margin="6dp"
         android:background="@drawable/borde"
         android:padding="2dp" >
 

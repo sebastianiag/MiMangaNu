@@ -96,5 +96,9 @@ Este programa solo automatiza funciones que se podrian hacer con un navegador de
     <string name="cantidad_errores_subtitle">Before stopping a chapter download</string>
     <string name="cantidad_reintentos_title">Number of retries</string>
     <string name="cantidad_reintentos_subtitle">By image</string>
+    <string name="borrar_imagenes">Delete images to free space</string>
+    <string name="seleccionar_todo">Select all</string>
+    <string name="quitar_seleccion">Select none</string>
+    <string name="quitar_descarga">Can\'t remove active download</string>
 
 </resources>

@@ -84,5 +84,9 @@
     <string name="cantidad_errores_subtitle">"Prima di interrompere un capitolo di download"</string>
     <string name="cantidad_reintentos_title">"Numero di tentativi"</string>
     <string name="cantidad_reintentos_subtitle">"Con immagine"</string>
+    <string name="borrar_imagenes">Eliminare le immagini di spazio libero</string>
+    <string name="seleccionar_todo">Seleziona tutto</string>
+    <string name="quitar_seleccion">Nessuna selezione</string>
+    <string name="quitar_descarga">Impossibile remobe scaricare attiva</string>
 
 </resources>

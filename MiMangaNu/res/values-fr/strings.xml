@@ -81,5 +81,9 @@
     <string name="cantidad_errores_subtitle">"Avant d'arrêter le téléchargement d'un chapitre"</string>
     <string name="cantidad_reintentos_title">"Nombre de tentatives"</string>
     <string name="cantidad_reintentos_subtitle">"Par image"</string>
+    <string name="borrar_imagenes">Supprimez les images à l\'espace libre</string>
+    <string name="seleccionar_todo">Tout sélectionner</string>
+    <string name="quitar_seleccion">Ne rien sélectionner</string>
+    <string name="quitar_descarga">Impossible de supprimer active télécharger</string>
 
 </resources>

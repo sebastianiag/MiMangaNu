@@ -3,6 +3,8 @@
 
 Lector Manga online 
 
+Cambios 1.21 Fixed missing translations.
+
 Cambios 1.20 bugfixes, aciones extras cab agregadas, etc.
 
 Cambios 1.19 Agregado feedback en errores de descarga, menu de configuracion, sentido de lectura individual, cab en opciones de capitulos, opciones de descarga y otras tantas cosas.

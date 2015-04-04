@@ -75,7 +75,7 @@
     <string name="max_texture_title">"Taille de texture maximale supportée par l'accélérateur"</string>
     <string name="max_texture_subtitle">"0 pour désactiver l'accélération"</string>
     <string name="opciones_descarga">"Paramètres de téléchargement"</string>
-    <string name="cantidad_descargas_title">"Télécharger fente"</string>
+    <string name="cantidad_descargas_title">"Téléchargement simultanés"</string>
     <string name="cantidad_descargas_subtitle">"Nombre de téléchargement simultanés (2 par défaut)"</string>
     <string name="cantidad_errores_title">"Nombre maximum d'erreurs"</string>
     <string name="cantidad_errores_subtitle">"Avant d'arrêter le téléchargement d'un chapitre"</string>

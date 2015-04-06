@@ -100,5 +100,6 @@ Este programa solo automatiza funciones que se podrian hacer con un navegador de
     <string name="seleccionar_todo">Select all</string>
     <string name="quitar_seleccion">Select none</string>
     <string name="quitar_descarga">Can\'t remove active download</string>
+    <string name="marcarleido">Check as read</string>
 
 </resources>

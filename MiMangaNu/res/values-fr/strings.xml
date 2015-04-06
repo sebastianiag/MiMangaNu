@@ -85,6 +85,6 @@
     <string name="seleccionar_todo">Tout sélectionner</string>
     <string name="quitar_seleccion">Ne rien sélectionner</string>
     <string name="quitar_descarga">Impossible de supprimer un téléchargement actif</string>
-    <string name="marcarleido">repère sélectionné comme lu</string>
+    <string name="marcarleido">Marquer comme lu</string>
 
 </resources>

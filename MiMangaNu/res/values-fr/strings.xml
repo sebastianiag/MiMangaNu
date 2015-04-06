@@ -84,6 +84,6 @@
     <string name="borrar_imagenes">Supprimer les images pour libérer de l'espace</string>
     <string name="seleccionar_todo">Tout sélectionner</string>
     <string name="quitar_seleccion">Ne rien sélectionner</string>
-    <string name="quitar_descarga">Impossible de supprimer le téléchargement en cours</string>
+    <string name="quitar_descarga">Impossible de supprimer un téléchargement actif</string>
 
 </resources>

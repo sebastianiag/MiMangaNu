@@ -3,6 +3,8 @@
 
 Lector Manga online 
 
+Cambios 1.22 Minor fix.
+
 Cambios 1.21 Fixed missing translations.
 
 Cambios 1.20 bugfixes, aciones extras cab agregadas, etc.

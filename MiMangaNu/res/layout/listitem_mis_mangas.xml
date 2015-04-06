@@ -23,11 +23,17 @@
     </ar.rulosoft.mimanganu.componentes.ControlTapaSerie>
 
     <ImageView
-        android:layout_margin="2dp"
         android:id="@+id/server"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_alignLeft="@+id/tapa"
-        android:layout_alignTop="@+id/tapa" />
+        android:layout_alignTop="@+id/tapa"
+        android:layout_margin="2dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground" >
+    </LinearLayout>
 
 </RelativeLayout>

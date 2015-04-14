@@ -15,11 +15,11 @@ import java.util.WeakHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import android.os.Handler;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
+import android.os.Handler;
 import ar.rulosoft.mimanganu.R;
 import ar.rulosoft.mimanganu.componentes.Imaginable;
 
@@ -27,26 +27,36 @@ public class ImageLoader {
 
 	MemoryCache memoryCache = new MemoryCache();
 	FileCache fileCache;
-	private Map<Imaginable, String> imageViews = Collections.synchronizedMap(new WeakHashMap<Imaginable, String>());
+	private static Map<Imaginable, String> imageViews = Collections.synchronizedMap(new WeakHashMap<Imaginable, String>());
 	ExecutorService executorService;
 	Handler handler = new Handler();// handler to display images in UI thread
 
 	public ImageLoader(Context context) {
+		imageViews.clear();
 		fileCache = new FileCache(context);
-		executorService = Executors.newFixedThreadPool(5);
+		executorService = Executors.newFixedThreadPool(3);
 	}
 
 	final int stub_id = R.drawable.stub;
-
+	
 	public void DisplayImage(String url, Imaginable imageView) {
-		imageViews.put(imageView, url);
-		Bitmap bitmap = memoryCache.get(url);
-		if (bitmap != null) {
-			imageView.setImageBitmap(bitmap);
-		} else {
-			queuePhoto(url, imageView);
-			imageView.setImageResource(stub_id);
+		if (alreadyDownloading(imageView, url)) {
+			imageViews.put(imageView, url);
+			Bitmap bitmap = memoryCache.get(url);
+			if (bitmap != null) {
+				imageView.setImageBitmap(bitmap);
+			} else {
+				queuePhoto(url, imageView);
+				imageView.setImageResource(stub_id);
+			}
 		}
+	}
+
+	private boolean alreadyDownloading(Imaginable imageView, String url) {
+		String tag = imageViews.get(imageView);
+		if (tag == null || !tag.equals(url))
+			return true;
+		return false;
 	}
 
 	private void queuePhoto(String url, Imaginable imageView) {
@@ -90,7 +100,7 @@ public class ImageLoader {
 			bitmap = decodeFile(f);
 			return bitmap;
 		} catch (Throwable ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
 			if (ex instanceof OutOfMemoryError)
 				memoryCache.clear();
 			return null;
@@ -150,7 +160,7 @@ public class ImageLoader {
 		try {
 			fs = new FileInputStream(file);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 
 		try {
@@ -158,19 +168,16 @@ public class ImageLoader {
 				bitmap = BitmapFactory.decodeFileDescriptor(fs.getFD(), null, bfOptions);
 			}
 		} catch (IOException e) {
-
-			e.printStackTrace();
+			//e.printStackTrace();
 		} finally {
 			if (fs != null) {
 				try {
 					fs.close();
 				} catch (IOException e) {
-
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 		}
-
 		return bitmap;
 	}
 
@@ -204,7 +211,7 @@ public class ImageLoader {
 				BitmapDisplayer bd = new BitmapDisplayer(bmp, photoToLoad);
 				handler.post(bd);
 			} catch (Throwable th) {
-				th.printStackTrace();
+				//th.printStackTrace();
 			}
 		}
 	}
@@ -233,6 +240,7 @@ public class ImageLoader {
 				photoToLoad.imageView.setImageBitmap(bitmap);
 			else
 				photoToLoad.imageView.setImageResource(stub_id);
+			imageViews.remove(photoToLoad.imageView);
 		}
 	}
 

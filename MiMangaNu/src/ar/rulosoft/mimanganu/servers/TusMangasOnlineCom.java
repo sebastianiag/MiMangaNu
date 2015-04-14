@@ -110,7 +110,7 @@ public class TusMangasOnlineCom extends ServerBase {
 	@Override
 	public String getImagen(Capitulo c, int pagina) throws Exception {
 		if (c.getExtra() == null || c.getExtra().length() < 2 || !c.getExtra().contains("|")) {
-			if (c.getExtra().length() > 2) {
+			if (c.getExtra() == null || c.getExtra().length() < 2) {
 				getExtraWeb(c);
 			}
 			String source = new Navegador().get(c.getExtra());
